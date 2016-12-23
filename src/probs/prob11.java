@@ -27,6 +27,7 @@ public class prob11 {
 		Scanner in;
 		Scanner in2;
 		try {
+			//40 seconds.
 			 in = new Scanner(new File("prob11in2.txt"));
 			 //in = new Scanner(new File("prob11intest.txt"));
 			 in2 = new Scanner(System.in);
@@ -80,9 +81,13 @@ public class prob11 {
 			 
 			 ArrayList<AstarNode> pathWithSymmetry = AstarAlgo.astar(pos, pos.getGoal());
 
-			 prob11Position.printRealPathFromSymmetricPath(pos, pathWithSymmetry);
-			 
-			 System.out.println("Answer: " + (pathWithSymmetry.size() -1) );
+			 if(pathWithSymmetry != null) {
+				 prob11Position.printRealPathFromSymmetricPath(pos, pathWithSymmetry);
+				 
+				 System.out.println("Answer: " + (pathWithSymmetry.size() -1) );
+			 } else {
+				 System.out.println("No solutions");
+			 }
 			 in.close();
 		} catch (Exception e) {
 			e.printStackTrace();

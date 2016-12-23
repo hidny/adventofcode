@@ -1,0 +1,8 @@
+swap position 4 with position 0 swaps the first and last letters, producing the input for the next step, ebcda.
+swap letter d with letter b swaps the positions of d and b: edcba.
+reverse positions 0 through 4 causes the entire string to be reversed, producing abcde.
+rotate left 1 step shifts all letters left one position, causing the first letter to wrap to the end of the string: bcdea.
+move position 1 to position 4 removes the letter at position 1 (c), then inserts it at position 4 (the end of the string): bdeac.
+move position 3 to position 0 removes the letter at position 3 (a), then inserts it at position 0 (the front of the string): abdec.
+rotate based on position of letter b finds the index of letter b (1), then rotates the string right once plus a number of times equal to that index (2): ecabd.
+rotate based on position of letter d finds the index of letter d (4), then rotates the string right once, plus a number of times equal to that index, plus an additional time because the index was at least 4, for a total of 6 right rotations: decab.

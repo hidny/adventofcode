@@ -230,8 +230,12 @@ public class prob11Position implements aStar.AstarNode {
 		ret += this.elevatorFloor - lowestFloorObj;
 		
 
-		//If there's 3 generators alone in a floor above all microchips, that's not good and will cost at least 
-		//1 extra move to clear out
+		//TODO: prove or disprove:
+		//Things that will cost at least 1 extra move to clear out:
+		//(These things wre proven by pen & paper)
+		//1) If there's 3+ generators alone in a floor above at least 1 microchip, and the elevator is below the 3 generator floor.
+		//2) If there's 3+ generators on the top floor and no microchips on the top floor.
+		
 		//This bit of logic makes the code find a solution 10x faster.
 		//The only thing is that I didn't prove it was true... :(
 		int numGen;
@@ -239,6 +243,12 @@ public class prob11Position implements aStar.AstarNode {
 		int totalMicroFound = 0;
 		
 		for(int floor=NUMBER_OF_FLOORS; floor>lowestFloorObj; floor--) {
+			//If current floor is not the top floor,
+			//then there's no value in continuing if the elevator is below the current floor:
+			if(floor < NUMBER_OF_FLOORS && this.elevatorFloor >= floor) {
+					break;
+			}
+			
 			numGen = 0;
 			numMicro = 0;
 			for(int i=0; i<rtgName.size(); i++) {
@@ -252,9 +262,7 @@ public class prob11Position implements aStar.AstarNode {
 				}
 			}
 		
-			if(numGen < numMicro) {
-				break;
-			} else if(numGen >= 3 && numMicro == 0) {
+			if(numGen >= 3 && numMicro == 0) {
 				if(totalMicroFound < rtgName.size()) {
 					ret++;
 					break;
@@ -385,7 +393,7 @@ public class prob11Position implements aStar.AstarNode {
 		for(int i=0; i<rtgGeneratorFloor.size(); i++) {
 			//Check if the microchip is protecting the generator:
 			if(rtgGeneratorFloor.get(i) != rtgMicrochipFloor.get(i)) {
-				//If the microchip isn't protecting, check if any other microchip is frying the generator:
+				//If the microchip isn't protected, check if any other generator is frying it:
 				for(int j=0; j<rtgMicrochipFloor.size(); j++) {
 					if(rtgGeneratorFloor.get(i) == rtgMicrochipFloor.get(j)) {
 						//microchip fried!
