@@ -14,12 +14,6 @@ public class prob23 {
 		try {
 			in = new Scanner(new File("prob23in.txt"));
 			
-			//1 toggle case
-			//in = new Scanner(new File("prob23infake.txt"));
-			
-			//2 Asked to jump nowhere cases:
-			 //in = new Scanner(new File("prob23infake2.txt"));
-			 
 			 
 			 in2 = new Scanner(System.in);
 			 String line;
@@ -57,7 +51,7 @@ public class prob23 {
 			 System.out.println("Asnwer: " + answer);
 			 
 			 //Asnwer: 13140
-
+			 //Answer: 479009700
 			 
 			 in2.close();
 			 in.close();

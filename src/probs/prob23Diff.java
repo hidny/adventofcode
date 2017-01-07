@@ -45,9 +45,6 @@ public class prob23Diff {
 			output = new long[input.length];
 			
 			for(int i=0; i<input.length; i++) {
-				if(changes[i] == null) {
-					System.out.println("What?");
-				}
 				output[i] = changes[i].eval(varNames, input);
 			}
 			input = output;
@@ -69,9 +66,6 @@ public class prob23Diff {
 					current.setExitIndex(exitIndex);
 					
 				}
-			}
-			if(current.getExitIndex() > 19) {
-				System.out.println("DEBUG");
 			}
  			currentIndex = current.getExitIndex();
 		}
@@ -149,9 +143,6 @@ public class prob23Diff {
 									 temp = new ArithNode('*', segment.getNumTimesRan(currentLine), new ArithNode(Integer.parseInt(token[1])));
 									 segment.setRegisterChange(i, currentLine+1, j, temp);
 								 } else {
-									 if(currentLine == 17 ){
-										System.out.println("Current Line: " + currentLine);
-									 }
 									 makeNoChangesToRegister(segment, i, currentLine, j);
 								 }
 								 
@@ -241,7 +232,8 @@ public class prob23Diff {
 		 }
 		
 		if(currentLine < segment.getExitIndex()) {
-			System.out.println("For good luck at end...");
+			//Note no change after last line:
+			//so it will correctly return the answer at the end
 			noteThatLineMadeNoChanges(segment, currentLine);
 		}
 		
@@ -264,11 +256,14 @@ public class prob23Diff {
 			 //1 piece is before toggle.
 			 //1 piece is the toggle
 			 //1 piece is after toggle.
+
+			 //1 piece is before toggle:
 			 if(segment.getStartIndex() < currentLine ) {
 				 segment.changeEndIndexLocation(currentLine - 1);
 				 //noteThatLineMadeNoChanges(segment, currentLine);
 			 }
-			 
+
+			 //1 piece is the toggle:
 			 prob23SegmentDiff temp = getSegmentWithIndex(currentLine);
 			 if(temp != null) {
 				 temp.changeEndIndexLocation(currentLine);
@@ -280,11 +275,10 @@ public class prob23Diff {
 				 //createNewSegment for Toggle:
 				 segments.add(new prob23SegmentDiff(currentLine, currentLine));
 			 }
+
+			 //1 piece is after toggle:
 			 prob23SegmentDiff temp2 = getSegmentWithIndex(currentLine + 1);
-			 if(temp2 != null) {
-				 //temp2.changeEndIndexLocation(lines.size() - 1);
-				 System.out.println("???");
-			 } else {
+			 if(temp2 == null) {
 				 //create new segment for end part:
 				 segments.add(new prob23SegmentDiff(currentLine + 1, lines.size() - 1));
 			 }
@@ -349,7 +343,7 @@ public class prob23Diff {
 			 
 			 long lineChangeIndex = programCounter + jumpNumber;
 			 
-			 //Change segment effected by line change:
+			 //note that segments are effected by line change and change segment lengths:
 			 for(int i=0; i<segments.size(); i++) {
 				 prob23SegmentDiff seg = segments.get(i);
 				 if((lineChangeIndex >= seg.getStartIndex() && lineChangeIndex <= seg.getEndIndex()) || (lineChangeIndex == seg.getExitIndex() && seg.getEndIndex() + 1 == seg.getExitIndex())) {
@@ -358,11 +352,8 @@ public class prob23Diff {
 						 seg.extendLength(lines);
 					 }
 					 seg.setLineChangedOnTgl(true);
-					 //TODO: uncomment
-					 //seg = getSegmentEffects(lines, seg);
 				 }
 			 }
-			//End Change segment effected by line change:
 			 
 			 System.out.println("Segment changed!");
 		 } else {
