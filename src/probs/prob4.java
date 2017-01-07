@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Scanner;
 
-import utilsFromProjectEuler.LetterCount;
+import utils.LetterCount;
 
 public class prob4 {
 

@@ -4,7 +4,7 @@ package probs;
 import java.io.File;
 import java.util.Scanner;
 
-import utilsFromProjectEuler.LetterCount;
+import utils.LetterCount;
 
 public class prob6 {
 

@@ -1,4 +1,4 @@
-package utilsFromProjectEuler;
+package utils;
 
 
 public class LetterCount implements Comparable{

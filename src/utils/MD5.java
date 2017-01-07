@@ -1,4 +1,4 @@
-package utilsFromProjectEuler;
+package utils;
 
 import java.security.MessageDigest;
 

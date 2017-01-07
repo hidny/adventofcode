@@ -24,8 +24,10 @@ public class prob22 {
 			 
 			 String token[];
 			 
-			ArrayList<prob22node> node = new ArrayList<prob22node>();
+			prob22Cluster orig = new prob22Cluster();
 			 
+			boolean isPart1 = false;
+			
 			System.out.println("Start");
 			 while(in.hasNextLine()) {
 				 line = in.nextLine();
@@ -55,34 +57,60 @@ public class prob22 {
 					 used = Integer.parseInt(token[2]);
 					 avail = Integer.parseInt(token[3]);
 					 
-					 node.add(new prob22node(x, y, size, used, avail));
+					 orig.setXYComp(x, y, size, used, avail);
 					 System.out.println(line);
-					 System.out.println(node.get(node.size() - 1));
+					 System.out.println(orig.getArray()[y][x]);
 				 }
 			 }
 			 
-			 //part 1:
-			 //O(n^2) instead of O(n*log(n)) because I'm lazy
+			 orig.removeNullComps();
 			 
-			 long answer = 0;
-			 
-			 for(int i=0; i<node.size(); i++) {
-				 if(node.get(i).isUsedZero() == false) {
-					 for(int j=0; j<node.size(); j++) {
-						 if(i==j) {
-							 //Nodes A and B are not the same
-							 continue;
-						 }
-						 if(node.get(i).fitsInside(node.get(j))) {
-							 answer++;
+			 if(isPart1) {
+				 //part 1:
+				 //O(n^2) instead of O(n*log(n)) because I'm lazy
+				
+				 long answer = 0;
+				 ArrayList<prob22comp> node = orig.getArrayList();
+				 
+				 for(int i=0; i<node.size(); i++) {
+					 if(node.get(i).isUsedZero() == false) {
+						 for(int j=0; j<node.size(); j++) {
+							 if(i==j) {
+								 //Nodes A and B are not the same
+								 continue;
+							 }
+							 
+							 if(node.get(i).fitsInside(node.get(j))) {
+								 answer++;
+							 }
 						 }
 					 }
 				 }
+				 System.out.println(node.size());
+				 System.out.println("Asnwer: " + answer);
+
+			 } else {
+				 orig.printCluster();
+				 orig.printMoves();
+				 orig.printNodesThatCantMove();
+				 
+				 ArrayList<prob22comp> voids = orig.getVoidsCouldBeFilled();
+
+				 orig.setOrigGoalProb2();
+				 
+				 ArrayList<prob22comp> goalNeighbours = orig.getGoalNeighbours();
+				 
+				 for(int i=0; i<voids.size(); i++) {
+					 System.out.println("void: " + voids.get(i).toString2());
+				 }
+				 
+				 System.out.println();
+				 for(int i=0; i<goalNeighbours.size(); i++) {
+					 System.out.println("goal Neighbour: " + goalNeighbours.get(i).toString2());
+				 }
 			 }
-			 
 			
 			 
-			 System.out.println("Asnwer: " + answer);
 			 
 			 in2.close();
 			 in.close();

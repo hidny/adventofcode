@@ -2,7 +2,7 @@ package probs;
 
 import java.util.ArrayList;
 
-import utilsFromProjectEuler.MD5;
+import utils.MD5;
 
 public class prob17obj {
 
