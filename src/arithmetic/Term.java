@@ -91,6 +91,11 @@ public class Term {
 	public boolean hasSameFactors(Term otherTerm) {
 		boolean foundMatch;
 		
+		//If both terms have no variables associated, add them up.
+		if(factors.size() == 0 && otherTerm.factors.size() == 0) {
+			return true;
+		}
+		
 		for(int i=0; i<factors.size(); i++) {
 			foundMatch = false;
 			

@@ -1,4 +1,4 @@
-package aStar;
+package aStarPrio;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class AstarAlgo {
 		
 		fScoreOpenNodes.put(start, start.getAdmissibleHeuristic());
 		
-		fScoreQuickMinFinder.insert(new HeapTree.HeapTreeObject(start.getAdmissibleHeuristic(), start));
+		fScoreQuickMinFinder.insert(new HeapTree.HeapTreeObject(getPrioHeuristic(start), start));
 		
 		AstarNode currentNeighbour;
 		
@@ -104,7 +104,7 @@ public class AstarAlgo {
 				}
 				fScoreOpenNodes.put(currentNeighbour, tentative_gScore + currentNeighbour.getAdmissibleHeuristic());
 				
-				fScoreQuickMinFinder.insert(new  HeapTree.HeapTreeObject(tentative_gScore + currentNeighbour.getAdmissibleHeuristic(), currentNeighbour));
+				fScoreQuickMinFinder.insert(new  HeapTree.HeapTreeObject(tentative_gScore + getPrioHeuristic(currentNeighbour), currentNeighbour));
 			}
 		}
 		
@@ -113,6 +113,12 @@ public class AstarAlgo {
 		
 	}
 	
+	//Make the heuristic prioritise being as small as possibe.
+	//That way, the A* algo checks the deepest promissing nodes first and gets the answer faster.
+	//This hack works if the answer is integer and there are many answers that are the same.
+	public static double getPrioHeuristic(AstarNode node) {
+		return node.getAdmissibleHeuristic() - 1.0/(1.0 * node.getAdmissibleHeuristic());
+	}
 	
 
 	//TreeMap<Long, AstarNode> minCostOfGettingNodeGetter = new TreeMap<Long, AstarNode>();

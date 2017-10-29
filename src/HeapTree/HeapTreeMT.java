@@ -2,7 +2,6 @@ package HeapTree;
 
 import java.util.ArrayList;
 
-import aStar.HeapTreeObject;
 
 public class HeapTreeMT {
 

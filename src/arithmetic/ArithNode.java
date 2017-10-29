@@ -3,7 +3,7 @@ package arithmetic;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import probs.prob23SegmentDiff;
+import probs2016.prob23SegmentDiff;
 
 public class ArithNode {
 
@@ -47,6 +47,16 @@ public class ArithNode {
 		System.out.println("expected: -3");
 		System.out.println("");
 		
+		//5x + 7
+		ArithNode eq1 = new ArithNode('+', seven, new ArithNode('*', x, five));
+		//5x +3
+		ArithNode eq2 = new ArithNode('+', new ArithNode(1), new ArithNode('*', x, new ArithNode(2)));
+		Hashtable<String, ArithNode> sub = new Hashtable<String, ArithNode>();
+		sub.put("x", eq1);
+		
+		ArithNode eq3 = eq2.substitute(sub);
+		
+		System.out.println("Expected: 10x + 15 Got: " + eq3.simplifiedCopy());
 		//arithNode equation = new arithNode('+', seven, new arithNode('*', x, five));
 	}
 
