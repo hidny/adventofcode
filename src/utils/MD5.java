@@ -36,7 +36,7 @@ public static String getHexFromMD5(String ID) {
 	}
 
 	
-	public static String getHexFromNumber(int number) {
+	private static String getHexFromNumber(int number) {
 		if(number < 10) {
 			return "" + (char)((int)'0' + number);
 		} else {
