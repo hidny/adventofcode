@@ -3,6 +3,8 @@ package probs2017;
 import java.io.File;
 import java.util.Scanner;
 
+
+import java.util.ArrayList;
 public class prob13 {
 
 	public static void main(String[] args) {
