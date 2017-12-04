@@ -31,7 +31,7 @@ public class prob13 {
 			 }
 			 
 			 System.out.println("input: " + input);
-			 prob13pos.setGoalAndPuzzleInput(31, 39, input);
+			 prob13pos.setPuzzleInput(input);
 			 
 			 prob13pos.main(null);
 			 

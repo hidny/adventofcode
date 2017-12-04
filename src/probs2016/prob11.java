@@ -3,8 +3,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import aStarPrio.AstarAlgo;
-import aStarPrio.AstarNode;
+import aStar.AstarAlgo;
+import aStar.AstarNode;
 
 //I could get prob 11 part 2 solved in under 8 seconds.
 //:)

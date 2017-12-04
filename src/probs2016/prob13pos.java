@@ -11,17 +11,17 @@ public class prob13pos implements aStar.AstarNode {
 	private int coordX;
 	private int coordY;
 	
-	public static int goalX;
-	public static int goalY;
 	public static long puzzleInput = 0;
 	
+	//Make map
 	public static void main(String args[]) {
 		for(int i=0; i<20; i++) {
 			System.out.print(countNumberOfBinaryOnes(i) % 2);
 		}
 		System.out.println();
 		
-		setGoalAndPuzzleInput(31, 39, 1362);
+		//31, 39,
+		setPuzzleInput( 1362);
 		
 		int MOVE_DIAG = 20;
 		
@@ -53,8 +53,9 @@ public class prob13pos implements aStar.AstarNode {
 	}
 	
 	@Override
-	public long getAdmissibleHeuristic() {
-		return Math.abs(goalX - coordX) + Math.abs(goalY - coordY);
+	public long getAdmissibleHeuristic(AstarNode goal) {
+		prob13pos goalTemp = (prob13pos)goal;
+		return Math.abs(goalTemp.coordX - coordX) + Math.abs(goalTemp.coordY - coordY);
 	}
 
 	@Override
@@ -102,9 +103,7 @@ public class prob13pos implements aStar.AstarNode {
 		}
 	}
 	
-	public static void setGoalAndPuzzleInput(int goalxin, int goalyin, long input) {
-		goalX = goalxin;
-		goalY = goalyin;
+	public static void setPuzzleInput(long input) {
 		puzzleInput = input;
 	}
 	

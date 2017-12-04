@@ -19,7 +19,7 @@ public class prob24 {
 		
 		try {
 			 in = new Scanner(new File("prob24in.txt"));
-			 boolean isPart2 = false;
+			 boolean isPart2 = true;
 			 
 			 //part1: 518
 			 //part2: 716
@@ -90,7 +90,7 @@ public class prob24 {
 					 if(set[i] &&set[j]) {
 						 
 						 start = new prob24pos(location[i][0], location[i][1]);
-						 prob24pos.setGoalAndPuzzleInput(location[j][0], location[j][1], mapOfDucks);
+						 prob24pos.setPuzzleInput(mapOfDucks);
 						 goal = new prob24pos(location[j][0], location[j][1]);
 						 path = AstarAlgo.astar(start, goal);
 						 dist[j][i] = path.size() - 1;

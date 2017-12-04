@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import aStar.AstarAlgo;
 import aStar.AstarNode;
 
 public class prob13part2 {
@@ -33,8 +32,8 @@ public class prob13part2 {
 			 }
 			 
 			 System.out.println("input: " + input);
-			 prob13pos.setGoalAndPuzzleInput(31, 39, input);
-			 
+			 prob13pos.setPuzzleInput(input);
+			 //31, 39, 
 			 prob13pos.main(null);
 			 
 			 prob13pos originalPos = new prob13pos(1, 1);

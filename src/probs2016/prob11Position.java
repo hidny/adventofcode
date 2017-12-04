@@ -2,9 +2,9 @@ package probs2016;
 
 import java.util.ArrayList;
 
-import aStarPrio.AstarNode;
+import aStar.AstarNode;
 
-public class prob11Position implements aStarPrio.AstarNode {
+public class prob11Position implements aStar.AstarNode {
 
 	private int elevatorFloor;
 	
@@ -116,19 +116,6 @@ public class prob11Position implements aStarPrio.AstarNode {
 		}
 	}
 	
-	public int hashCodeBad() {
-		int ret = elevatorFloor;
-		
-		for(int i=0; i<rtgName.size(); i++) {
-			ret = (int)(NUMBER_OF_FLOORS*ret +rtgGeneratorFloor.get(i));
-			ret = (int)(NUMBER_OF_FLOORS*ret +rtgMicrochipFloor.get(i));
-		}
-		
-		return ret;
-	}
-	//Note: I already take care of this in get neighbours...
-
-	
 	
 	private int hashCode = -1;
 	//This hash code takes advantage of symmetry to reduce the search space
@@ -199,8 +186,9 @@ public class prob11Position implements aStarPrio.AstarNode {
 	
 	
 	
+	//Since the goal is implied, ignore the param!
 	@Override
-	public long getAdmissibleHeuristic() {
+	public long getAdmissibleHeuristic(AstarNode goal) {
 		int ret = 0;
 		long lowestFloorObj = NUMBER_OF_FLOORS;
 		long secondLowestFloorObj = NUMBER_OF_FLOORS;
@@ -462,9 +450,7 @@ public class prob11Position implements aStarPrio.AstarNode {
 	}
 	
 	
-	//Note: if goals are too numerous, for some other Astar app,
-	//I'll have to implement isGoal()
-	//Not this time though... :)
+	
 	public prob11Position getGoal() {
 		prob11Position ret = this.hardCopy();
 		
@@ -488,7 +474,7 @@ public class prob11Position implements aStarPrio.AstarNode {
 		 for(int i=0; i<pathWithSymmetry.size(); i++) {
 
 			System.out.println("----------");
-			System.out.println("Estimate: " + pathWithSymmetry.get(i).getAdmissibleHeuristic());
+			System.out.println("Estimate: " + pathWithSymmetry.get(i).getAdmissibleHeuristic(null));
 			if(i==0) {
 				 System.out.println(currentRealPos);
 				

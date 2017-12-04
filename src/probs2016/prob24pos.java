@@ -11,8 +11,6 @@ public class prob24pos implements aStar.AstarNode {
 	private int coordX;
 	private int coordY;
 	
-	public static int goalX;
-	public static int goalY;
 	public static long puzzleInput = 0;
 	
 	public static char map[][];
@@ -27,8 +25,9 @@ public class prob24pos implements aStar.AstarNode {
 	}
 	
 	@Override
-	public long getAdmissibleHeuristic() {
-		return Math.abs(goalX - coordX) + Math.abs(goalY - coordY);
+	public long getAdmissibleHeuristic(aStar.AstarNode goal) {
+		prob24pos goalPos = (prob24pos)goal;
+		return Math.abs(goalPos.coordX - coordX) + Math.abs(goalPos.coordY - coordY);
 	}
 
 	@Override
@@ -71,9 +70,7 @@ public class prob24pos implements aStar.AstarNode {
 		}
 	}
 	
-	public static void setGoalAndPuzzleInput(int goalxin, int goalyin, char mapOfDucts[][]) {
-		goalX = goalxin;
-		goalY = goalyin;
+	public static void setPuzzleInput(char mapOfDucts[][]) {
 		map = mapOfDucts;
 	}
 	

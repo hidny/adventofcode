@@ -2,24 +2,20 @@ package practice;
 
 import java.util.ArrayList;
 
-import aStarPrio.AstarNode;
+import aStar.AstarNode;
 
 public class HexMaze implements AstarNode {
 
-	private boolean FirstRowSlanted = false;
+	private boolean FirstRowShifted = false;
 	
 	public static boolean wall[][];
-	
-	//TODO: this should be gone:
-		public static  int goali;
-		public static  int goalj;
 	
 	private int i;
 	private int j;
 	
 	//TODO: this should take in the goal node
 	@Override
-	public long getAdmissibleHeuristic() {
+	public long getAdmissibleHeuristic(AstarNode goal) {
 		
 		
 		// TODO Auto-generated method stub
@@ -34,9 +30,16 @@ public class HexMaze implements AstarNode {
 
 	@Override
 	public long getCostOfMove(AstarNode nextPos) {
-		return 1;
+		// TODO Auto-generated method stub
+		return 0;
 	}
-	
+	//To override the hash contains function, we need to override both toString and hashCode. Isn't Java great?
+	public String toString() {
+		return "(" + i + ", " + j + ")";
+	}
+	public int hashCode() {
+		return 0;
+	}
 	
 
 }
