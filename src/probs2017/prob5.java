@@ -7,6 +7,9 @@ import java.util.Scanner;
 
 public class prob5 {
 
+	//Took way too long to read the instructions :(
+	//  5   00:04:53   254      0   00:05:39   169      0
+	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
@@ -15,9 +18,30 @@ public class prob5 {
 			int count = 0;
 			boolean part2 = true;
 			String line = "";
+			ArrayList <String>lines = new ArrayList<String>();
 			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
+				String token[] = line.split(" ");
+				
+				lines.add(line);
+			}
+			
+			int progCounter = 0;
+			
+			
+			while(0 <= progCounter && progCounter < lines.size()) {
+				int offset = Integer.parseInt(lines.get(progCounter));
+				
+				int next = progCounter + offset;
+				
+				if(part2 && offset >=3) {
+					lines.set(progCounter, "" + (offset - 1));
+				} else {
+					lines.set(progCounter, "" + (offset + 1));
+				}
+				progCounter = next;
+				count++;
 			}
 			
 			System.out.println("Answer: " + count);

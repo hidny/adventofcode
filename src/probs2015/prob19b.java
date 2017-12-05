@@ -35,8 +35,8 @@ public class prob19b {
 				if(token.length == 3) {
 					rules.add(line);
 					
-					if(vars.getIndexFromLabel(token[0]) == -1) {
-						vars.addLabel(token[0], 0);
+					if(vars.get(token[0]) == -1) {
+						vars.set(token[0], 0);
 					}
 					String element;
 					int lastIndex = 0;
@@ -45,8 +45,8 @@ public class prob19b {
 							element = token[2].substring(lastIndex, i);
 							lastIndex = i;
 							
-							if(vars.getIndexFromLabel(element) == -1) {
-								vars.addLabel(element, 0);
+							if(vars.get(element) == -1) {
+								vars.set(element, 0);
 							}
 							
 						}
@@ -54,8 +54,8 @@ public class prob19b {
 					//Handle last var:
 					element = token[2].substring(lastIndex, token[2].length());
 					lastIndex = token[2].length();
-					if(vars.getIndexFromLabel(element) == -1) {
-						vars.addLabel(element, 0);
+					if(vars.get(element) == -1) {
+						vars.set(element, 0);
 					}
 					
 					numRules++;

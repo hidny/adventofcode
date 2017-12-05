@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.Scanner;
 import java.util.Set;
 
-import utils.Mapping;
 
 public class prob19 {
 

@@ -30,7 +30,7 @@ public class NumberTheory {
 	}
 	
 	//todo: get second half of divisors with first half.
-	public static long[] getFirstHalfDivisors(long n) {
+	private static long[] getFirstHalfDivisors(long n) {
 		int numDivisors = 0;
 		long sqrt = (long)Math.sqrt(n);
 		for(int i=1; i<=sqrt; i++) {

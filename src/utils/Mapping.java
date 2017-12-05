@@ -4,39 +4,42 @@ import java.util.ArrayList;
 
 public class Mapping {
 
+	//TODO: can't this mapping file be better
+	//with just get and set?
+	
 	private ArrayList <String> label = new ArrayList<String>();
 	
-	private ArrayList <Integer> number = new ArrayList<Integer>();
+	private ArrayList <Long> number = new ArrayList<Long>();
 	
-	public void Mapping() {
-		
-	}
 	
-	public void addLabel(String varName, int value) {
-		label.add(varName);
-		number.add(value);
-	}
-	
-	public int getNumberFromLabel(String varName) {
-		for(int i=0; i<label.size(); i++) {
-			if(label.get(i).equals(varName)) {
-				return number.get(i);
-			}
+	public void set(String varName, long value) {
+		if(getIndexFromLabel(varName) == -1) {
+			addLabel(varName, value);
+		} else {
+			number.set(getIndexFromLabel(varName), value);
 		}
-		
-		return -1;
 	}
 	
+	public long get(String varName) {
+		if(getIndexFromLabel(varName) != -1) {
+			return number.get(getIndexFromLabel(varName));
+		} else {
+			return -1;
+		}
+	}
+
 	public int size() {
 		return label.size();
 	}
 	
-	public String getLabel(int index) {
-		return label.get(index);
-	}
-	
-	public int getValue(int index) {
-		return number.get(index);
+	public String getLabel(long value) {
+		for(int i=0; i<label.size(); i++) {
+			if(number.get(i).equals(value)) {
+				return label.get(i);
+			}
+		}
+		
+		return "";
 	}
 	
 	public int getIndexFromLabel(String thislabel) {
@@ -48,4 +51,12 @@ public class Mapping {
 		
 		return -1;
 	}
+	
+	private void addLabel(String varName, long value) {
+		label.add(varName);
+		number.add(value);
+	}
+	
+	
+	
 }

@@ -12,19 +12,19 @@ public class prob16 {
 		try {
 			 in = new Scanner(new File("in2015/prob2015in16.txt"));
 			
-			boolean part2 = true;
+			boolean part2 = false;
 			
 			Mapping ticker = new Mapping();
-			ticker.addLabel("children", 3);
-			ticker.addLabel("cats", 7);
-			ticker.addLabel("samoyeds", 2);
-			ticker.addLabel("pomeranians", 3);
-			ticker.addLabel("akitas", 0);
-			ticker.addLabel("vizslas", 0);
-			ticker.addLabel("goldfish", 5);
-			ticker.addLabel("trees", 3);
-			ticker.addLabel("cars", 2);
-			ticker.addLabel("perfumes", 1);
+			ticker.set("children", 3);
+			ticker.set("cats", 7);
+			ticker.set("samoyeds", 2);
+			ticker.set("pomeranians", 3);
+			ticker.set("akitas", 0);
+			ticker.set("vizslas", 0);
+			ticker.set("goldfish", 5);
+			ticker.set("trees", 3);
+			ticker.set("cars", 2);
+			ticker.set("perfumes", 1);
 			
 			while(in.hasNextLine()) {
 				String line = in.nextLine();
@@ -47,17 +47,17 @@ public class prob16 {
 					
 					
 					if(part2 == true && (label.equals("cats") || label.equals("trees"))) {
-						if(ticker.getNumberFromLabel(label) >= number) {
+						if(ticker.get(label) >= number) {
 							match = false;
 							break;
 						}
 					} else if(part2 == true && (label.equals("pomeranians") || label.equals("goldfish"))) {
-						if(ticker.getNumberFromLabel(label) <= number) {
+						if(ticker.get(label) <= number) {
 							match = false;
 							break;
 						}
 					} else {
-						if(ticker.getNumberFromLabel(label) != number) {
+						if(ticker.get(label) != number) {
 							match = false;
 							break;
 						}
