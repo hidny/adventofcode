@@ -5,7 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class prob7 {
+public class prob7part2 {
 
 	public static void main(String[] args) {
 		Scanner in;
@@ -13,11 +13,9 @@ public class prob7 {
 			 in = new Scanner(new File("in2017/prob2017in7.txt"));
 			
 			int count = 0;
-			boolean part2 = true;
 			String line = "";
 			ArrayList <String>lines = new ArrayList<String>();
 			
-			prob7obj temp;
 			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
@@ -39,7 +37,7 @@ public class prob7 {
 					
 				}
 				
-				temp = new prob7obj(token[0], num, onTop);
+				new prob7obj(token[0], num, onTop);
 				
 				
 				
@@ -47,7 +45,6 @@ public class prob7 {
 
 			prob7obj.checkWeights();
 			
-			System.out.println("Answer: " + count);
 			in.close();
 			
 		} catch(Exception e) {

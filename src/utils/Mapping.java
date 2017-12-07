@@ -17,7 +17,6 @@ public class Mapping {
 		if(getIndexFromLabel(varName) == -1) {
 			addLabel(varName, value);
 		} else {
-			System.out.println("hello" + varName);
 			number.set(getIndexFromLabel(varName), value);
 		}
 	}
@@ -27,6 +26,14 @@ public class Mapping {
 			return number.get(getIndexFromLabel(varName));
 		} else {
 			return -1;
+		}
+	}
+	
+	public boolean has(String varName) {
+		if(getIndexFromLabel(varName) != -1) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 

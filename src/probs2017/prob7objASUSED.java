@@ -5,20 +5,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class prob7obj {
+public class prob7objASUSED {
 
 	
 	private ArrayList<String> onTop;
 	private int weight;
 	private String label;
 	
-	public static ArrayList<prob7obj> list = new ArrayList<prob7obj>();
+	public static ArrayList<prob7objASUSED> list = new ArrayList<prob7objASUSED>();
 	
 	
-	private static int answerStackWeight = -1;
-	private static int answer = -1;
-	
-	public prob7obj(String label, int num, ArrayList <String> onTop) {
+	public prob7objASUSED(String label, int num, ArrayList <String> onTop) {
 		this.weight = num;
 		this.onTop = onTop;
 		this.label = label;
@@ -28,13 +25,13 @@ public class prob7obj {
 	
 
 	public static  void checkWeights() {
-		prob7obj current;
+		prob7objASUSED current;
 		int weightTop = 0;
 		int currentWeightTop = 0;
 		for(int i=0; i<list.size(); i++) {
 			current = list.get(i);
 			weightTop = 0;
-			//System.out.println(list.get(i).label + ":");
+			System.out.println(list.get(i).label + ":");
 			
 			for(int j=0; j<current.onTop.size(); j++) {
 				currentWeightTop = getObj(current.onTop.get(j)).getWeight();
@@ -42,48 +39,15 @@ public class prob7obj {
 					weightTop = currentWeightTop;
 				} else if(currentWeightTop == weightTop) {
 					//good
-					//System.out.println("good");
+					System.out.println("good");
 				} else if(currentWeightTop != weightTop){
-					//System.out.println(getObj(current.onTop.get(j)).label);
-					if(current.onTop.size() > 2 ) {
-						int thirdWeight = 0;
-						if( j==1) {
-							thirdWeight = getObj(current.onTop.get(j+1)).getWeight();
-						} else if(j>1) {
-							thirdWeight = getObj(current.onTop.get(j+1)).getWeight();
-						}
-						
-						int potentialAnswer = 0;
-						
-						if(thirdWeight == currentWeightTop) {
-							System.out.println("Stack weight of " + getObj(current.onTop.get(0)).label + " is " + weightTop + " but should be " + thirdWeight);
-							
-							int diff = weightTop - thirdWeight;
-							potentialAnswer =  (getObj(current.onTop.get(0)).weight - diff);
-							System.out.println("Weight of " + getObj(current.onTop.get(0)).label + " is " + getObj(current.onTop.get(0)).weight + " but should be " + potentialAnswer);
-						} else {
-							System.out.println("Stack weight of " + getObj(current.onTop.get(j)).label + " is " + currentWeightTop + " but should be " + thirdWeight);
-							
-							int diff = currentWeightTop - thirdWeight;
-							potentialAnswer = ( getObj(current.onTop.get(j)).weight - diff);
-							System.out.println("Weight of " + getObj(current.onTop.get(j)).label + " is " + getObj(current.onTop.get(j)).weight + " but should be " + potentialAnswer);
-							
-							
-						}
-						System.out.println();
-						
-						if(answer == -1 || answerStackWeight > thirdWeight) {
-							answerStackWeight = thirdWeight;
-							answer = potentialAnswer;
-						}
-					}
+					System.out.println(getObj(current.onTop.get(j)).label);
+					System.out.println("Answer: " + currentWeightTop + " or " + weightTop);
 					
 				}
 			}
 			
 		}
-		
-		System.out.println("Final answer: " + answer);
 		
 		//604 - 8 = 596
 		//I manually switched mfzpvpj from 604 to 596 and saw there was no problems!
@@ -126,7 +90,7 @@ public class prob7obj {
 		return sum;
 	}
 	
-	public static prob7obj getObj(String label) {
+	public static prob7objASUSED getObj(String label) {
 		//System.out.println("Hello");
 		for(int i=0; i<list.size(); i++) {
 			//System.out.println(list.get(i).label);
