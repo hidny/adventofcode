@@ -53,7 +53,7 @@ public class prob7obj {
 		//I did a lot of things manually... :(
 		//I'll need to clean this up later. (I think I'll keep this copy for prosperity)
 		
-		//it's the with that weights if you include its subcomponents 2162
+		
 		//2170 or 2162 is smallest (is the smallest contradictory combo)
 		//and 2170 is uniquely bad out of all 2162 weights (I check that there was more than 1 for
 		//zuahdoy (14) -> gsqcet, mfzpvpj, ygmtia, nvold
