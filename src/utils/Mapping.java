@@ -7,15 +7,17 @@ public class Mapping {
 	//TODO: can't this mapping file be better
 	//with just get and set?
 	
-	private ArrayList <String> label = new ArrayList<String>();
+	public ArrayList <String> label = new ArrayList<String>();
 	
-	private ArrayList <Long> number = new ArrayList<Long>();
+	public ArrayList <Long> number = new ArrayList<Long>();
+	
 	
 	
 	public void set(String varName, long value) {
 		if(getIndexFromLabel(varName) == -1) {
 			addLabel(varName, value);
 		} else {
+			System.out.println("hello" + varName);
 			number.set(getIndexFromLabel(varName), value);
 		}
 	}

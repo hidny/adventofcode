@@ -15,10 +15,37 @@ public class prob7 {
 			int count = 0;
 			boolean part2 = true;
 			String line = "";
+			ArrayList <String>lines = new ArrayList<String>();
+			
+			prob7obj temp;
 			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
+				String token[] = line.split(" ");
+				lines.add(line);
+				
+				
+				int num = Integer.parseInt(token[1].substring(1, token[1].length() -1));
+				ArrayList <String> onTop = new ArrayList<String>();
+				String current;
+				for(int i=3; i<token.length; i++) {
+					current = token[i];
+					if(token[i].endsWith(",")) {
+						current = current.substring(0, current.length() -1);
+					}
+					
+					
+					onTop.add(current);
+					
+				}
+				
+				temp = new prob7obj(token[0], num, onTop);
+				
+				
+				
 			}
+
+			prob7obj.checkWeights();
 			
 			System.out.println("Answer: " + count);
 			in.close();
