@@ -1,4 +1,4 @@
-package utilsFromProjectEuler;
+package utilsPE;
 
 public class GCD {
 	public static long getGCD(long a, long b) {

@@ -120,7 +120,7 @@ public class prob21 {
 							}
 						}
 						
-						combo = utilsFromProjectEuler.Combination.getNextCombination(combo);
+						combo = utilsPE.Combination.getNextCombination(combo);
 					}
 					
 					if(j < armor.length) {

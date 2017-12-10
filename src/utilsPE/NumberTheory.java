@@ -1,4 +1,4 @@
-package utilsFromProjectEuler;
+package utilsPE;
 
 public class NumberTheory {
 	public static long[] getAllDivisors(long n) {

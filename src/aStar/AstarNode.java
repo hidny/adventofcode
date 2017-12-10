@@ -16,5 +16,6 @@ public interface AstarNode {
 	//To override the hash contains function, we need to override both toString and hashCode. Isn't Java great?
 	public String toString();
 	public int hashCode();
+	public boolean  equals (Object object);
 	
 }

@@ -27,7 +27,7 @@ public class prob7obj {
 	}
 	
 
-	public static  void checkWeights() {
+	public static  void checkWeightsForPart2() {
 		prob7obj current;
 		int weightTop = 0;
 		int currentWeightTop = 0;

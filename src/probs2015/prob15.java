@@ -48,7 +48,7 @@ public class prob15 {
 					temp = getIntArrayFromCombo(combo, numIngredients);
 				}
 				
-				combo = utilsFromProjectEuler.Combination.getNextCombination(combo);
+				combo = utilsPE.Combination.getNextCombination(combo);
 			}
 			
 			for(int i=0; i<temp.length; i++) {

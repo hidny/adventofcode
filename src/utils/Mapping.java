@@ -25,7 +25,7 @@ public class Mapping {
 		if(getIndexFromLabel(varName) != -1) {
 			return number.get(getIndexFromLabel(varName));
 		} else {
-			return -1;
+			return 0;
 		}
 	}
 	

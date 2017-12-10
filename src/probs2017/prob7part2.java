@@ -43,7 +43,7 @@ public class prob7part2 {
 				
 			}
 
-			prob7obj.checkWeights();
+			prob7obj.checkWeightsForPart2();
 			
 			in.close();
 			

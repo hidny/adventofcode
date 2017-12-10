@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 import aStar.AstarAlgo;
 import aStar.AstarNode;
-import utilsFromProjectEuler.Permutation;
+import utilsPE.Permutation;
 
 public class prob24 {
 

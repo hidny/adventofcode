@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 import utils.Mapping;
-import utilsFromProjectEuler.Fraction;
+import utilsPE.Fraction;
 
 public class prob19b {
 
@@ -119,7 +119,7 @@ public class prob19b {
 				System.out.println();
 			}
 			
-			Fraction matrixAnswer[] =  utilsFromProjectEuler.Matrix.solveMatrixSlow(matrix);
+			Fraction matrixAnswer[] =  utilsPE.Matrix.solveMatrixSlow(matrix);
 			
 			for(int i=0; i<vars.size(); i++) {
 				System.out.println( "( " + vars.getLabel(i) + ") = " +matrixAnswer[i] + "\t");

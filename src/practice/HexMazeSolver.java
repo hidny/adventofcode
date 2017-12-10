@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import aStar.AstarNode;
+
 public class HexMazeSolver {
 
 	//TODO: use this as an excuse to refine your A* algo
@@ -14,7 +16,7 @@ public class HexMazeSolver {
 		
 		Scanner in;
 		try {
-			 in = new Scanner(new File("practice/hex1.txt"));
+			 in = new Scanner(new File("practice/hex7.txt"));
 			
 			int count = 0;
 			boolean part2 = true;
@@ -23,39 +25,77 @@ public class HexMazeSolver {
 			ArrayList<String> lines = new ArrayList<String>();
 			while(in.hasNextLine()) {
 				lines.add( in.nextLine());
-
+				
+				
 				
 			}
 			
 			
-			boolean maze[][] = new boolean[lines.size()][lines.get(0).length()];
+			boolean wall[][] = new boolean[lines.size()][lines.get(0).length()];
 			
-			int starti;
-			int startj;
+			int starti = -1;
+			int startj = -1;
 			
-			int endi;
-			int endj;
+			int endi = -1;
+			int endj = -1;
+			
+			
+			//Idea just space it out!
+			
+			//TODO
+			
+			boolean firstRowShifted = false;
+			
+			if(lines.get(0).charAt(0) == '>') {
+				firstRowShifted = true;
+			}
 			
 			for(int i=0; i<lines.size(); i++) {
-				for(int j=0; j<lines.get(i).length(); j++) {
+				int j=0;
+				if(lines.get(i).charAt(0) == '>') {
+					j=1;
+				}
+				int temp = (j + i) % 2;
+				if(temp == 1 && firstRowShifted == false) {
+					System.out.println("WARNING1");
+				} else if(temp == 0 && firstRowShifted == true){
+					System.out.println("WARNING2");
+				}
+				
+				
+				for(; j<lines.get(i).length(); j+=2) {
 
 					if(lines.get(i).charAt(j) == '#') {
-						maze[i][j] = false;
+						wall[i][j/2] = true;
 						
 					} else if(lines.get(i).charAt(j) == 's' || lines.get(i).charAt(j) == 'S') {
 						starti = i;
-						startj = j;
+						startj = j/2;
 					}else if (lines.get(i).charAt(j) == 'e' || lines.get(i).charAt(j) == 'E' ) {
 						endi = i;
-						endj = j;
+						endj = j/2;
 					}
 				}
 			}
 			
 			
+			HexMaze start = new HexMaze(wall, starti, startj, firstRowShifted);
+			HexMaze goal = new HexMaze(wall, endi, endj, firstRowShifted);
+			
+			start.print(endi, endj);
+			
+			//hex7 expects 2
+			//hex6 expects 26
+			//hex5 expects 11
+			//hex4 expect 144
+			//hex3 expect 26
+			ArrayList<aStar.AstarNode> answer = aStar.AstarAlgo.astar(start, goal);
 			
 			
-			System.out.println("Answer: " + count);
+			
+			//int numSteps = answer.size() - 1;
+			
+			System.out.println("Answer: " + aStar.AstarAlgo.astarSize(start, goal));
 			in.close();
 			
 		} catch(Exception e) {

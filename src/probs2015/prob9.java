@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import utilsFromProjectEuler.Permutation;
+import utilsPE.Permutation;
 
 public class prob9 {
 

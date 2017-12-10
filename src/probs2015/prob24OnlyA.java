@@ -85,7 +85,7 @@ public class prob24OnlyA {
 									}
 									
 								}
-								comboSecond = utilsFromProjectEuler.Combination.getNextCombination(comboSecond);
+								comboSecond = utilsPE.Combination.getNextCombination(comboSecond);
 							}
 							
 							
@@ -93,7 +93,7 @@ public class prob24OnlyA {
 						
 						
 					}
-					comboFirst = utilsFromProjectEuler.Combination.getNextCombination(comboFirst);
+					comboFirst = utilsPE.Combination.getNextCombination(comboFirst);
 				}
 			}
 			

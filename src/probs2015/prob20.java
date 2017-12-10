@@ -29,7 +29,7 @@ public class prob20 {
 			long divisors[];
 			
 			for(long i=1; i<LIMIT_SUM; i++) {
-				divisors = utilsFromProjectEuler.NumberTheory.getAllDivisors(i);
+				divisors = utilsPE.NumberTheory.getAllDivisors(i);
 				
 				int sum = 0;
 				for(int j=0; j<divisors.length; j++) {

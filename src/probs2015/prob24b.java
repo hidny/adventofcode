@@ -63,7 +63,7 @@ public class prob24b {
 					
 
 					if(quantumEntanglement > answer && answer != -1) {
-						comboFirst = utilsFromProjectEuler.Combination.getNextCombination(comboFirst);
+						comboFirst = utilsPE.Combination.getNextCombination(comboFirst);
 						continue;
 					}
 					
@@ -135,24 +135,24 @@ public class prob24b {
 													 if(answer == -1 || quantumEntanglement < answer) {
 														 answer = quantumEntanglement;
 														 
-														 comboFirst = utilsFromProjectEuler.Combination.getNextCombination(comboFirst);
+														 comboFirst = utilsPE.Combination.getNextCombination(comboFirst);
 														 continue NEXT_ENTANGLE;
 													 }
 												}
 												
-												comboThird = utilsFromProjectEuler.Combination.getNextCombination(comboThird);
+												comboThird = utilsPE.Combination.getNextCombination(comboThird);
 											}
 										}
 										
 									} else if(answer == -1 || quantumEntanglement < answer) {
 										answer = quantumEntanglement;
 										
-										comboFirst = utilsFromProjectEuler.Combination.getNextCombination(comboFirst);
+										comboFirst = utilsPE.Combination.getNextCombination(comboFirst);
 										continue NEXT_ENTANGLE;
 									}
 									
 								}
-								comboSecond = utilsFromProjectEuler.Combination.getNextCombination(comboSecond);
+								comboSecond = utilsPE.Combination.getNextCombination(comboSecond);
 							}
 							
 							
@@ -160,7 +160,7 @@ public class prob24b {
 						
 						
 					}
-					comboFirst = utilsFromProjectEuler.Combination.getNextCombination(comboFirst);
+					comboFirst = utilsPE.Combination.getNextCombination(comboFirst);
 				}
 			}
 			

@@ -84,7 +84,7 @@ public class prob17 {
 						}
 						
 						
-						bucketCombo = utilsFromProjectEuler.Combination.getNextCombination(bucketCombo);
+						bucketCombo = utilsPE.Combination.getNextCombination(bucketCombo);
 					}
 					
 					part2MinNumBucket++;

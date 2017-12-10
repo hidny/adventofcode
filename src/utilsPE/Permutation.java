@@ -1,4 +1,4 @@
-package utilsFromProjectEuler;
+package utilsPE;
 
 public class Permutation {
 		  //Another function for the permutation of objects in general. (not just digits)

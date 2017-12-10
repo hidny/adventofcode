@@ -12,8 +12,6 @@ public class prob7part1 {
 		try {
 			 in = new Scanner(new File("in2017/prob2017in7.txt"));
 			
-			int count = 0;
-			boolean part2 = true;
 			String line = "";
 			ArrayList <String>lines = new ArrayList<String>();
 		

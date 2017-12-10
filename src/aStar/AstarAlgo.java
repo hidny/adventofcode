@@ -9,6 +9,15 @@ import HeapTree.HeapTreeMT;
 
 public class AstarAlgo {
 
+	public static int astarSize(AstarNode start, AstarNode goal) {
+		 ArrayList<AstarNode>  temp = astar(start, goal);
+		 
+		 if(temp == null) {
+			 return -1;
+		 } else {
+			 return temp.size() - 1;
+		 }
+	}
 	
 	//From pseudo code of:
 	//https://en.wikipedia.org/wiki/A*_search_algorithm

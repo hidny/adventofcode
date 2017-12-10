@@ -1,4 +1,4 @@
-package utilsFromProjectEuler;
+package utilsPE;
 import java.math.BigInteger;
 import java.util.Comparator;
 
