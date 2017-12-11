@@ -3,7 +3,7 @@ package practice;
 import java.io.File;
 import java.util.Scanner;
 
-public class prob16 {
+public class probPractice {
 
 	public static void main(String[] args) {
 		Scanner in;
