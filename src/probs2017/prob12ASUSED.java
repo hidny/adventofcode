@@ -7,24 +7,25 @@ import java.util.Scanner;
 
 import utils.Mapping;
 
-public class prob12 {
+public class prob12ASUSED {
 
 	public static void main(String[] args) {
 		Scanner in;
 		try {
 			 in = new Scanner(new File("in2017/prob2017in12.txt"));
 			
-			int BIG_NUM = 10000;
-			 
-			int countPart1 = 0;
+			int count = 0;
 			boolean part2 = false;
 			String line = "";
+			Mapping dict = new Mapping();
+			ArrayList <String>lines = new ArrayList<String>();
 			
-			boolean exists[] = new boolean[BIG_NUM];
-			boolean array[][] = new boolean[BIG_NUM][BIG_NUM];
+			boolean exists[] = new boolean[10000];
+			boolean array[][] = new boolean[10000][10000];
 			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
+				lines.add(line);
 				String token[] = line.split(" ");
 				
 				int firstNum = Integer.parseInt(token[0]);
@@ -38,40 +39,34 @@ public class prob12 {
 				
 			}
 			
-			boolean touching[] = new boolean[BIG_NUM];
-			boolean touched[] = new boolean[BIG_NUM];
+			boolean touching[] = new boolean[10000];
+			boolean touched[] = new boolean[10000];
 			
 			boolean progress;
 			
 			int groups = 0;
 			
-			//While loop that goes through the index of every node checking for as yet untouched groups:
 			int startIndex = 0;
-			while(startIndex < BIG_NUM) {
-				
-				//Check if startIndex is an element of an untouched group: (Part 1 is for the size of the group that has node 0)
+			while(startIndex < 10000) {
 				if(touched[startIndex] == false && exists[startIndex]) {
-					//Find all elements of current group:
 					for(int i=0; i<touching.length; i++ ) {
 						touching[i] = false;
 					}
-					
-					countPart1++;
 					touching[startIndex] =true;
 					progress = true;
 					
-					while(progress == true){
+					for(int repeat =0; repeat<100000 && progress == true; repeat++){
 						progress = false;
 						for(int i=0; i<10000; i++) {
 							if(touching[i]) {
 								
-								for(int j=0; j<BIG_NUM; j++) {
+								for(int j=0; j<10000; j++) {
 									if(touching[j] == false) {
-										if(array[i][j] ) {
+										if((array[i][j] || array[j][i])) {
 											touching[j] = true;
 											touched[j] = true;
 											progress = true;
-											countPart1++;
+											count++;
 										}
 									}
 								}
@@ -81,22 +76,25 @@ public class prob12 {
 						
 						
 					}
-					System.out.println(countPart1);
+					System.out.println(count);
 					if(part2 == false) {
 						//151
-						System.out.println("Answer: " + countPart1);
+						System.out.println("Answer: " + count);
 						System.exit(1);
 					}
-					countPart1 = 0;
+					count = 0;
 					groups++;
-					
-					//End find all elements of current group:
 					
 				}
 				
 				startIndex++;
 			}
 			
+			for(int i=0; i<10000; i++) {
+				if(touching[i]) {
+					count++;
+				}
+			}
 			//186
 			System.out.println("Answer2: " + groups);
 			
