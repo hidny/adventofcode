@@ -13,11 +13,12 @@ public class prob12 {
 		Scanner in;
 		try {
 			 in = new Scanner(new File("in2017/prob2017in12.txt"));
+
 			
 			int BIG_NUM = 10000;
 			 
 			int countPart1 = 0;
-			boolean part2 = false;
+			boolean part2 = true;
 			String line = "";
 			
 			boolean exists[] = new boolean[BIG_NUM];

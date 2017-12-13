@@ -6,7 +6,7 @@ import utils.Mapping;
 
 import java.util.*;
 
-public class prob13 {
+public class prob13ASUSED {
 
 	public static void main(String[] args) {
 		Scanner in;
@@ -14,8 +14,13 @@ public class prob13 {
 			 in = new Scanner(new File("in2017/prob2017in13.txt"));
 			
 			int count = 0;
+			boolean part2 = true;
 			String line = "";
 			
+
+			LinkedList queue = new LinkedList();
+			Stack stack = new Stack();
+			HashSet set = new HashSet();
 			
 			Mapping dict = new Mapping();
 			ArrayList <String>lines = new ArrayList<String>();
@@ -31,6 +36,7 @@ public class prob13 {
 				
 			}
 			
+			//92544
 			int answerb=0;
 			for(; true; answerb++) {
 				count =0;
@@ -41,7 +47,13 @@ public class prob13 {
 					int location = Integer.parseInt(dict.label.get(i)) +answerb;
 					
 					long scannerLocation = (location) % (2*dict.number.get(i)-2);
-					
+					if(scannerLocation < dict.number.get(i)) {
+						//do nothing
+					} else {
+						//scannerLocation = 2*dict.number.get(i) - 2 - scannerLocation;
+					}
+					//System.out.println("lcoation:" + location);
+					//System.out.println("scannerLocation" + scannerLocation);
 					
 					if(scannerLocation == 0) {
 						//System.out.println(location + "x" + dict.number.get(i));
