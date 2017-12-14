@@ -31,23 +31,30 @@ public class prob13 {
 				
 			}
 			
+			boolean hitScanner;
+			
 			int answerb=0;
 			for(; true; answerb++) {
 				count =0;
 				
+				hitScanner = false;
+				
 				for(int i=0; i<dict.size(); i++) {
 					
 					
-					int location = Integer.parseInt(dict.label.get(i)) +answerb;
+					int location = Integer.parseInt(dict.label.get(i));
 					
-					long scannerLocation = (location) % (2*dict.number.get(i)-2);
+					long scannerLocation = (location  + answerb ) % (2*dict.number.get(i)-2);
 					
 					
 					if(scannerLocation == 0) {
 						//System.out.println(location + "x" + dict.number.get(i));
 						
 						count += location * dict.number.get(i);
-						if(answerb > 0 && count > 0) {
+
+						hitScanner = true;
+						
+						if(answerb > 0) {
 							break;
 						}
 					}
@@ -55,12 +62,12 @@ public class prob13 {
 				if(answerb==0) {
 					System.out.println("Answer part 1: " + count);
 				}
-				if(count == 0) {
+				if(hitScanner == false) {
 					break;
 				}
 			}
 			
-			System.out.println("Answer part 2: " + answerb);;
+			System.out.println("Answer part 2: " + answerb);
 			
 			in.close();
 			

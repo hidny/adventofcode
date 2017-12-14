@@ -10,7 +10,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob14 {
+public class prob14ASUSED {
 
 	public static void main(String[] args) {
 		Scanner in;
@@ -18,24 +18,31 @@ public class prob14 {
 			 in = new Scanner(new File("in2017/prob2017in14.txt"));
 			
 			int count = 0;
+			boolean part2 = true;
 			String lineIn = "";
 			
+			LinkedList queue = new LinkedList();
+			Stack stack = new Stack();
+			HashSet set = new HashSet();
+			
+			Mapping dict = new Mapping();
 
 			int array[] = new int[256];
 			
 			while(in.hasNextLine() ) {
 				lineIn = in.nextLine();
 				
+				//TODO
 				for(int num=0; num<128; num++) {
 					array = new int[256];
 					
 					String lineIt = lineIn + "-" + num;
 					
-					//TODO: PUT INTO FUNCTION
 					for(int i=0; i<array.length; i++) {
 						array[i] = i;
 					}
 					
+					System.out.println(lineIt);
 					
 					int curPos = 0;
 					int skipSize = 0;
@@ -43,6 +50,7 @@ public class prob14 {
 					for(int b=0; b<64; b++) {
 						for(int i=0; i<lineIt.length(); i++) {
 							int length = (int)(lineIt.charAt(i));
+							//System.out.print(length + ",");
 							
 							array = reverse(array, curPos, length);
 							curPos += length  + skipSize;
@@ -62,6 +70,8 @@ public class prob14 {
 						}
 					}
 					
+					//System.out.println();
+					
 					
 					int arrayDense[] = new int[16];
 					for(int i=0; i<16; i++) {
@@ -74,17 +84,27 @@ public class prob14 {
 							
 							
 						}
+						//System.out.println(arrayDense[i]);
 					}
 					
-					//TODO: END PUT INTO FUNCTION
-					
+					//int temp2 = 42;
+					String ret = "";
+					for(int i=0; i<16; i++) {
+						int temp = arrayDense[i];
+						
+						ret += getHexFromNumber(temp/16);
+						
+						
+						ret += getHexFromNumber(temp % 16);
+					}
 					System.out.println("TEST:");
 					printBin(arrayDense[0]);
 					for(int i=0; i<16; i++) {
 						count+=countOnes(arrayDense[i]);
 					}
 					
-					
+					//System.out.println(ret);
+					//2b0c9cc0449507a0 db 3b ab d5 7a d9 e8 d8
 				}
 			}
 			
@@ -98,8 +118,6 @@ public class prob14 {
 		}
 	}
 	
-	
-	//TODO: PUT INTO OTHER UTILS CLASS
 	public static int[] reverse(int a[], int curPos, int length) {
 		int temp[] = new int[length];
 		for(int i=0; i<temp.length; i++) {
@@ -113,8 +131,20 @@ public class prob14 {
 		return a;
 		
 	}
-	//TODO: PUT INTO OTHER UTILS CLASS
+	
+	
+
+	private static String getHexFromNumber(int number) {
+		if(number < 10) {
+			return "" + (char)((int)'0' + number);
+		} else {
+			return "" + (char)((int)'a' + number - 10);
+		}
+	}
+	
 	private static void printBin(int num) {
+		
+		int mult = 1;
 		
 		String ret = "";
 		for(int i=128; i>0; i/=2) {
@@ -132,6 +162,7 @@ public class prob14 {
 	private static int countOnes(int num) {
 		int ret = 0;
 		
+		int mult = 1;
 		
 		for(int i=128; i>0; i/=2) {
 			if(num >= i) {
