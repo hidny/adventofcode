@@ -10,7 +10,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob15 {
+public class prob15bASUSED {
 
 	public static void main(String[] args) {
 		Scanner in;
@@ -21,7 +21,11 @@ public class prob15 {
 			boolean part2 = true;
 			String line = "";
 			
+			LinkedList queue = new LinkedList();
+			Stack stack = new Stack();
+			HashSet set = new HashSet();
 			
+			Mapping dict = new Mapping();
 			ArrayList <String>lines = new ArrayList<String>();
 		
 			int genA = 65;
@@ -47,10 +51,17 @@ public class prob15 {
 			int MOD = (int)Math.pow(2,  16);
 			
 			//2467
-			for(int i=0; i<40000000; i++) {
+			for(int i=0; i<5000000; i++) {
 				currentA = (16807*currentA) % 2147483647;
 				currentB = (48271*currentB) % 2147483647;
 				
+				while(currentA % 4 != 0) {
+					currentA = (16807*currentA) % 2147483647;
+				}
+				
+				while(currentB % 8 != 0) {
+					currentB = (48271*currentB) % 2147483647;
+				}
 				
 				if(currentA % MOD == currentB % MOD) {
 					count++;

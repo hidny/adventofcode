@@ -10,7 +10,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob15 {
+public class prob15ASUSED {
 
 	public static void main(String[] args) {
 		Scanner in;
@@ -21,7 +21,11 @@ public class prob15 {
 			boolean part2 = true;
 			String line = "";
 			
+			LinkedList queue = new LinkedList();
+			Stack stack = new Stack();
+			HashSet set = new HashSet();
 			
+			Mapping dict = new Mapping();
 			ArrayList <String>lines = new ArrayList<String>();
 		
 			int genA = 65;

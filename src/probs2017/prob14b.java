@@ -123,6 +123,7 @@ public class prob14b {
 							
 							for(int starty=y-1; starty<=y+1; starty++) {
 								for(int startx=x-1; startx<=x+1; startx++) {
+									//Don't include itself
 									if(starty == y && startx == x) {
 										continue;
 									}
