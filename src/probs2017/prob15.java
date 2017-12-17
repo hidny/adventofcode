@@ -18,7 +18,6 @@ public class prob15 {
 			 in = new Scanner(new File("in2017/prob2017in15.txt"));
 			
 			int count = 0;
-			boolean part2 = true;
 			String line = "";
 			
 			
@@ -26,6 +25,9 @@ public class prob15 {
 		
 			int genA = 65;
 			int genB = 8921;
+			
+			int MOD_GEN = 2147483647;
+			int NUM_ITER = 40000000;
 			
 			while(in.hasNextLine()) {
 				
@@ -47,9 +49,9 @@ public class prob15 {
 			int MOD = (int)Math.pow(2,  16);
 			
 			//2467
-			for(int i=0; i<40000000; i++) {
-				currentA = (16807*currentA) % 2147483647;
-				currentB = (48271*currentB) % 2147483647;
+			for(int i=0; i<NUM_ITER; i++) {
+				currentA = (16807*currentA) % MOD_GEN;
+				currentB = (48271*currentB) % MOD_GEN;
 				
 				
 				if(currentA % MOD == currentB % MOD) {
