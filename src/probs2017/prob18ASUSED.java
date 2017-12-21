@@ -19,7 +19,7 @@ public class prob18ASUSED {
 			in = new Scanner(new File("in2017/prob2017in18.txt"));
 			
 			int count = 0;
-			boolean part2 = true;
+			boolean part2 = false;
 			String line = "";
 
 			LinkedList queue = new LinkedList();
