@@ -10,7 +10,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob22 {
+public class prob22bASUSED {
 
 	public static void main(String[] args) {
 		Scanner in;
@@ -29,9 +29,15 @@ public class prob22 {
 			ArrayList <String>lines = new ArrayList<String>();
 			
 			
+			//It barely fit lol!
 			int LIMIT = 20000;
-			boolean table[][] = new boolean[LIMIT][LIMIT];
+			int table[][] = new int[LIMIT][LIMIT];
 			
+			
+			int CLEAN = 0;
+			int WEAK = 1;
+			int INF = 2;
+			int FLAG = 3;
 			
 			//dir: 0 up
 			//1 right
@@ -49,10 +55,10 @@ public class prob22 {
 			for(int i=0; i<lines.size(); i++) {
 				for(int j=0; j<lines.get(i).length(); j++) {
 					if(lines.get(i).charAt(j) == '#') {
-						table[i][j] = true;
+						table[i][j] = INF;
 						origCount++;
 					} else {
-						table[i][j] = false;
+						table[i][j] = CLEAN;
 					}
 				}
 			}
@@ -62,18 +68,25 @@ public class prob22 {
 			
 			int dir =0;
 			
-			for(int burst=0; burst<10000; burst++) {
+			for(int burst=0; burst<10000000; burst++) {
 				
-				if(table[posY][posX] == true ) {
-					dir = (4 + dir + 1) % 4;
-				} else {
+				if(table[posY][posX] == CLEAN) {
 					dir = (4 + dir - 1) % 4;
+				} else if(table[posY][posX] == WEAK) {
 					
+				} else if(table[posY][posX] == INF) {
+					dir = (4 + dir + 1) % 4;
+				} else if(table[posY][posX] == FLAG) {
+					dir = (4 + dir + 2) % 4;
+				} else {
+					System.out.println("AAHH!");
+					System.exit(1);
 				}
-				if(table[posY][posX] == false) {
+				
+				if(table[posY][posX] == WEAK) {
 					count++;
 				}
-				table[posY][posX] = !table[posY][posX];
+				table[posY][posX] =( table[posY][posX]+1) %4;
 				
 				if(dir == 0) {
 					posY--;
