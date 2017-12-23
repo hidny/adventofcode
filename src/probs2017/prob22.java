@@ -4,6 +4,7 @@ import java.io.File;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
@@ -12,6 +13,9 @@ import utils.Mapping;
 
 public class prob22 {
 
+	//https://en.wikipedia.org/wiki/Langton%27s_ant
+	
+	//The right to do this was with Hashes...
 	public static void main(String[] args) {
 		Scanner in;
 		try {
@@ -32,6 +36,7 @@ public class prob22 {
 			int LIMIT = 20000;
 			boolean table[][] = new boolean[LIMIT][LIMIT];
 			
+			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
 			//dir: 0 up
 			//1 right

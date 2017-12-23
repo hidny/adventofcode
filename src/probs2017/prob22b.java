@@ -18,14 +18,8 @@ public class prob22b {
 			 in = new Scanner(new File("in2017/prob2017in22.txt"));
 			
 			int count = 0;
-			boolean part2 = false;
 			String line = "";
 
-			LinkedList queue = new LinkedList();
-			Stack stack = new Stack();
-			HashSet set = new HashSet();
-			
-			Mapping dict = new Mapping();
 			ArrayList <String>lines = new ArrayList<String>();
 			
 			
@@ -50,12 +44,10 @@ public class prob22b {
 				
 			}
 			
-			int origCount = 0;
 			for(int i=0; i<lines.size(); i++) {
 				for(int j=0; j<lines.get(i).length(); j++) {
 					if(lines.get(i).charAt(j) == '#') {
 						table[i][j] = INF;
-						origCount++;
 					} else {
 						table[i][j] = CLEAN;
 					}
@@ -112,23 +104,10 @@ public class prob22b {
 					System.exit(1);
 				}
 				
-				
-				
-				/*for(int i=0; i<LIMIT; i++) {
-					for(int j=0; j<LIMIT; j++) {
-						if(table[i][j]) {
-							System.out.print("#");
-						} else {
-							System.out.print("");
-						}
-						System.out.println();
-					}
-				}
-				System.out.println();
-				System.out.println();*/
 			}
 			
-			
+
+			sop("ehllo");
 			
 			
 			System.out.println("Answer: " + count);
@@ -140,5 +119,8 @@ public class prob22b {
 		}
 	}
 	
+	public static void sop(String output) {
+		System.out.println(output);
+	}
 
 }
