@@ -10,13 +10,14 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob24 {
+public class prob24b {
 
 	public static void main(String[] args) {
 		Scanner in;
 		try {
 			in = new Scanner(new File("in2017/prob2017in24.txt"));
 
+		
 			String line = "";
 
 			ArrayList <String>lines = new ArrayList<String>();
@@ -35,7 +36,10 @@ public class prob24 {
 			}
 			
 			
-			int answer = getBestWeight(sideA, sideB);
+			int length = getBestLength(sideA, sideB);
+			
+			int answer =  getBestWeightLength( sideA,  sideB, length);
+			
 			
 			
 			System.out.println("Answer: " + answer);
@@ -47,7 +51,58 @@ public class prob24 {
 		}
 	}
 	
-	public static int getBestWeight(ArrayList<Integer> sideA, ArrayList<Integer> sideB) {
+
+	public static int getBestLength(ArrayList<Integer> sideA, ArrayList<Integer> sideB) {
+		
+		int currentPort = 0;
+		
+		boolean used[] = new boolean[sideA.size()];
+		
+		
+		return getBestLength(sideA, sideB, 0, used, 0, currentPort);
+	}
+	
+	public static int getBestLength(ArrayList<Integer> sideA, ArrayList<Integer> sideB, int depth, boolean used[], int startLength, int currentPort) {
+
+		int currentIndex = 0;
+		
+		int bestLength= startLength;
+		
+		while(true) {
+
+			int currentLength = startLength;
+			
+			currentIndex = getNextIndexPort(currentIndex, currentPort, used, sideA, sideB);
+			
+			if(currentIndex == -1) {
+				break;
+			}
+			
+			used[currentIndex] = true;
+			int otherSidePort = getOtherSidePort(currentPort, currentIndex, sideA, sideB);
+			
+			currentLength += 1;
+			
+			currentLength = getBestLength(sideA, sideB, depth+1, used, currentLength, otherSidePort);
+			
+			if(currentLength > bestLength) {
+				bestLength = currentLength;
+				//for(int i=0; i<depth; i++) {
+				//	sop("\t");
+				//}
+				//sopl(sideA.get(currentIndex) + "/" + sideB.get(currentIndex));
+			}
+
+			used[currentIndex] = false;
+			currentIndex++;
+		}
+		
+		return bestLength;
+	}
+	
+	public static int currentBestWeightLenght = 0;
+	
+	public static int getBestWeightLength(ArrayList<Integer> sideA, ArrayList<Integer> sideB, int length) {
 		int currentWeight = 0;
 		
 		int currentPort = 0;
@@ -55,10 +110,10 @@ public class prob24 {
 		boolean used[] = new boolean[sideA.size()];
 		
 		
-		return getBestWeight(sideA, sideB, 0, used, currentWeight, currentPort);
+		return getBestWeightLength(sideA, sideB, 0, used, currentWeight, currentPort, length);
 	}
 	
-	public static int getBestWeight(ArrayList<Integer> sideA, ArrayList<Integer> sideB, int depth, boolean used[], int startWeight, int currentPort) {
+	public static int getBestWeightLength(ArrayList<Integer> sideA, ArrayList<Integer> sideB, int depth, boolean used[], int startWeight, int currentPort, int length) {
 
 		int currentIndex = 0;
 		
@@ -79,21 +134,31 @@ public class prob24 {
 			
 			currentWeight += getWeight(currentIndex, sideA, sideB);
 			
-			currentWeight = getBestWeight(sideA, sideB, depth+1, used, currentWeight, otherSidePort);
-			
-			if(currentWeight > bestWeight) {
+			if(currentWeight > bestWeight && length -1 <= depth) {
 				bestWeight = currentWeight;
 				//for(int i=0; i<depth; i++) {
 				//	sop("\t");
 				//}
 				//sopl(sideA.get(currentIndex) + "/" + sideB.get(currentIndex));
+			} else {
+				currentWeight = getBestWeightLength(sideA, sideB, depth+1, used, currentWeight, otherSidePort, length);
+				
+				if(currentWeight > bestWeight) {
+					bestWeight = currentWeight;
+				}
 			}
+			
 
 			used[currentIndex] = false;
 			currentIndex++;
 		}
 		
-		return bestWeight;
+		if(bestWeight == startWeight) {
+			return 0;
+		} else {
+		
+			return bestWeight;
+		}
 	}
 	
 	//start search at currentIndex:
