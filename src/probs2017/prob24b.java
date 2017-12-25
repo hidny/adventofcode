@@ -100,7 +100,6 @@ public class prob24b {
 		return bestLength;
 	}
 	
-	public static int currentBestWeightLenght = 0;
 	
 	public static int getBestWeightLength(ArrayList<Integer> sideA, ArrayList<Integer> sideB, int length) {
 		int currentWeight = 0;
