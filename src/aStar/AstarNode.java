@@ -13,7 +13,7 @@ public interface AstarNode {
 	public long getCostOfMove(AstarNode nextPos);
 	
 	
-	//To override the hash contains function, we need to override both toString and hashCode. Isn't Java great?
+	//To do the right thing and override the hash's 'contains' function, we need to override both toString and hashCode. Isn't Java great?
 	public String toString();
 	public int hashCode();
 	public boolean  equals (Object object);
