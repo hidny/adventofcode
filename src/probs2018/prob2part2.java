@@ -11,7 +11,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 import number.IsNumber;
-public class prob2 {
+public class prob2part2 {
 
 	
 	public static void main(String[] args) {
@@ -48,21 +48,38 @@ public class prob2 {
 			while(in.hasNextLine()) {
 				line = in.nextLine();
 				lines.add(line);
+				sop(line);
 				
-				dict = new Mapping();
-				for(int i=0; i<line.length(); i++) {
-					dict.set(line.charAt(i) + "", 1 + dict.get(line.charAt(i) + ""));
-				}
-				
-				boolean twosFound =false;
-				boolean threesFound = false;
-				for(int i=0; i<26; i++) {
-					if(dict.get("" + (char)((int)('a' + i))) == 2 && twosFound == false) {
-						numTwos++;
-						twosFound = true;
-					} else if(dict.get("" + (char)((int)('a' + i))) == 3 && threesFound == false) {
-						numThrees++;
-						threesFound = true;
+				for(int i=0; i<lines.size()-1; i++) {
+					
+					//missingIndex
+					for(int j=0; j<lines.get(i).length(); j++) {
+						boolean matches = true;
+						
+						//curentIndex
+						for(int k=0; k<lines.get(i).length(); k++) {
+							
+							if(j == k && lines.get(i).charAt(k) == line.charAt(k)) {
+								matches = false;
+								break;
+							}
+							
+							if(j != k && lines.get(i).charAt(k) != line.charAt(k)) {
+								matches = false;
+								break;
+							}
+						}
+						
+						if(matches) {
+							for(int k=0; k<lines.get(i).length(); k++) {
+								
+								if(j != k) {
+									System.out.print(lines.get(i).charAt(k));
+								}
+							}
+							System.out.println();
+							System.exit(1);
+						}
 					}
 				}
 			}
