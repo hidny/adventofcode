@@ -42,6 +42,7 @@ public class prob3 {
 			//2 down
 			//3 left
 			
+			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
 				lines.add(line);
@@ -49,8 +50,32 @@ public class prob3 {
 				
 			}
 			
+			int array[][] = new int[1000][1000];
+			
 			int origCount = 0;
 			for(int i=0; i<lines.size(); i++) {
+				line = lines.get(i);
+				String coord[] = line.split(" ")[2].split(",");
+				int coordj =pint(coord[0]);
+				int coordi = pint(coord[1].split(":")[0]);
+				
+				String dim[] = line.split(" ")[3].split("x");
+				int widthj = pint(dim[0]);
+				int heighti = pint(dim[1]);
+				
+				for(int i1=coordi; i1<coordi + heighti; i1++) {
+					for(int j=coordj; j<coordj + widthj; j++) {
+						array[i1][j]++;
+					}
+				}
+			}
+			
+			for(int i=0; i<1000; i++) {
+				for(int j=0; j<1000; j++) {
+					if(array[i][j] > 1) {
+						count++;
+					}
+				}
 			}
 			
 			sopl("Answer: " + count);
@@ -68,5 +93,12 @@ public class prob3 {
 	public static void sopl(Object a) {
 		System.out.println(a.toString());
 	}
-
+	public static int pint(String s) {
+		if (IsNumber.isNumber(s)) {
+			return Integer.parseInt(s);
+		} else {
+			sop("Error: (" + s + " is not a number");
+			return -1;
+		}
+	}
 }
