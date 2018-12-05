@@ -10,4 +10,12 @@ public class IsNumber {
 			return false;
 		}
 	}
+	public static boolean isLong(String val) {
+		try {
+			long a = Long.parseLong(val);
+			return true;
+		} catch(Exception e) {
+			return false;
+		}
+	}
 }

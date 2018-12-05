@@ -12,13 +12,13 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob5 {
+public class prob7 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2018/prob2018in5.txt"));
+			 in = new Scanner(new File("in2018/prob2018in6.txt"));
 			
 			int count = 0;
 			boolean part2 = false;
@@ -50,26 +50,8 @@ public class prob5 {
 			}
 			
 			int origCount = 0;
-			
-			int size = line.length();
-			int size2;
-
-			while(true) {
-				size = line.length();
-				
-				for(int c=0; c<26; c++) {
-					sop(size);
-					line = line.replaceAll((char)('a' + c) + "" + (char)('A' + c) + "", "") ;
-					line = line.replaceAll((char)('A' + c) + "" +  (char)('a' + c) + "", "");
-					
-					
-				}
-				size2 = line.length();
-				
-				if(size == size2) { break;}
+			for(int i=0; i<lines.size(); i++) {
 			}
-			sop(size);
-			
 			
 			
 			sopl("Answer: " + count);

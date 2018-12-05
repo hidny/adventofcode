@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob5 {
+public class prob5part2 {
 
 	
 	public static void main(String[] args) {
@@ -53,26 +53,36 @@ public class prob5 {
 			
 			int size = line.length();
 			int size2;
+			int bestSize=99999999;
 
-			while(true) {
-				size = line.length();
+			for(int d=0; d<26; d++) {
+				String dline = line.replaceAll((char)('a' + d) + "", "");
+				dline = dline.replaceAll((char)('A' + d) + "", "");
 				
-				for(int c=0; c<26; c++) {
-					sop(size);
-					line = line.replaceAll((char)('a' + c) + "" + (char)('A' + c) + "", "") ;
-					line = line.replaceAll((char)('A' + c) + "" +  (char)('a' + c) + "", "");
+				while(true) {
+					size = dline.length();
 					
+					for(int c=0; c<26; c++) {
+						//sop(size);
+						dline = dline.replaceAll((char)('a' + c) + "" + (char)('A' + c) + "", "") ;
+						dline = dline.replaceAll((char)('A' + c) + "" +  (char)('a' + c) + "", "");
+						
+						
+					}
+					size2 = dline.length();
 					
+					if(size == size2) { break;}
 				}
-				size2 = line.length();
 				
-				if(size == size2) { break;}
+				if(size < bestSize) {
+					//sop("d");
+					bestSize = size;
+					sop('a' + d);
+				}
 			}
-			sop(size);
+
 			
-			
-			
-			sopl("Answer: " + count);
+			sopl("Answer: " + bestSize);
 			in.close();
 			
 		} catch(Exception e) {

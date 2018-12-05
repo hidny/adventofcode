@@ -1,8 +1,8 @@
 package probs2018;
 
+import number.IsNumber;
 import java.io.File;
 
-import number.IsNumber;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -12,13 +12,13 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob5 {
+public class prob3part2 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2018/prob2018in5.txt"));
+			 in = new Scanner(new File("in2018/prob2018in3.txt"));
 			
 			int count = 0;
 			boolean part2 = false;
@@ -42,6 +42,7 @@ public class prob5 {
 			//2 down
 			//3 left
 			
+			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
 				lines.add(line);
@@ -49,28 +50,58 @@ public class prob5 {
 				
 			}
 			
+			int array[][] = new int[1000][1000];
+			
 			int origCount = 0;
-			
-			int size = line.length();
-			int size2;
-
-			while(true) {
-				size = line.length();
+			for(int i=0; i<lines.size(); i++) {
+				line = lines.get(i);
+				String coord[] = line.split(" ")[2].split(",");
+				int coordj =pint(coord[0]);
+				int coordi = pint(coord[1].split(":")[0]);
 				
-				for(int c=0; c<26; c++) {
-					sop(size);
-					line = line.replaceAll((char)('a' + c) + "" + (char)('A' + c) + "", "") ;
-					line = line.replaceAll((char)('A' + c) + "" +  (char)('a' + c) + "", "");
-					
-					
+				String dim[] = line.split(" ")[3].split("x");
+				int widthj = pint(dim[0]);
+				int heighti = pint(dim[1]);
+				
+				for(int i1=coordi; i1<coordi + heighti; i1++) {
+					for(int j=coordj; j<coordj + widthj; j++) {
+						array[i1][j]++;
+					}
 				}
-				size2 = line.length();
-				
-				if(size == size2) { break;}
 			}
-			sop(size);
 			
-			
+			for(int l=0; l<lines.size(); l++) {
+				line = lines.get(l);
+				String coord[] = line.split(" ")[2].split(",");
+				int coordj =pint(coord[0]);
+				int coordi = pint(coord[1].split(":")[0]);
+				
+				String dim[] = line.split(" ")[3].split("x");
+				int widthj = pint(dim[0]);
+				int heighti = pint(dim[1]);
+				
+				boolean isGood = true;
+				for(int i1=coordi; i1<coordi + heighti; i1++) {
+					for(int j=coordj; j<coordj + widthj; j++) {
+						if(array[i1][j] > 1) {
+							isGood=false;
+							break;
+						}
+					}
+				}
+				
+				if(isGood) {
+					sop(line);
+					System.exit(1);
+				}
+			}
+			for(int i=0; i<1000; i++) {
+				for(int j=0; j<1000; j++) {
+					if(array[i][j] > 1) {
+						count++;
+					}
+				}
+			}
 			
 			sopl("Answer: " + count);
 			in.close();
@@ -87,7 +118,6 @@ public class prob5 {
 	public static void sopl(Object a) {
 		System.out.println(a.toString());
 	}
-	
 	public static int pint(String s) {
 		if (IsNumber.isNumber(s)) {
 			return Integer.parseInt(s);
@@ -95,14 +125,5 @@ public class prob5 {
 			sop("Error: (" + s + " is not a number");
 			return -1;
 		}
-	}
-	
-	public static void exit() {
-		exit(0);
-	}
-	public static void exit(int code) {
-		sop("Exit with code " + code);
-		
-		System.exit(code);
 	}
 }

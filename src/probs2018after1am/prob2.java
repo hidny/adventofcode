@@ -1,8 +1,7 @@
-package probs2018;
+package probs2018after1am;
 
 import java.io.File;
 
-import number.IsNumber;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -11,14 +10,14 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import utils.Mapping;
-
-public class prob5 {
+import number.IsNumber;
+public class prob2 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2018/prob2018in5.txt"));
+			 in = new Scanner(new File("in2018/prob2018in2.txt"));
 			
 			int count = 0;
 			boolean part2 = false;
@@ -42,37 +41,39 @@ public class prob5 {
 			//2 down
 			//3 left
 			
+
+			int numTwos = 0;
+			int numThrees = 0;
+			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
 				lines.add(line);
 				
+				dict = new Mapping();
+				for(int i=0; i<line.length(); i++) {
+					dict.set(line.charAt(i) + "", 1 + dict.get(line.charAt(i) + ""));
+				}
 				
+				boolean twosFound =false;
+				boolean threesFound = false;
+				for(int i=0; i<26; i++) {
+					if(dict.get("" + (char)((int)('a' + i))) == 2 && twosFound == false) {
+						numTwos++;
+						twosFound = true;
+					} else if(dict.get("" + (char)((int)('a' + i))) == 3 && threesFound == false) {
+						numThrees++;
+						threesFound = true;
+					}
+				}
 			}
+			
+			int checksum = numTwos * numThrees;
 			
 			int origCount = 0;
-			
-			int size = line.length();
-			int size2;
-
-			while(true) {
-				size = line.length();
-				
-				for(int c=0; c<26; c++) {
-					sop(size);
-					line = line.replaceAll((char)('a' + c) + "" + (char)('A' + c) + "", "") ;
-					line = line.replaceAll((char)('A' + c) + "" +  (char)('a' + c) + "", "");
-					
-					
-				}
-				size2 = line.length();
-				
-				if(size == size2) { break;}
+			for(int i=0; i<lines.size(); i++) {
 			}
-			sop(size);
 			
-			
-			
-			sopl("Answer: " + count);
+			sopl("Answer: " + checksum);
 			in.close();
 			
 		} catch(Exception e) {
@@ -96,13 +97,5 @@ public class prob5 {
 			return -1;
 		}
 	}
-	
-	public static void exit() {
-		exit(0);
-	}
-	public static void exit(int code) {
-		sop("Exit with code " + code);
-		
-		System.exit(code);
-	}
+
 }

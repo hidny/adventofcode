@@ -1,8 +1,8 @@
-package probs2018;
-
-import java.io.File;
+package probs2018after1am;
 
 import number.IsNumber;
+import java.io.File;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -12,13 +12,13 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob5 {
+public class prob4 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2018/prob2018in5.txt"));
+			 in = new Scanner(new File("in2018/prob2018in4.txt"));
 			
 			int count = 0;
 			boolean part2 = false;
@@ -50,27 +50,8 @@ public class prob5 {
 			}
 			
 			int origCount = 0;
-			
-			int size = line.length();
-			int size2;
-
-			while(true) {
-				size = line.length();
-				
-				for(int c=0; c<26; c++) {
-					sop(size);
-					line = line.replaceAll((char)('a' + c) + "" + (char)('A' + c) + "", "") ;
-					line = line.replaceAll((char)('A' + c) + "" +  (char)('a' + c) + "", "");
-					
-					
-				}
-				size2 = line.length();
-				
-				if(size == size2) { break;}
+			for(int i=0; i<lines.size(); i++) {
 			}
-			sop(size);
-			
-			
 			
 			sopl("Answer: " + count);
 			in.close();
@@ -87,22 +68,5 @@ public class prob5 {
 	public static void sopl(Object a) {
 		System.out.println(a.toString());
 	}
-	
-	public static int pint(String s) {
-		if (IsNumber.isNumber(s)) {
-			return Integer.parseInt(s);
-		} else {
-			sop("Error: (" + s + " is not a number");
-			return -1;
-		}
-	}
-	
-	public static void exit() {
-		exit(0);
-	}
-	public static void exit(int code) {
-		sop("Exit with code " + code);
-		
-		System.exit(code);
-	}
+
 }

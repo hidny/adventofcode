@@ -1,4 +1,4 @@
-package probs2018;
+package probs2018after1am;
 
 import java.io.File;
 
@@ -50,27 +50,8 @@ public class prob5 {
 			}
 			
 			int origCount = 0;
-			
-			int size = line.length();
-			int size2;
-
-			while(true) {
-				size = line.length();
-				
-				for(int c=0; c<26; c++) {
-					sop(size);
-					line = line.replaceAll((char)('a' + c) + "" + (char)('A' + c) + "", "") ;
-					line = line.replaceAll((char)('A' + c) + "" +  (char)('a' + c) + "", "");
-					
-					
-				}
-				size2 = line.length();
-				
-				if(size == size2) { break;}
+			for(int i=0; i<lines.size(); i++) {
 			}
-			sop(size);
-			
-			
 			
 			sopl("Answer: " + count);
 			in.close();
@@ -87,22 +68,5 @@ public class prob5 {
 	public static void sopl(Object a) {
 		System.out.println(a.toString());
 	}
-	
-	public static int pint(String s) {
-		if (IsNumber.isNumber(s)) {
-			return Integer.parseInt(s);
-		} else {
-			sop("Error: (" + s + " is not a number");
-			return -1;
-		}
-	}
-	
-	public static void exit() {
-		exit(0);
-	}
-	public static void exit(int code) {
-		sop("Exit with code " + code);
-		
-		System.exit(code);
-	}
+
 }

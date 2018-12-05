@@ -13,11 +13,7 @@ import java.util.Stack;
 import utils.Mapping;
 import utils.Sort;
 
-
-//I could've just sorted the strings... instead of sorting by guard then by entries.
-
-
-public class prob4 {
+public class prob4part2 {
 
 	
 	public static void main(String[] args) {
@@ -116,9 +112,45 @@ public class prob4 {
 				sop("");
 			}
 			
+			for(int i=0; i<guards.length; i++) {
+				int index = guards[i].id;
+				
+				guards[i].getSleepTime();
+			}
+			
+			int sleepAmounts[][] = new int[10000][60];
+			
+			for(int i=0; i<guards.length; i++) {
+				int index = guards[i].id;
+				prob4guardShift currentGuard = guards[i];
+				
+				for(int j=0; j<60; j++) {
+					if(currentGuard.sleep[j]) {
+						sleepAmounts[index][j]++;
+						sop("1");
+					}
+				}
+			}
+
+			int maxGuardSleepIndex=0;
+			int maxSleepIndex=0;
+			
+			for(int i=0; i<sleepAmounts.length; i++) {
+
+				for(int j=0; j<sleepAmounts[i].length; j++) {
+					//sop("1");
+					if(sleepAmounts[i][j] > sleepAmounts[maxGuardSleepIndex][maxSleepIndex]) {
+						maxGuardSleepIndex = i;
+						maxSleepIndex = j;
+					}
+				}
+
+			}
+			sop("hello");
+			sop("Answer: " + (maxGuardSleepIndex * maxSleepIndex));
 			
 			//goal 1: guard most asleep:
-			
+			/*
 			int sleepAmounts[] = new int[10000];
 			//TODO initialize
 			
@@ -162,7 +194,7 @@ public class prob4 {
 			System.out.println("Max sleep minute:" + maxSleepIndex);
 			
 			sop("Answer: " + (maxSleepIndex * indexMostSleep));
-			
+			*/
 			
 			/*
 

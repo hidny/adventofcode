@@ -1,8 +1,6 @@
-package probs2018;
-
+package freshbooks;
 import java.io.File;
 
-import number.IsNumber;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -10,15 +8,18 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
 
+import number.IsNumber;
 import utils.Mapping;
 
-public class prob5 {
+//   https://bewuethr.github.io
+
+public class Problem1 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2018/prob2018in5.txt"));
+			 in = new Scanner(new File("in2018/prob2018in1.txt"));
 			
 			int count = 0;
 			boolean part2 = false;
@@ -49,28 +50,19 @@ public class prob5 {
 				
 			}
 			
+			ArrayList ints = new ArrayList<Integer>();
 			int origCount = 0;
-			
-			int size = line.length();
-			int size2;
-
-			while(true) {
-				size = line.length();
+			for(int i=0; i<lines.size()*1000; i++) {
+				ints.add(count);
+				count += Integer.parseInt(lines.get(i % lines.size()));
 				
-				for(int c=0; c<26; c++) {
-					sop(size);
-					line = line.replaceAll((char)('a' + c) + "" + (char)('A' + c) + "", "") ;
-					line = line.replaceAll((char)('A' + c) + "" +  (char)('a' + c) + "", "");
-					
-					
+				for(int j=0; j<i; j++) {
+					if(count == (Integer)ints.get(j)) {
+						sop(count);
+						System.exit(1);
+					}
 				}
-				size2 = line.length();
-				
-				if(size == size2) { break;}
 			}
-			sop(size);
-			
-			
 			
 			sopl("Answer: " + count);
 			in.close();
@@ -87,22 +79,5 @@ public class prob5 {
 	public static void sopl(Object a) {
 		System.out.println(a.toString());
 	}
-	
-	public static int pint(String s) {
-		if (IsNumber.isNumber(s)) {
-			return Integer.parseInt(s);
-		} else {
-			sop("Error: (" + s + " is not a number");
-			return -1;
-		}
-	}
-	
-	public static void exit() {
-		exit(0);
-	}
-	public static void exit(int code) {
-		sop("Exit with code " + code);
-		
-		System.exit(code);
-	}
+
 }

@@ -1,8 +1,7 @@
-package probs2018;
+package probs2018after1am;
 
 import java.io.File;
 
-import number.IsNumber;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -11,14 +10,14 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import utils.Mapping;
-
-public class prob5 {
+import number.IsNumber;
+public class prob2part2 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2018/prob2018in5.txt"));
+			 in = new Scanner(new File("in2018/prob2018in2.txt"));
 			
 			int count = 0;
 			boolean part2 = false;
@@ -42,37 +41,56 @@ public class prob5 {
 			//2 down
 			//3 left
 			
+
+			int numTwos = 0;
+			int numThrees = 0;
+			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
 				lines.add(line);
+				sop(line);
 				
-				
+				for(int i=0; i<lines.size()-1; i++) {
+					
+					//missingIndex
+					for(int j=0; j<lines.get(i).length(); j++) {
+						boolean matches = true;
+						
+						//curentIndex
+						for(int k=0; k<lines.get(i).length(); k++) {
+							
+							if(j == k && lines.get(i).charAt(k) == line.charAt(k)) {
+								matches = false;
+								break;
+							}
+							
+							if(j != k && lines.get(i).charAt(k) != line.charAt(k)) {
+								matches = false;
+								break;
+							}
+						}
+						
+						if(matches) {
+							for(int k=0; k<lines.get(i).length(); k++) {
+								
+								if(j != k) {
+									System.out.print(lines.get(i).charAt(k));
+								}
+							}
+							System.out.println();
+							System.exit(1);
+						}
+					}
+				}
 			}
+			
+			int checksum = numTwos * numThrees;
 			
 			int origCount = 0;
-			
-			int size = line.length();
-			int size2;
-
-			while(true) {
-				size = line.length();
-				
-				for(int c=0; c<26; c++) {
-					sop(size);
-					line = line.replaceAll((char)('a' + c) + "" + (char)('A' + c) + "", "") ;
-					line = line.replaceAll((char)('A' + c) + "" +  (char)('a' + c) + "", "");
-					
-					
-				}
-				size2 = line.length();
-				
-				if(size == size2) { break;}
+			for(int i=0; i<lines.size(); i++) {
 			}
-			sop(size);
 			
-			
-			
-			sopl("Answer: " + count);
+			sopl("Answer: " + checksum);
 			in.close();
 			
 		} catch(Exception e) {
@@ -96,13 +114,5 @@ public class prob5 {
 			return -1;
 		}
 	}
-	
-	public static void exit() {
-		exit(0);
-	}
-	public static void exit(int code) {
-		sop("Exit with code " + code);
-		
-		System.exit(code);
-	}
+
 }
