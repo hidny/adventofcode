@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob7 {
+public class prob7part2 {
 
 	//2016->prob24pos for grid used on A*
 	
@@ -53,7 +53,13 @@ public class prob7 {
 			String output = "";
 			
 			
-			boolean done[] = new boolean[26];
+			int timeDone[] = new int[26];
+			
+			for(int i=0; i<timeDone.length; i++) {
+				timeDone[i] =1000000;
+			}
+			
+			boolean workingOnit[] = new boolean[26];
 			
 			boolean hasRequirement[];
 			
@@ -62,42 +68,78 @@ public class prob7 {
 			
 			boolean progress = true;
 			
-			while(progress) {
-				progress = false;
+			int time = 0;
+			int max_people = 5;
+			
+			
+			SEARCH:
+			while(true) {
+				
+				//sop(time);
+				
 				hasRequirement = new boolean[26];
 				for(int i=0; i<lines.size(); i++) {
 					int waiter =(int)((lines.get(i).split(" ")[7].charAt(0)-'A'));
 					int req = (int)((lines.get(i).split(" ")[1].charAt(0)-'A'));
 					
-					if(done[req] == false) {
+					if(workingOnit[req] == false || timeDone[req] > time) {
 						hasRequirement[waiter] = true;
 					}
 				}
 				
 				boolean contestant[] = new boolean[26];
 				for(int i=0; i<26; i++) {
-					if(done[i] == false && hasRequirement[i] == false) {
-						hasRequirement[i] = false;
+					if(workingOnit[i] == false && hasRequirement[i] == false) {
 						
-						progress = true;
 						contestant[i] = true;
-						//output += (char)('A' + i) + "";
 					}
 				}
 				
+				//5 people!
+				
+				int numberOfPeopleWorking = 0;
+				for(int i=0; i<26; i++) {
+					if(workingOnit[i] == true && timeDone[i] > time) {
+						numberOfPeopleWorking++;
+					}
+				}
+				//sop(numberOfPeopleWorking);
 				
 				for(int i=0; i<26; i++) {
-					if(contestant[i]) {
-						done[i] = true;
+					if(contestant[i] && numberOfPeopleWorking < max_people) {
+						timeDone[i] = 60 + time + 1 + i;
+						numberOfPeopleWorking++;
+						workingOnit[i] = true;
+						
 						output += (char)('A' + i) + "";
-						System.out.println(output);
-						break;
+						//System.out.println(output);
+						sop(time + "    "+ numberOfPeopleWorking + "    " + timeDone[i] + "    " + output);
 					}
 				}
+
+				//sop(time);
+				
+				for(int i=0; i<26; i++) {
+					if(time < timeDone[i]) {
+						time++;
+						continue SEARCH;
+					}
+				}
+				
+				break;
+				
 			}
 			
+			int answer = 0;
+			for(int i=0; i<26; i++) {
+				if(timeDone[i] > answer) {
+					answer = timeDone[i];
+				}
+				
+			}
 			
-			sopl("Answer: " + output);
+			sopl("Answer: " + answer);
+			
 			in.close();
 			
 		} catch(Exception e) {

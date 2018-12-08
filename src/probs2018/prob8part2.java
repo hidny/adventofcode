@@ -12,14 +12,13 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob7 {
+public class prob8part2 {
 
-	//2016->prob24pos for grid used on A*
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2018/prob2018in7.txt"));
+			 in = new Scanner(new File("in2018/prob2018in8.txt"));
 			
 			int count = 0;
 			boolean part2 = false;
@@ -46,64 +45,66 @@ public class prob7 {
 			while(in.hasNextLine()) {
 				line = in.nextLine();
 				lines.add(line);
+				sop(line);
 				
 			}
-			
-			
-			String output = "";
-			
-			
-			boolean done[] = new boolean[26];
-			
-			boolean hasRequirement[];
 			
 			
 			int origCount = 0;
-			
-			boolean progress = true;
-			
-			while(progress) {
-				progress = false;
-				hasRequirement = new boolean[26];
-				for(int i=0; i<lines.size(); i++) {
-					int waiter =(int)((lines.get(i).split(" ")[7].charAt(0)-'A'));
-					int req = (int)((lines.get(i).split(" ")[1].charAt(0)-'A'));
-					
-					if(done[req] == false) {
-						hasRequirement[waiter] = true;
-					}
-				}
-				
-				boolean contestant[] = new boolean[26];
-				for(int i=0; i<26; i++) {
-					if(done[i] == false && hasRequirement[i] == false) {
-						hasRequirement[i] = false;
-						
-						progress = true;
-						contestant[i] = true;
-						//output += (char)('A' + i) + "";
-					}
-				}
-				
-				
-				for(int i=0; i<26; i++) {
-					if(contestant[i]) {
-						done[i] = true;
-						output += (char)('A' + i) + "";
-						System.out.println(output);
-						break;
-					}
-				}
+			for(int i=0; i<lines.size(); i++) {
 			}
 			
+			count = sum(line, 0);
 			
-			sopl("Answer: " + output);
+			sopl("Answer: " + count);
 			in.close();
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 		}
+	}
+	
+	
+	public static int sum(String line, int index) {
+		return sum(line.split(" "), index); 
+	}
+	
+	public static int currentIndex = 0;
+	
+	public static int sum(String line[], int index) {
+		//int numChildren = 
+		int numChildren = pint(line[index]);
+		
+		int indexes[] = new int[numChildren];
+		
+		int numMetaData = pint(line[index+1]);
+		
+		currentIndex = index +2;
+		
+		int ret = 0;
+		for(int i=0; i<numChildren; i++) {
+			indexes[i] = sum(line, currentIndex);
+		}
+		
+		
+		if(numChildren == 0) {
+			for(int i=0; i<numMetaData; i++) {
+				ret += pint(line[currentIndex + i]);
+				
+			}
+		} else {
+			for(int i=0; i<numMetaData; i++) {
+				if(pint(line[currentIndex + i]) -1 < numChildren) {
+					ret += indexes[pint(line[currentIndex + i]) -1];
+				}
+				
+			}
+		}
+		currentIndex = currentIndex + numMetaData;
+		
+		return ret;
+		
 	}
 	
 	public static void sop(Object a) {

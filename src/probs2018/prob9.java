@@ -12,14 +12,13 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob7 {
+public class prob9 {
 
-	//2016->prob24pos for grid used on A*
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2018/prob2018in7.txt"));
+			 in = new Scanner(new File("in2018/prob2018in9.txt"));
 			
 			int count = 0;
 			boolean part2 = false;
@@ -47,57 +46,15 @@ public class prob7 {
 				line = in.nextLine();
 				lines.add(line);
 				
+				
 			}
-			
-			
-			String output = "";
-			
-			
-			boolean done[] = new boolean[26];
-			
-			boolean hasRequirement[];
-			
 			
 			int origCount = 0;
-			
-			boolean progress = true;
-			
-			while(progress) {
-				progress = false;
-				hasRequirement = new boolean[26];
-				for(int i=0; i<lines.size(); i++) {
-					int waiter =(int)((lines.get(i).split(" ")[7].charAt(0)-'A'));
-					int req = (int)((lines.get(i).split(" ")[1].charAt(0)-'A'));
-					
-					if(done[req] == false) {
-						hasRequirement[waiter] = true;
-					}
-				}
-				
-				boolean contestant[] = new boolean[26];
-				for(int i=0; i<26; i++) {
-					if(done[i] == false && hasRequirement[i] == false) {
-						hasRequirement[i] = false;
-						
-						progress = true;
-						contestant[i] = true;
-						//output += (char)('A' + i) + "";
-					}
-				}
-				
-				
-				for(int i=0; i<26; i++) {
-					if(contestant[i]) {
-						done[i] = true;
-						output += (char)('A' + i) + "";
-						System.out.println(output);
-						break;
-					}
-				}
+			for(int i=0; i<lines.size(); i++) {
 			}
 			
 			
-			sopl("Answer: " + output);
+			sopl("Answer: " + count);
 			in.close();
 			
 		} catch(Exception e) {

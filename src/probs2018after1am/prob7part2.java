@@ -1,4 +1,4 @@
-package probs2018;
+package probs2018after1am;
 
 import java.io.File;
 
@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob7 {
+public class prob7part2 {
 
 	//2016->prob24pos for grid used on A*
 	
@@ -53,51 +53,116 @@ public class prob7 {
 			String output = "";
 			
 			
-			boolean done[] = new boolean[26];
+			int timeDone[] = new int[26];
+			
+			for(int i=0; i<timeDone.length; i++) {
+				timeDone[i] =1000000;
+			}
+			
+			boolean workingOnit[] = new boolean[26];
 			
 			boolean hasRequirement[];
 			
 			
-			int origCount = 0;
+			int time = 0;
+			int max_people = 5;
 			
-			boolean progress = true;
 			
-			while(progress) {
-				progress = false;
+
+			sop("time workers endTime order");
+			
+			SEARCH:
+			while(true) {
+				
+				//sop(time);
+				
+				//Get requirements
 				hasRequirement = new boolean[26];
 				for(int i=0; i<lines.size(); i++) {
+					
+					//GENIUS OBSERVATION: I don't need to make a java object the stuff in the input file, the entry in the input could be treated as a java object :P
+					//SUPER GENIUS OBSERVATION: why are you using Java for this???
+					
 					int waiter =(int)((lines.get(i).split(" ")[7].charAt(0)-'A'));
 					int req = (int)((lines.get(i).split(" ")[1].charAt(0)-'A'));
 					
-					if(done[req] == false) {
+					if(workingOnit[req] == false || timeDone[req] > time) {
 						hasRequirement[waiter] = true;
 					}
 				}
 				
+				//Get contestants that could be worked on now:
 				boolean contestant[] = new boolean[26];
 				for(int i=0; i<26; i++) {
-					if(done[i] == false && hasRequirement[i] == false) {
-						hasRequirement[i] = false;
+					if(workingOnit[i] == false && hasRequirement[i] == false) {
 						
-						progress = true;
 						contestant[i] = true;
-						//output += (char)('A' + i) + "";
 					}
 				}
 				
+				//5 people!
+				//You + 4 elves!
 				
+				//Get number of People available to work:
+				int numberOfPeopleWorking = 0;
 				for(int i=0; i<26; i++) {
-					if(contestant[i]) {
-						done[i] = true;
-						output += (char)('A' + i) + "";
-						System.out.println(output);
-						break;
+					if(workingOnit[i] == true && timeDone[i] > time) {
+						numberOfPeopleWorking++;
 					}
 				}
+				
+				
+				//Try to assign more workers to more task:
+				for(int i=0; i<26; i++) {
+					if(contestant[i] && numberOfPeopleWorking < max_people) {
+						
+						timeDone[i] = 60 + time + 1 + i;
+						numberOfPeopleWorking++;
+						workingOnit[i] = true;
+						
+						output += (char)('A' + i) + "";
+						sop(time + "      "+ numberOfPeopleWorking + "      " + timeDone[i] + "      " + output);
+					}
+				}
+
+				//See if work assignment needs to continue and at what time it should continue:
+				for(int i=0; i<26; i++) {
+					if(workingOnit[i] == false) {
+						
+						//Skip to the time where no one is working anymore:
+						int nextTime = 1000000;
+						for(int j=0; j<26; j++) {
+							if(workingOnit[j] == true && timeDone[j] > time) {
+								if(nextTime > timeDone[j]) {
+									nextTime = timeDone[j];
+
+								}
+							}
+						}
+						time = nextTime;
+						
+						
+						continue SEARCH;
+					}
+				}
+				
+				//End it here.
+				break;
+				
 			}
 			
 			
-			sopl("Answer: " + output);
+			//Get time of last thing done:
+			int answer = 0;
+			for(int i=0; i<26; i++) {
+				if(timeDone[i] > answer) {
+					answer = timeDone[i];
+				}
+				
+			}
+			
+			sopl("Answer: " + answer);
+			
 			in.close();
 			
 		} catch(Exception e) {
