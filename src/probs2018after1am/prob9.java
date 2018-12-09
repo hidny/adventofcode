@@ -1,4 +1,4 @@
-package probs2018;
+package probs2018after1am;
 
 import java.io.File;
 
@@ -49,83 +49,88 @@ public class prob9 {
 				
 			}
 			
-			LinkedList<Integer> marbles = new LinkedList<Integer>();
+			//LinkedList<Integer> marbles = new LinkedList<Integer>();
 			
-			int NUM_PLAYERS = 418 ;
-			int NUM_MARBLES = 71339 ;
-			//int NUM_PLAYERS = 13 ;
-			//int NUM_MARBLES =  7999 ;
+			for(int lineNumber=0; lineNumber<lines.size(); lineNumber++) {
 				
-			int lastScore = 0;
-			int points[] = new int[NUM_PLAYERS];
-			
-			marbles.add(0);
-			
-			int marbleNumber = 1;
-			int currentIndex = 0;
-			
-			int playerNumber = 0;
-			
-			
-			
-			while(true) {
-				lastScore = 0;
+				line = lines.get(lineNumber);
+				
+				prob9marbles currentIndex = new prob9marbles(0);
+				
+				//int NUM_PLAYERS = 13 ;
+				//int NUM_MARBLES = 7999 ;
+				int NUM_PLAYERS = pint(line.split(" ")[0]);
+				int NUM_MARBLES =  pint(line.split(" ")[6]);
+				
+				if(part2) {
+					NUM_MARBLES = NUM_MARBLES * 100;
+				}
+				
+				sop(line);
+				
+				int lastScore = 0;
+				long points[] = new long[NUM_PLAYERS];
 				
 				
-				if(marbleNumber > 0 && marbleNumber % 23 == 0) {
-					//Diff
-					//sop("hello");
-					lastScore = marbleNumber;
+				int marbleNumber = 1;
+				
+				int playerNumber = 0;
+				
+				
+				
+				while(true) {
+					lastScore = 0;
 					
-					int rmIndex = (currentIndex - 7 + marbles.size()) % marbles.size();
 					
-					lastScore += marbles.remove(rmIndex);
-					currentIndex = rmIndex;
-					
-					points[playerNumber] += lastScore;
-					
-					sop(lastScore);
-					if(marbleNumber % 23000 == 0) {
-
-						sop(marbleNumber);
+					if(marbleNumber > 0 && marbleNumber % 23 == 0) {
+						//Diff
+						lastScore = marbleNumber;
+						
+						prob9marbles marbleB4RM = currentIndex.prev.prev.prev.prev.prev.prev.prev.prev;
+	
+						lastScore += marbleB4RM.next.number;
+						
+						marbleB4RM.removeNext();
+						
+						
+						currentIndex = marbleB4RM.next;
+						
+						
+						points[playerNumber] += lastScore;
+						
+						
+						
+					} else {
+						
+						prob9marbles marbleB4ADD = currentIndex.next;
+						
+						marbleB4ADD.addNext(marbleNumber);
+						
+						currentIndex = marbleB4ADD.next;
+						
 					}
 					
-					//sop(marbleNumber);
-				} else {
+					playerNumber = (playerNumber + 1) % points.length;
+					marbleNumber++;
 					
-					int indexAdd = (currentIndex + 2) % marbles.size();
-					marbles.add(indexAdd, marbleNumber);
-					currentIndex = indexAdd;
-					
-					/*for(int i=0; i<marbles.size(); i++) {
-						if(i == currentIndex) {
-							System.out.print("(" + marbles.get(i) + ")  ");
-						} else {
-							System.out.print(marbles.get(i) + "  ");
-						}
+					if(marbleNumber > NUM_MARBLES) {
+						 break;
 					}
-					sopl("");*/
+					
 				}
 				
-				playerNumber = (playerNumber + 1) % points.length;
-				marbleNumber++;
+				int origCount = 0;
 				
-				if(marbleNumber > NUM_MARBLES) {
-					 break;
+				long answer = 0;
+				for(int i=0; i<points.length; i++) {
+					if(points[i] > answer) {
+						answer = points[i];
+					}
 				}
 				
+				sopl("Answer: " + answer);
+				sop("");
 			}
-			
-			int origCount = 0;
-			
-			int answer = 0;
-			for(int i=0; i<points.length; i++) {
-				if(points[i] > answer) {
-					answer = points[i];
-				}
-			}
-			
-			sopl("Answer: " + answer);
 			in.close();
 			
 		} catch(Exception e) {

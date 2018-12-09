@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob9 {
+public class prob9part2 {
 
 	
 	public static void main(String[] args) {
@@ -49,20 +49,20 @@ public class prob9 {
 				
 			}
 			
-			LinkedList<Integer> marbles = new LinkedList<Integer>();
+			//LinkedList<Integer> marbles = new LinkedList<Integer>();
 			
-			int NUM_PLAYERS = 418 ;
-			int NUM_MARBLES = 71339 ;
+			prob9marbles currentIndex = new prob9marbles(0);
+			
 			//int NUM_PLAYERS = 13 ;
-			//int NUM_MARBLES =  7999 ;
+			//int NUM_MARBLES = 7999 ;
+			int NUM_PLAYERS = 418  ;
+			int NUM_MARBLES =  7133900 ;
 				
 			int lastScore = 0;
-			int points[] = new int[NUM_PLAYERS];
+			long points[] = new long[NUM_PLAYERS];
 			
-			marbles.add(0);
 			
 			int marbleNumber = 1;
-			int currentIndex = 0;
 			
 			int playerNumber = 0;
 			
@@ -74,37 +74,30 @@ public class prob9 {
 				
 				if(marbleNumber > 0 && marbleNumber % 23 == 0) {
 					//Diff
-					//sop("hello");
 					lastScore = marbleNumber;
 					
-					int rmIndex = (currentIndex - 7 + marbles.size()) % marbles.size();
+					prob9marbles marbleB4RM = currentIndex.prev.prev.prev.prev.prev.prev.prev.prev;
+
+					lastScore += marbleB4RM.next.number;
 					
-					lastScore += marbles.remove(rmIndex);
-					currentIndex = rmIndex;
+					marbleB4RM.removeNext();
+					
+					
+					currentIndex = marbleB4RM.next;
+					
 					
 					points[playerNumber] += lastScore;
 					
-					sop(lastScore);
-					if(marbleNumber % 23000 == 0) {
-
-						sop(marbleNumber);
-					}
 					
-					//sop(marbleNumber);
+					
 				} else {
 					
-					int indexAdd = (currentIndex + 2) % marbles.size();
-					marbles.add(indexAdd, marbleNumber);
-					currentIndex = indexAdd;
+					prob9marbles marbleB4ADD = currentIndex.next;
 					
-					/*for(int i=0; i<marbles.size(); i++) {
-						if(i == currentIndex) {
-							System.out.print("(" + marbles.get(i) + ")  ");
-						} else {
-							System.out.print(marbles.get(i) + "  ");
-						}
-					}
-					sopl("");*/
+					marbleB4ADD.addNext(marbleNumber);
+					
+					currentIndex = marbleB4ADD.next;
+					
 				}
 				
 				playerNumber = (playerNumber + 1) % points.length;
@@ -118,7 +111,7 @@ public class prob9 {
 			
 			int origCount = 0;
 			
-			int answer = 0;
+			long answer = 0;
 			for(int i=0; i<points.length; i++) {
 				if(points[i] > answer) {
 					answer = points[i];
