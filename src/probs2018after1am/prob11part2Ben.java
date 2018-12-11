@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob11 {
+public class prob11part2Ben {
 
 	
 	public static void main(String[] args) {
@@ -21,7 +21,7 @@ public class prob11 {
 			 in = new Scanner(new File("in2018/prob2018in11.txt"));
 			
 			int count = 0;
-			boolean part2 = false;
+			boolean part2 = true;
 			String line = "";
 
 			LinkedList queue = new LinkedList();
@@ -69,47 +69,49 @@ public class prob11 {
 				}
 			}
 			
-			int answer = -20000;
-			for(int i=1; i<=DIM; i++) {
-				for(int j=1; j<=DIM; j++) {
+			int powerLevelDeep[][][] = new int[DIM + 1][DIM + 1][DIM + 1];
+			
+			powerLevelDeep[0] = powerLevel;
+			
+			String answer = "";
+			
+			int maxPower = -20000;
+			for(int sideLength = 1; sideLength <= DIM && sideLength <= DIM; sideLength++) {
+				for(int i=1; i<=DIM - sideLength + 1; i++) {
+					for(int j=1; j<=DIM -sideLength + 1; j++) {
 					
-					if(part2) {
-						for(int sideLength = 1; sideLength + i <= DIM && sideLength + j <= DIM; sideLength++) {
 							int current = 0;
-							
-							for(int i1=0; i1<sideLength; i1++) {
-								for(int j1=0; j1<sideLength; j1++) {
-									current += powerLevel[i + i1][j + j1];
+							if(sideLength == 1) {
+								current = powerLevelDeep[0][i][j];
+							} else {
+								current = powerLevelDeep[sideLength - 2][i][j];
+								for(int i1=0; i1<sideLength; i1++) {
+									current += powerLevel[i + i1][j + sideLength - 1];
 								}
+								for(int j1=0; j1<sideLength; j1++) {
+									current += powerLevel[i + sideLength - 1][j + j1];
+								}
+								
+								current -= powerLevel[i + sideLength - 1][j + sideLength - 1];
+								
+								powerLevelDeep[sideLength - 1][i][j] = current;
 							}
-						
-							if(current> answer) {
-								sop(j + "," + i + "," + sideLength);
-								answer = current;
+							
+							
+							if(current> maxPower) {
+								answer = j + "," + i + "," + sideLength;
+								sop(answer);
+								
+								maxPower = current;
 							}
-						}
-					} else {
-						//part1:
-						int current = 0;
-						int sideLength = 3;
-						
-						for(int i1=0; i1<sideLength && i + i1 < DIM + 1; i1++) {
-							for(int j1=0; j1<sideLength &&  j+ j1 < DIM + 1; j1++) {
-								current += powerLevel[i + i1][j + j1];
-							}
-						}
 					
-						if(current> answer) {
-							sop(j + "," + i);
-							answer = current;
-						}
 					}
 				}
-					
 			}
 			
 			
-			sopl("Answer: " + answer);
+			sopl("maxPower: " + maxPower);
+			sopl("answer: " + answer);
 			in.close();
 			
 		} catch(Exception e) {
