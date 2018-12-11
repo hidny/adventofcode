@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob10 {
+public class prob10Fixed {
 
 	
 	public static void main(String[] args) {
@@ -32,8 +32,8 @@ public class prob10 {
 			ArrayList <String>lines = new ArrayList<String>();
 			
 			
-			int LIMIT_I = 100;
-			int LIMIT_J = 100;
+			int LIMIT_I = 102;
+			int LIMIT_J = 102;
 			
 			boolean table[][] = new boolean[LIMIT_I][LIMIT_J];
 			
@@ -59,7 +59,7 @@ public class prob10 {
 			}
 			Scanner input = new Scanner(System.in);
 			
-			int time = 0;
+			int time = 10000;
 			int origCount = 0;
 			while(time < 1000000) {
 				table = new boolean[LIMIT_I][LIMIT_J];
@@ -74,13 +74,13 @@ public class prob10 {
 					int velxj = pint(vel.split(",")[0]);
 					int velyi = pint(vel.split(",")[1].replaceAll(">", ""));
 					
-					sop(line);
-					sop(posxj);
-					sop(posyi);
+					//sop(line);
+					//sop(posxj);
+					//sop(posyi);
 					
-					sop(velxj);
-					sop(velyi);
-					sop("---");
+					//sop(velxj);
+					//sop(velyi);
+					//sop("---");
 					//input.next();
 					
 					
@@ -117,7 +117,7 @@ public class prob10 {
 						minI = foundI;
 					}
 					
-					sop(foundJ + " " + foundI);
+					//sop(foundJ + " " + foundI);
 					table[ai][aj] = true;
 				}
 				
@@ -136,16 +136,16 @@ public class prob10 {
 				sop(minJ);
 				sop(maxI);
 				sop(minI);
-				sop("Width: " + (maxJ - minJ));
+				sop("Width (Fixed): " + (maxJ - minJ));
 				sop("Height: " + (maxI - minI));
-				sop(time);
+				sop("Time: " + time);
 				sop("");
 				sop("");
 				sop("");
-
-				if(time >= 21) {
+				if(maxI - minI < 100) {
 					input.next();
 				}
+				
 				time++;
 			
 			}
@@ -180,6 +180,7 @@ public class prob10 {
 	public static void exit() {
 		exit(0);
 	}
+	
 	public static void exit(int code) {
 		sop("Exit with code " + code);
 		

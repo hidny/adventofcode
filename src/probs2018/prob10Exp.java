@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob10 {
+public class prob10Exp {
 
 	
 	public static void main(String[] args) {
@@ -33,9 +33,9 @@ public class prob10 {
 			
 			
 			int LIMIT_I = 100;
-			int LIMIT_J = 100;
+			int LIMIT_J = 400;
 			
-			boolean table[][] = new boolean[LIMIT_I][LIMIT_J];
+			int table[][] = new int[LIMIT_I][LIMIT_J];
 			
 			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
@@ -43,13 +43,6 @@ public class prob10 {
 			//1 right
 			//2 down
 			//3 left
-			
-			int minJ =0;
-			int maxJ =0;
-			
-			int minI =0;
-			int maxI =0;
-			
 			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
@@ -61,8 +54,14 @@ public class prob10 {
 			
 			int time = 0;
 			int origCount = 0;
-			while(time < 1000000) {
-				table = new boolean[LIMIT_I][LIMIT_J];
+			while(time < 100) {
+				table = new int[LIMIT_I][LIMIT_J];
+				
+				for(int i=0; i<LIMIT_I; i++) {
+					for(int j=0; j<LIMIT_J;j++) {
+						table[i][j] = -10000;
+					}
+				}
 				
 				for(int i=0; i<lines.size(); i++) {
 					line = lines.get(i);
@@ -74,57 +73,17 @@ public class prob10 {
 					int velxj = pint(vel.split(",")[0]);
 					int velyi = pint(vel.split(",")[1].replaceAll(">", ""));
 					
-					sop(line);
-					sop(posxj);
-					sop(posyi);
-					
-					sop(velxj);
-					sop(velyi);
-					sop("---");
-					//input.next();
-					
-					
 					int ai = (posyi + time * velyi) % LIMIT_I;
-					
-					ai = (ai + LIMIT_I) % LIMIT_I;
-					
 					int aj = (posxj + time * velxj) % LIMIT_J;
-					aj = (aj + LIMIT_J) % LIMIT_J;
 					
-					if(i == 0) {
-						 minJ = posxj + time * velxj;
-						 maxJ = posxj + time * velxj;
-						
-						 minI =(posyi + time * velyi);
-						 maxI =(posyi + time * velyi);
-					}
-					int foundI = posyi + time * velyi;
-					int foundJ = posxj + time * velxj;
-					
-					if(maxJ < foundJ) {
-						maxJ = foundJ;
-					}
-					
-					if(minJ > foundJ) {
-						minJ = foundJ;
-					}
-					
-					if(maxI < foundI) {
-						maxI = foundI;
-					}
-					
-					if(minI > foundI) {
-						minI = foundI;
-					}
-					
-					sop(foundJ + " " + foundI);
-					table[ai][aj] = true;
+					table[(LIMIT_I/2 + LIMIT_I + ai) % LIMIT_I][(LIMIT_J/2 + LIMIT_J + aj) % LIMIT_J] = (posxj + time * velxj) / LIMIT_J;
+					sop(i);
 				}
 				
 				for(int i=0; i<LIMIT_I; i++) {
 					for(int j=0; j<LIMIT_J;j++) {
-						if(table[i][j]) {
-							System.out.print("#");
+						if(table[i][j] != -10000) {
+							System.out.print(table[i][j]);
 						} else {
 							System.out.print("_");
 						}
@@ -132,20 +91,14 @@ public class prob10 {
 					sop("");
 				}
 				
-				sop(maxJ);
-				sop(minJ);
-				sop(maxI);
-				sop(minI);
-				sop("Width: " + (maxJ - minJ));
-				sop("Height: " + (maxI - minI));
+				if(time >= 21) {
+					input.next();
+				}
+				
 				sop(time);
 				sop("");
 				sop("");
 				sop("");
-
-				if(time >= 21) {
-					input.next();
-				}
 				time++;
 			
 			}
