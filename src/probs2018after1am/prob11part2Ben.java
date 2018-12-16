@@ -69,9 +69,9 @@ public class prob11part2Ben {
 				}
 			}
 			
-			int powerLevelDeep[][][] = new int[DIM + 1][DIM + 1][DIM + 1];
+			int powerLevelSquare[][][] = new int[DIM + 1][DIM + 1][DIM + 1];
 			
-			powerLevelDeep[0] = powerLevel;
+			powerLevelSquare[0] = powerLevel;
 			
 			String answer = "";
 			
@@ -82,9 +82,9 @@ public class prob11part2Ben {
 					
 							int current = 0;
 							if(sideLength == 1) {
-								current = powerLevelDeep[0][i][j];
+								current = powerLevelSquare[0][i][j];
 							} else {
-								current = powerLevelDeep[sideLength - 2][i][j];
+								current = powerLevelSquare[sideLength - 2][i][j];
 								for(int i1=0; i1<sideLength; i1++) {
 									current += powerLevel[i + i1][j + sideLength - 1];
 								}
@@ -94,7 +94,7 @@ public class prob11part2Ben {
 								
 								current -= powerLevel[i + sideLength - 1][j + sideLength - 1];
 								
-								powerLevelDeep[sideLength - 1][i][j] = current;
+								powerLevelSquare[sideLength - 1][i][j] = current;
 							}
 							
 							

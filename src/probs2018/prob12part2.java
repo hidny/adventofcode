@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import utils.Mapping;
 
-public class prob12 {
+public class prob12part2 {
 
 	static int LENGTH = 1000;
 	
@@ -48,16 +48,21 @@ public class prob12 {
 				
 				
 			}
+			//16411
 			
-			int NUM_GEN = 20;
+			int NUM_GEN = 300;
 			
 			line = lines.get(0).split(" ")[2];
 			
-			boolean table[][] = new boolean[NUM_GEN + 1][LENGTH];
+			boolean prev[]  = new boolean[LENGTH];
+			boolean current[] = new boolean[LENGTH];
 			
-			table[0] = convertBig(line);
+			prev = convertBig(line);
 			
 			for(int gen = 1; gen<=NUM_GEN; gen++) {
+				
+				current = new boolean[prev.length + 4];
+				
 				for(int i=2; i<lines.size(); i++) {
 					line = lines.get(i);
 					
@@ -69,50 +74,58 @@ public class prob12 {
 						result = false;
 					}
 					
-					for(int j=2; j<table[0].length - 2; j++) {
+					for(int j=2; j<prev.length - 2; j++) {
 						boolean nope = false;
 						
 						for(int k=0; k<5; k++) {
-							if(table[gen-1][j - 2 + k] != check[k]) {
+							if(prev[j - 2 + k] != check[k]) {
 								nope = true;
 								break;
 							}
 						}
 
 						if(nope ==false) {
-							table[gen][j] = result;
+							current[j+2] = result;
 						}
 					}
 					
 					
 				}
-				for(int i=0; i<table[gen].length; i++) {
-					if(table[gen][i]) {
+				for(int i=0; i<current.length; i++) {
+					if(current[i]) {
 						System.out.print("#");
 					} else {
 
 						System.out.print(",");
 					}
 				}
+				
+				//It's linear after 300 gens!
+				//Found formula:
+				//(NUM_GEN - GEN300)* (55 new points gen after gen 300)  + (number of points at 300)
+				//(50000000000-300)*(16411-16356) + 16411
+
 				int prevCount = count;
 				count = 0;
-				sop("");
+				//sop("");
 				//sop(table[0].length);
-				for(int i=0; i<table[0].length; i++) {
-					if(table[gen][i]) {
-						count += i - LENGTH/2;
+				for(int i=0; i<current.length; i++) {
+					if(current[i]) {
+						count += i - current.length/2;
 					}
 				}
-				sop(count-prevCount);
+				//sop(count-prevCount);
 				sop(count);
+				
+				prev= current;
+				
 				
 			}
 			count = 0;
 			
-			//sop(table[0].length);
-			for(int i=0; i<table[0].length; i++) {
-				if(table[NUM_GEN][i]) {
-					count += i - LENGTH/2;
+			for(int i=0; i<current.length; i++) {
+				if(current[i]) {
+					count += i - current.length/2;
 				}
 			}
 			
