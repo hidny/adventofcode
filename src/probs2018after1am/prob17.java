@@ -1,4 +1,4 @@
-package probs2018;
+package probs2018after1am;
 
 import java.io.File;
 
@@ -14,40 +14,25 @@ import utils.Mapping;
 
 public class prob17 {
 
-	
-	public static int ymax=-100000;
-	public static int ymin=10000;;
+	//BUG in next 2 lines cost me 10 minutes... :(
+	public static int ymax=Integer.MIN_VALUE;
+	public static int ymin=Integer.MAX_VALUE;
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
+			//in = new Scanner(new File("in2018/prob2018in17.test.txt"));
 			 in = new Scanner(new File("in2018/prob2018in17.txt"));
 			
-			int count = 0;
-			boolean part2 = false;
 			String line = "";
-
-			LinkedList queue = new LinkedList();
-			Stack stack = new Stack();
-			HashSet set = new HashSet();
 			
-			Mapping dict = new Mapping();
 			ArrayList <String>lines = new ArrayList<String>();
 			
 			
 			int LIMIT = 20000;
 			int table[][] = new int[LIMIT][LIMIT];
 			
-			int miny=10000;
-			int maxy = 0;
 			
-			
-			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
-			
-			//dir: 0 up
-			//1 right
-			//2 down
-			//3 left
 			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
@@ -64,9 +49,8 @@ public class prob17 {
 				
 				int arg1 = pint(arguments[0].split("=")[1]);
 				
-				String tmp = arguments[1].split("=")[1];
-				String tmp2[] = arguments[1].split("=")[1].split("\\.");
-				int arg2Start = pint(tmp.split("\\.")[0]);
+				
+				int arg2Start = pint(arguments[1].split("=")[1].split("\\.")[0]);
 				int arg2End = pint(arguments[1].split("=")[1].split("\\.")[2]);
 				
 				//1 = clay
@@ -98,10 +82,12 @@ public class prob17 {
 			int ystart = 0;
 			drainWater(table, xstart, ystart);
 			
-			int answer = getAnswer(table);
+			int answerPart1 = getAnswer(table, false);
+			int answerPart2 = getAnswer(table, true);
 			
 			printStatusBig(table);
-			sopl("Answer: " + answer);
+			sopl("Answer part 1: " + answerPart1);
+			sopl("Answer part 2: " + answerPart2);
 			in.close();
 			
 		} catch(Exception e) {
@@ -109,21 +95,20 @@ public class prob17 {
 		} finally {
 		}
 	}
-	
+
+	public static int SPACE = 0;
 	public static int CLAY = 1;
-	
 	public static int FALLING = 2;
 	public static int WATER = 3;
 	
-	public static int SPACE = 0;
 	
 	public static Scanner input = new Scanner(System.in);
 	
-	public static void printStatus(int table[][]) {
-		printStatus(table, true);
+	public static void printStatusTest(int table[][]) {
+		printStatusTest(table, true);
 	}
 	
-	public static void printStatus(int table[][], boolean pause) {
+	public static void printStatusTest(int table[][], boolean pause) {
 	/*	for(int i=0; i<30; i++) {
 			for(int j=450; j<550; j++) {
 				if(table[i][j] == SPACE) {
@@ -166,19 +151,22 @@ public class prob17 {
 			
 		}
 	
-	public static int getAnswer(int table[][]) {
+	public static int getAnswer(int table[][], boolean part2) {
 		int answer = 0;
 		for(int i=ymin; i<=ymax; i++) {
 			for(int j=0; j<table.length; j++) {
 				if(i ==0 && j==500) {
 					sopl("oops");
 					//dont count source
+					//AHH!! Why didn't this tip me off that I a bug!
 					continue;
 				}
 				if(table[i][j] == WATER) {
 					answer++;
 				} else if(table[i][j] == FALLING) {
-					//answer++;
+					if(part2 == false) {
+						answer++;
+					}
 				}
 			}
 		}
@@ -187,27 +175,22 @@ public class prob17 {
 	
 	public static void drainWater(int table[][], int xstart, int ystart) {
 	
-		//go down:
-		//int ystart = 0;
-		//int xstart = 500;
 		
-		printStatus(table, false);
+		printStatusTest(table, false);
 		
 		for(int ynext = ystart; ynext<=ymax; ynext++) {
-			printStatus(table, false);
-			//sopl("hello");
+			printStatusTest(table, false);
 			
 			if(table[ynext][xstart] == SPACE || table[ynext][xstart] == FALLING) {
 				table[ynext][xstart] = FALLING;
 
-				printStatus(table, false);
+				printStatusTest(table, false);
 				
-				//TODO: print state?
 				
 			} else if(table[ynext][xstart] == CLAY || table[ynext][xstart] == WATER) {
 				//see if we could fill it
 				
-				//hit clay... go up one
+				//hit clay or water... go up one
 				ynext--;
 				
 				boolean rowIsFalling = false;
@@ -222,6 +205,7 @@ public class prob17 {
 					}
 				}
 				if(rowIsFalling == false) {
+					//check if row is falling to the left
 					for(int xleft = xstart-1; table[ynext][xleft] != CLAY; xleft--) {
 						
 						
@@ -267,10 +251,12 @@ public class prob17 {
 						table[ynext][xleft] = FALLING;
 						
 					}
-					//TODO: let water fall to left and right... be recursive...
+					
+					//Take it back now y'all  (cha cha slide)
+					
 				} else {
 					
-					//TODO: copy paste code...
+					//Note: it's copy paste code... but it's mentally easier to have it separated, so whatever.
 					//fill to right:
 					for(int xright = xstart+1; table[ynext][xright] != CLAY; xright++) {
 						
@@ -278,7 +264,6 @@ public class prob17 {
 						
 						
 						if(table[ynext+1][xright] != CLAY && table[ynext+1][xright]!=WATER) {
-							//Row is falling
 							break;
 						}
 					}
@@ -289,10 +274,11 @@ public class prob17 {
 						table[ynext][xleft] = WATER;
 						
 						if(table[ynext+1][xleft] != CLAY && table[ynext+1][xleft]!=WATER) {
-							//Row is falling
 							break;
 						}
 					}
+					
+					//Take it back now y'all  (cha cha slide)
 					
 					//Fill middle:
 					if(table[ynext][xstart] != CLAY) {
@@ -304,7 +290,7 @@ public class prob17 {
 				}
 				
 
-				printStatus(table);
+				printStatusTest(table);
 				
 				if( rowIsFalling == false) {
 					ynext -= 2;
@@ -318,7 +304,6 @@ public class prob17 {
 					}
 					
 					break;
-					//TODO: recursive
 				}
 			
 			}
@@ -355,6 +340,4 @@ public class prob17 {
 		System.exit(code);
 	}
 	
-	//TOO HIGH:
-	//38453
 }

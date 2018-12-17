@@ -136,6 +136,7 @@ public class prob16part2 {
 						jump -= permIndex % permJump;
 						
 						if(permIndex % permJump > 0) {
+							//TODO
 							//I'm surprised this case never happens... there's probably a good reason for this that I can't think of.
 							//I thought that without the "jump -= permIndex % permJump;" command, good answers would be skipped,
 							//but it doesn't look like it anymore... :(
