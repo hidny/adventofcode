@@ -7,23 +7,24 @@ import aStar.AstarAlgo;
 import aStar.AstarNode;
 
 
-//TODO: fix:
-// I didn't understand what counts as a step.
-//1 step = move a single shape as much as you want
-
 public class BoardPos  implements AstarNode{
 
 
+	public static int width;
+	public static int height;
 	
 	public static void main(String[] args) {
-		fakeProblem1();
+		
+		//TODO: fakeProblem2 is easy for me, but still takes long for computer...
+		// investigate ways to make it go faster
+		fakeProblem2();
 	}
 	
 	public static void fakeProblem1() {
 		BoardPos pos = new BoardPos();
 		
-		pos.height = 5;
-		pos.width = 4;
+		height = 5;
+		width = 4;
 		
 		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
 		
@@ -39,8 +40,8 @@ public class BoardPos  implements AstarNode{
 	public static void fakeProblem2() {
 		BoardPos pos = new BoardPos();
 		
-		pos.height = 5;
-		pos.width = 4;
+		height = 5;
+		width = 4;
 		
 		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
 		
@@ -60,8 +61,8 @@ public class BoardPos  implements AstarNode{
 	public static void fakeProblem3() {
 		BoardPos pos = new BoardPos();
 		
-		pos.height = 5;
-		pos.width = 4;
+		height = 5;
+		width = 4;
 		
 		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
 		
@@ -75,6 +76,26 @@ public class BoardPos  implements AstarNode{
 		doAstar(pos);
 	}
 	
+
+	public static void fakeProblem4() {
+		BoardPos pos = new BoardPos();
+		
+		height = 5;
+		width = 4;
+		
+		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
+		
+		for(int i=0; i<1; i++) {
+			for(int j=0; j<1; j++) {
+				pos.shapes.add(new ShapePos(3+i, 1+j, ShapeCatalog.UNIT));
+			}
+		}
+		sopl("Here's a model of the position for fake problem 4:");
+		sopl(pos);
+				
+		//printNeighbours(pos);
+		doAstar(pos);
+	}
 	
 	public static void doProblem1() {
 	
@@ -82,8 +103,8 @@ public class BoardPos  implements AstarNode{
 
 		BoardPos pos = new BoardPos();
 		
-		pos.height = 5;
-		pos.width = 4;
+		height = 5;
+		width = 4;
 
 		for(int i=0; i<2; i++) {
 			pos.shapes.add(new ShapePos(0 + i, 0, ShapeCatalog.UNIT));
@@ -120,8 +141,8 @@ public class BoardPos  implements AstarNode{
 
 		BoardPos pos = new BoardPos();
 		
-		pos.height = 5;
-		pos.width = 4;
+		height = 5;
+		width = 4;
 
 		for(int i=0; i<2; i++) {
 			pos.shapes.add(new ShapePos(0 + i, 0, ShapeCatalog.UNIT));
@@ -155,8 +176,8 @@ public class BoardPos  implements AstarNode{
 
 		BoardPos pos = new BoardPos();
 		
-		pos.height = 5;
-		pos.width = 4;
+		height = 5;
+		width = 4;
 
 		pos.shapes.add(new ShapePos(0, 0, ShapeCatalog.I));
 		
@@ -187,8 +208,8 @@ public class BoardPos  implements AstarNode{
 
 		BoardPos pos = new BoardPos();
 		
-		pos.height = 5;
-		pos.width = 4;
+		height = 5;
+		width = 4;
 
 		pos.shapes.add(new ShapePos(0, 0, ShapeCatalog.UNIT));
 		pos.shapes.add(new ShapePos(0, 3, ShapeCatalog.UNIT));
@@ -265,10 +286,8 @@ public class BoardPos  implements AstarNode{
 		sopl("Number of real Moves: " + numMoves2);
 	}
 	
-	
+	//TODO: replace arraylist with array (1 less complex object)
 	public ArrayList<ShapePos> shapes = new ArrayList<ShapePos>();
-	public int width;
-	public int height;
 	public int indexSelected = -1;
 	
 	public BoardPos makeHardCopy() {
@@ -278,11 +297,6 @@ public class BoardPos  implements AstarNode{
 			//(Hard copy list though)
 			newBoard.shapes.add(shapes.get(i));
 		}
-		
-		//TODO: height and width could be static variables and reduce the amount of memory used...
-		//WHATEVER
-		newBoard.width = this.width;
-		newBoard.height = this.height;
 
 		newBoard.indexSelected = this.indexSelected;
 		
@@ -345,6 +359,7 @@ public class BoardPos  implements AstarNode{
 					//sopl(s + " " + d);
 					//TODO: maybe don't do a hard copy to save some time...
 					BoardPos tempBoard = moveShapeDirHardcopy(s, d);
+					//TODO: ONLY DO HARD COPY INSIDE IF COND
 					
 					if(boardPosAlreadyFoundWithLessOrEqualMovesNeeded(tempBoard) == false) {
 					

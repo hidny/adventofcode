@@ -80,7 +80,9 @@ public class AstarAlgo {
 			} else if(goal == null && current.getAdmissibleHeuristic(null) == -1) {
 				return reconstruct_path(cameFrom, current);
 			}
-			
+			//TESTING
+			//System.out.println(current);
+			//END TESTING
 			openSet.remove(current);
 			fScoreOpenNodes.remove(current);
 			
