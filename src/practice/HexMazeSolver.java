@@ -16,7 +16,7 @@ public class HexMazeSolver {
 		
 		Scanner in;
 		try {
-			 in = new Scanner(new File("practice/hex7.txt"));
+			 in = new Scanner(new File("practice/hex5.txt"));
 			
 			int count = 0;
 			boolean part2 = true;

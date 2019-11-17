@@ -19,7 +19,7 @@ public class prob24 {
 		
 		try {
 			 in = new Scanner(new File("prob24in.txt"));
-			 boolean isPart2 = true;
+			 boolean isPart2 = false;
 			 
 			 //part1: 518
 			 //part2: 716
@@ -150,6 +150,8 @@ public class prob24 {
 			 }
 			 
 			 System.out.println("Answer: " + optimalDist);
+			 //716 part 2
+			 //518 part 1
 			 
 			 in2.close();
 			 in.close();

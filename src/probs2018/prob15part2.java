@@ -282,7 +282,7 @@ Wins with 2558 hit points left
 Outcome: 225104
 			  */
 			
-			sopl("Answer: " + count);
+			sopl("Answer: See outcome 2 lines above ");
 			in.close();
 			
 		} catch(Exception e) {

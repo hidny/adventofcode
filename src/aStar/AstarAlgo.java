@@ -56,21 +56,28 @@ public class AstarAlgo {
 			
 			AstarNode current = getLowestFFunctionNode(fScoreOpenNodes, fScoreQuickMinFinder);
 			
+			
 			//Uncomment for fun:
 			
 			//System.out.println("        ");
 			//System.out.println("------------");
 			
-			//System.out.println("Current smallest fscore: " + fScoreOpenNodes.get(current));
 			//System.out.println("getPositionID: " + current.getPositionID());
 			
 			//System.out.println(current);
+			//System.out.println("Current smallest fscore: " + fScoreOpenNodes.get(current));
+			//System.out.println("Current heuristic fscore: " + current.getAdmissibleHeuristic(goal));
 			
+			//END OF UNCOMMENT
 			//if(fScoreOpenNodes.get(current) == 72) {
 			//	System.out.println("DEBUG!");
 			//}
 			
-			if(current.hashCode() == goal.hashCode()) {
+			if((goal != null && current.hashCode() == goal.hashCode())) {
+				return reconstruct_path(cameFrom, current);
+			
+			//Alternative way to show solution. //TODO TEST
+			} else if(goal == null && current.getAdmissibleHeuristic(null) == 0.00) {
 				return reconstruct_path(cameFrom, current);
 			}
 			
@@ -123,20 +130,15 @@ public class AstarAlgo {
 		
 	}
 	
-	//Make the quick min prioritize the admissible heuristic being as small as possibe by lowering the heuristic function depending on how deep we are..
-	//That way, the A* algo checks the deepest promissing nodes first and gets the answer faster.
-	//This strategy works best if the answer is an integer and there are many answers that are the same.
-	//This admissible heuristic might interfere with getting the right answer, if the wrong answer is really really close to the right answer (less than 1/1000)
+	//Make the quick min prioritize the admissible heuristic being as small as possible by lowering the heuristic function depending on how deep we are..
+	//That way, the A* algo checks the deepest promising nodes first and gets the answer faster.
 	
 	//The "correct" way to do this is to make the min finder have a defined tie breaker that goes with the deepest node if all else is equal, but that's complicated.
-	public static double SMALL_NUMBER = 0.000001;
 	
 	public static double getPriorityHeuristic(AstarNode node, AstarNode goal) {
 		double admissibleHeuristic = node.getAdmissibleHeuristic(goal);
 		
-			//return admissibleHeuristic + SMALL_NUMBER - SMALL_NUMBER/(SMALL_NUMBER + 1.0 * admissibleHeuristic);
-		return admissibleHeuristic  - SMALL_NUMBER/(1000*SMALL_NUMBER + admissibleHeuristic);
-		
+		return admissibleHeuristic  - 1.0/(100.0 + admissibleHeuristic);
 	}
 
 	//TreeMap<Long, AstarNode> minCostOfGettingNodeGetter = new TreeMap<Long, AstarNode>();

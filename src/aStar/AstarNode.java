@@ -2,6 +2,8 @@ package aStar;
 
 import java.util.ArrayList;
 
+//WARNING: AUTO-IMPLEMENT DOESN'T GET YOU ALL NECESSARY FUNCTIONS IN THIS INTERFACE!
+//DO A COPY PASTE
 public interface AstarNode {
 
 	
@@ -13,6 +15,7 @@ public interface AstarNode {
 	public long getCostOfMove(AstarNode nextPos);
 	
 	
+	//
 	//To do the right thing and override the hash's 'contains' function, we need to override both toString and hashCode. Isn't Java great?
 	public String toString();
 	public int hashCode();

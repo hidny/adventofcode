@@ -74,6 +74,7 @@ public class prob13part2 {
 			 }
 			 
 			 System.out.println("Answer: " + (oldLayer.size() + futureLayer.size()));
+			 //138
 			 
 			 in2.close();
 			 in.close();

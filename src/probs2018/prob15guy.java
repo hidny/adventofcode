@@ -90,7 +90,7 @@ public class prob15guy {
 			int currentDistance;
 			for(int k=0; k<guys.size(); k++) {
 				if(guys.get(k).isDead == false && guys.get(k).elf == targetElf) {
-
+					
 					prob15pos goal = new prob15pos(guys.get(k).j, guys.get(k).i);
 					
 					path = AstarAlgo.astar(start, goal);

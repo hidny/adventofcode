@@ -58,7 +58,6 @@ public class prob15pos implements aStar.AstarNode {
 	}
 	
 	
-	//TODO
 	
 	public static char friendsMap[][];
 	
