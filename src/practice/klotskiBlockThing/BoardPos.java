@@ -16,7 +16,7 @@ public class BoardPos  implements AstarNode{
 
 	
 	public static void main(String[] args) {
-		doProblem18();
+		doProblem50();
 	}
 	
 	public static void fakeProblem1() {
@@ -174,6 +174,39 @@ public class BoardPos  implements AstarNode{
 		pos.shapes.add(new ShapePos(4, 1, ShapeCatalog.DASH));
 		
 		sopl("Here's a model of the position for problem 18:");
+		sopl(pos);
+				
+		printNeighbours(pos);
+		doAstar(pos);
+		
+	}
+	
+	public static void doProblem50() {
+		
+		//All coords are i and j where i start at 0 on top left.
+
+		BoardPos pos = new BoardPos();
+		
+		pos.height = 5;
+		pos.width = 4;
+
+		pos.shapes.add(new ShapePos(0, 0, ShapeCatalog.UNIT));
+		pos.shapes.add(new ShapePos(0, 3, ShapeCatalog.UNIT));
+		
+		pos.shapes.add(new ShapePos(1, 0, ShapeCatalog.I));
+		pos.shapes.add(new ShapePos(1, 3, ShapeCatalog.I));
+		
+		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
+		
+		for(int i=0; i<3; i++) {
+			pos.shapes.add(new ShapePos(2 + i, 1, ShapeCatalog.DASH));
+		}
+
+		pos.shapes.add(new ShapePos(3, 0, ShapeCatalog.UNIT));
+		pos.shapes.add(new ShapePos(3, 3, ShapeCatalog.UNIT));
+
+		
+		sopl("Here's a model of the position for problem 50:");
 		sopl(pos);
 				
 		printNeighbours(pos);
