@@ -16,7 +16,7 @@ public class BoardPos  implements AstarNode{
 
 	
 	public static void main(String[] args) {
-		doProblem50();
+		fakeProblem1();
 	}
 	
 	public static void fakeProblem1() {
@@ -31,7 +31,7 @@ public class BoardPos  implements AstarNode{
 		sopl("Here's a model of the position for fake problem 1:");
 		sopl(pos);
 				
-		printNeighbours(pos);
+		//printNeighbours(pos);
 		doAstar(pos);
 	}
 	
@@ -52,7 +52,7 @@ public class BoardPos  implements AstarNode{
 		sopl("Here's a model of the position for fake problem 1:");
 		sopl(pos);
 				
-		printNeighbours(pos);
+		//printNeighbours(pos);
 		doAstar(pos);
 	}
 	
@@ -107,7 +107,7 @@ public class BoardPos  implements AstarNode{
 		
 		sopl("Here's a model of the position for problem 1:");
 		sopl(pos);
-				
+		
 		printNeighbours(pos);
 		doAstar(pos);
 		
@@ -218,6 +218,8 @@ public class BoardPos  implements AstarNode{
 		
 		//Clear current static positions
 		positions  = new Hashtable<String, Integer>();
+
+		pos.setupShapeRecylingProgram();
 		
 		ArrayList<AstarNode> neighbours = pos.getNodeNeighbours();
 		
@@ -235,7 +237,8 @@ public class BoardPos  implements AstarNode{
 
 		//Clear current static positions
 		positions  = new Hashtable<String, Integer>();
-		
+
+		pos.setupShapeRecylingProgram();
 		
 		registerBoard(pos);
 		
@@ -262,6 +265,7 @@ public class BoardPos  implements AstarNode{
 		sopl("Number of real Moves: " + numMoves2);
 	}
 	
+	
 	public ArrayList<ShapePos> shapes = new ArrayList<ShapePos>();
 	public int width;
 	public int height;
@@ -270,10 +274,16 @@ public class BoardPos  implements AstarNode{
 	public BoardPos makeHardCopy() {
 		BoardPos newBoard = new BoardPos();
 		for(int i=0; i<shapes.size(); i++) {
-			newBoard.shapes.add(shapes.get(i).hardCopy());
+			//Soft copy shapes to make it go faster:
+			//(Hard copy list though)
+			newBoard.shapes.add(shapes.get(i));
 		}
+		
+		//TODO: height and width could be static variables and reduce the amount of memory used...
+		//WHATEVER
 		newBoard.width = this.width;
 		newBoard.height = this.height;
+
 		newBoard.indexSelected = this.indexSelected;
 		
 		return newBoard;
@@ -281,6 +291,7 @@ public class BoardPos  implements AstarNode{
 	
 	
 	//TODO: This heuristic is pretty bad...
+	//TODO: This heuristic probably doesn't work for set 2.
 	//Don't use goal param...
 	public long getAdmissibleHeuristic(AstarNode goal) {
 		if(goal != null) {
@@ -292,11 +303,16 @@ public class BoardPos  implements AstarNode{
 		//Let's keep it simple and just calc the manhattan distance goal shape has to goal
 		ShapePos goalShape = getGoalShape();
 		
-		int xDist = Math.abs(goalShape.j - goalShape.goalj);
-		int yDist = Math.abs(goalShape.i - goalShape.goali);
+		int yDist = Math.abs(goalShape.getI() - goalShape.goali);
+		int xDist = Math.abs(goalShape.getJ() - goalShape.goalj);
 		
-		
-		return xDist + yDist;
+		if(yDist + xDist == 0) {
+			return -1;
+		} else if(this.indexSelected != -1 && shapes.get(this.indexSelected).isGoalShape) {
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 	
 	public void setGoalIJ(int i, int j) {
@@ -395,8 +411,8 @@ public class BoardPos  implements AstarNode{
 			for(int i=0; i<curTable.length; i++) {
 				for(int j=0; j<curTable[0].length; j++) {
 					if(curTable[i][j] == TAKEN) {
-						int iBoard = curShape.i + i;
-						int jBoard = curShape.j + j;
+						int iBoard = curShape.getI() + i;
+						int jBoard = curShape.getJ() + j;
 						
 						if(iBoard >=0 && iBoard<height
 						&& jBoard >=0 && jBoard<width) {
@@ -466,11 +482,11 @@ public class BoardPos  implements AstarNode{
 		}
 
 		if(indexSelected >=0) {
-			ret += "Current Shape selected location (i, j) = " + this.shapes.get(indexSelected).i + ", " + this.shapes.get(indexSelected).j + "\n";
+			ret += "Current Shape selected location (i, j) = " + this.shapes.get(indexSelected).getI() + ", " + this.shapes.get(indexSelected).getJ() + "\n";
 		} else {
 			ret += "No Shape selected!" + "\n";
 		}
-		ret += "Current Goal Shape location (i, j) = " + this.getGoalShape().i + ", " + this.getGoalShape().j + "\n";
+		ret += "Current Goal Shape location (i, j) = " + this.getGoalShape().getI() + ", " + this.getGoalShape().getJ() + "\n";
 		ret += "Goal location (i, j) = " + this.getGoalShape().goali + ", " + this.getGoalShape().goalj + "\n";
 		ret+= "\n\n";
 		
@@ -498,7 +514,8 @@ public class BoardPos  implements AstarNode{
 		if(getCostOfMove(newBoard) > 0) {
 			newBoard.num_moves_from_start++;
 		}
-		softMoveShapeDir(newBoard, indexS, dir);
+
+		newBoard.shapes.set(indexS, newBoard.shapes.get(indexS).getShapeThatIsMovedInDir(dir));
 		
 		return newBoard;
 	
@@ -508,34 +525,16 @@ public class BoardPos  implements AstarNode{
 		if(shapes.get(indexS).isMovable == false) {
 			return false;
 		}
-		softMoveShapeDir(this, indexS, dir);
+		
+		shapes.set(indexS, shapes.get(indexS).getShapeThatIsMovedInDir(dir));
 		
 		boolean ret = isPossiblePos();
 
-		softMoveShapeDir(this, indexS, getOppositeDir(dir));
+		shapes.set(indexS, shapes.get(indexS).getShapeThatIsMovedInDir(getOppositeDir(dir)));
 		
 		return ret;
 	}
 	
-	private static void softMoveShapeDir(BoardPos pos, int indexS, int dir) {
-		
-		if(dir == 0) {
-			pos.shapes.get(indexS).i--;
-
-		} else if(dir == 1) {
-			pos.shapes.get(indexS).j++;
-			
-		} else if(dir == 2) {
-			pos.shapes.get(indexS).i++;
-			
-		} else if(dir == 3){
-			pos.shapes.get(indexS).j--;
-			
-		} else {
-			System.out.println("ERROR");
-			System.exit(1);
-		}
-	}
 	
 	public static int getOppositeDir(int dir) {
 		return (dir + 2) % 4;
@@ -569,8 +568,8 @@ public class BoardPos  implements AstarNode{
 			for(int i=0; i<curTable.length; i++) {
 				for(int j=0; j<curTable[0].length; j++) {
 					if(curTable[i][j] == TAKEN) {
-						int iBoard = curShape.i + i;
-						int jBoard = curShape.j + j;
+						int iBoard = curShape.getI() + i;
+						int jBoard = curShape.getJ() + j;
 						
 						if(iBoard >=0 && iBoard<height
 						&& jBoard >=0 && jBoard<width) {
@@ -651,4 +650,9 @@ public class BoardPos  implements AstarNode{
 		System.out.println(a.toString());
 	}
 	
+	public void setupShapeRecylingProgram() {
+		for(int i=0; i<shapes.size(); i++) {
+			shapes.get(i).setupShapeRecyclingProgram(this.height, this.width);
+		}
+	}
 }

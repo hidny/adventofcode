@@ -77,7 +77,7 @@ public class AstarAlgo {
 				return reconstruct_path(cameFrom, current);
 			
 			//Alternative way to show solution. //TODO TEST
-			} else if(goal == null && current.getAdmissibleHeuristic(null) == 0.00) {
+			} else if(goal == null && current.getAdmissibleHeuristic(null) == -1) {
 				return reconstruct_path(cameFrom, current);
 			}
 			
