@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import aStar.AstarAlgo;
 import aStar.AstarNode;
 
+import java.util.Scanner;
 
 public class BoardPos  implements AstarNode{
 
@@ -18,6 +19,10 @@ public class BoardPos  implements AstarNode{
 		
 		//TODO: fakeProblem2 is easy for me, but still takes long for computer...
 		// investigate ways to make it go faster
+		doProblem22();
+		
+		Scanner in = new Scanner(System.in);
+		in.next();
 		doProblem50();
 	}
 	
@@ -31,7 +36,7 @@ public class BoardPos  implements AstarNode{
 		
 		
 		sopl("Here's a model of the position for fake problem 1:");
-		sopl(pos.prettyPrint());
+		sopl(pos.prettyString());
 				
 		//printNeighbours(pos);
 		doAstar(pos);
@@ -52,7 +57,7 @@ public class BoardPos  implements AstarNode{
 			}
 		}
 		sopl("Here's a model of the position for fake problem 1:");
-		sopl(pos.prettyPrint());
+		sopl(pos.prettyString());
 				
 		//printNeighbours(pos);
 		doAstar(pos);
@@ -71,7 +76,7 @@ public class BoardPos  implements AstarNode{
 			pos.shapes.add(new ShapePos(2, 1+j, ShapeCatalog.I));
 		}
 		sopl("Here's a model of the position for fake problem 1:");
-		sopl(pos.prettyPrint());
+		sopl(pos.prettyString());
 				
 		printNeighbours(pos);
 		doAstar(pos);
@@ -92,7 +97,7 @@ public class BoardPos  implements AstarNode{
 			}
 		}
 		sopl("Here's a model of the position for fake problem 4:");
-		sopl(pos.prettyPrint());
+		sopl(pos.prettyString());
 				
 		//printNeighbours(pos);
 		doAstar(pos);
@@ -128,7 +133,7 @@ public class BoardPos  implements AstarNode{
 		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
 		
 		sopl("Here's a model of the position for problem 1:");
-		sopl(pos.prettyPrint());
+		sopl(pos.prettyString());
 		
 		printNeighbours(pos);
 		doAstar(pos);
@@ -163,7 +168,7 @@ public class BoardPos  implements AstarNode{
 		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
 		
 		sopl("Here's a model of the position for problem 1:");
-		sopl(pos.prettyPrint());
+		sopl(pos.prettyString());
 				
 		printNeighbours(pos);
 		doAstar(pos);
@@ -196,7 +201,41 @@ public class BoardPos  implements AstarNode{
 		pos.shapes.add(new ShapePos(4, 1, ShapeCatalog.DASH));
 		
 		sopl("Here's a model of the position for problem 18:");
-		sopl(pos.prettyPrint());
+		sopl(pos.prettyString());
+				
+		printNeighbours(pos);
+		doAstar(pos);
+		
+	}
+	
+	public static void doProblem22() {
+		
+		//All coords are i and j where i start at 0 on top left.
+
+		BoardPos pos = new BoardPos();
+		
+		height = 5;
+		width = 4;
+
+		pos.shapes.add(new ShapePos(0, 0, ShapeCatalog.I));
+		pos.shapes.add(new ShapePos(0, 3, ShapeCatalog.I));
+		
+		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
+		
+		pos.shapes.add(new ShapePos(2, 0, ShapeCatalog.UNIT));
+		pos.shapes.add(new ShapePos(2, 3, ShapeCatalog.UNIT));
+		
+		pos.shapes.add(new ShapePos(2, 1, ShapeCatalog.DASH));
+
+		pos.shapes.add(new ShapePos(3, 0, ShapeCatalog.I));
+		pos.shapes.add(new ShapePos(3, 1, ShapeCatalog.UNIT));
+		pos.shapes.add(new ShapePos(3, 2, ShapeCatalog.UNIT));
+		pos.shapes.add(new ShapePos(3, 3, ShapeCatalog.I));
+		
+		
+		
+		sopl("Here's a model of the position for problem 22:");
+		sopl(pos.prettyString());
 				
 		printNeighbours(pos);
 		doAstar(pos);
@@ -229,7 +268,7 @@ public class BoardPos  implements AstarNode{
 
 		
 		sopl("Here's a model of the position for problem 50:");
-		sopl(pos.prettyPrint());
+		sopl(pos.prettyString());
 				
 		printNeighbours(pos);
 		doAstar(pos);
@@ -248,7 +287,7 @@ public class BoardPos  implements AstarNode{
 		sopl("Neighbour\'s");
 		
 		for(int s=0; s<neighbours.size(); s++) {
-			sopl(((BoardPos)neighbours.get(s)).prettyPrint());
+			sopl(((BoardPos)neighbours.get(s)).prettyString());
 		}
 	}
 	
@@ -259,6 +298,8 @@ public class BoardPos  implements AstarNode{
 
 		//Clear current static positions
 		positions  = new Hashtable<String, Integer>();
+		testNumRegistered = 0;
+		testNumCurrent = 0;
 
 		pos.setupShapeRecylingProgram();
 		
@@ -280,7 +321,7 @@ public class BoardPos  implements AstarNode{
 			
 				numMoves += path.get(i-1).getCostOfMove(path.get(i));
 			}
-			sopl(((BoardPos)path.get(i)).prettyPrint());
+			sopl(((BoardPos)path.get(i)).prettyString());
 		}
 		
 		sopl("Number of Moves: " + numMoves);
@@ -511,7 +552,7 @@ public class BoardPos  implements AstarNode{
 		return ret.toString();
 	}
 	//Every unique pos should have it's own string...
-	public String prettyPrint() {
+	public String prettyString() {
 		if(isPossiblePos() == false) {
 			sopl("ERROR: trying to print illegal position");
 			System.exit(1);
