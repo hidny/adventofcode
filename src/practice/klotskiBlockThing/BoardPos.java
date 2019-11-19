@@ -1,5 +1,6 @@
 package practice.klotskiBlockThing;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -17,7 +18,7 @@ public class BoardPos  implements AstarNode{
 		
 		//TODO: fakeProblem2 is easy for me, but still takes long for computer...
 		// investigate ways to make it go faster
-		fakeProblem2();
+		doProblem50();
 	}
 	
 	public static void fakeProblem1() {
@@ -30,7 +31,7 @@ public class BoardPos  implements AstarNode{
 		
 		
 		sopl("Here's a model of the position for fake problem 1:");
-		sopl(pos);
+		sopl(pos.prettyPrint());
 				
 		//printNeighbours(pos);
 		doAstar(pos);
@@ -51,7 +52,7 @@ public class BoardPos  implements AstarNode{
 			}
 		}
 		sopl("Here's a model of the position for fake problem 1:");
-		sopl(pos);
+		sopl(pos.prettyPrint());
 				
 		//printNeighbours(pos);
 		doAstar(pos);
@@ -70,7 +71,7 @@ public class BoardPos  implements AstarNode{
 			pos.shapes.add(new ShapePos(2, 1+j, ShapeCatalog.I));
 		}
 		sopl("Here's a model of the position for fake problem 1:");
-		sopl(pos);
+		sopl(pos.prettyPrint());
 				
 		printNeighbours(pos);
 		doAstar(pos);
@@ -91,7 +92,7 @@ public class BoardPos  implements AstarNode{
 			}
 		}
 		sopl("Here's a model of the position for fake problem 4:");
-		sopl(pos);
+		sopl(pos.prettyPrint());
 				
 		//printNeighbours(pos);
 		doAstar(pos);
@@ -127,7 +128,7 @@ public class BoardPos  implements AstarNode{
 		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
 		
 		sopl("Here's a model of the position for problem 1:");
-		sopl(pos);
+		sopl(pos.prettyPrint());
 		
 		printNeighbours(pos);
 		doAstar(pos);
@@ -162,7 +163,7 @@ public class BoardPos  implements AstarNode{
 		pos.shapes.add(new ShapePos(0, 1, ShapeCatalog.BOX, true, 3, 1));
 		
 		sopl("Here's a model of the position for problem 1:");
-		sopl(pos);
+		sopl(pos.prettyPrint());
 				
 		printNeighbours(pos);
 		doAstar(pos);
@@ -195,7 +196,7 @@ public class BoardPos  implements AstarNode{
 		pos.shapes.add(new ShapePos(4, 1, ShapeCatalog.DASH));
 		
 		sopl("Here's a model of the position for problem 18:");
-		sopl(pos);
+		sopl(pos.prettyPrint());
 				
 		printNeighbours(pos);
 		doAstar(pos);
@@ -228,7 +229,7 @@ public class BoardPos  implements AstarNode{
 
 		
 		sopl("Here's a model of the position for problem 50:");
-		sopl(pos);
+		sopl(pos.prettyPrint());
 				
 		printNeighbours(pos);
 		doAstar(pos);
@@ -247,7 +248,7 @@ public class BoardPos  implements AstarNode{
 		sopl("Neighbour\'s");
 		
 		for(int s=0; s<neighbours.size(); s++) {
-			sopl(neighbours.get(s));
+			sopl(((BoardPos)neighbours.get(s)).prettyPrint());
 		}
 	}
 	
@@ -279,7 +280,7 @@ public class BoardPos  implements AstarNode{
 			
 				numMoves += path.get(i-1).getCostOfMove(path.get(i));
 			}
-			sopl(path.get(i));
+			sopl(((BoardPos)path.get(i)).prettyPrint());
 		}
 		
 		sopl("Number of Moves: " + numMoves);
@@ -399,8 +400,118 @@ public class BoardPos  implements AstarNode{
 		}
 	}
 	
-	//Every unique pos should have it's own string...
+	
+	
+	//private String tempToString = "";
+	
+	
 	public String toString() {
+		//TODO
+		//if(tempToString.equals("") == false) {
+		//	return tempToString;
+		//}
+		
+		BigInteger ret = BigInteger.ZERO;
+		BigInteger MULT = new BigInteger("2");
+		
+		
+		boolean tableTaken[][] = new boolean[height][width];
+		boolean tableLeftRightAttached[][] = new boolean[height][width];
+		boolean tableUpDownAttached[][] = new boolean[height][width];
+		
+		for(int i=0; i<tableTaken.length; i++) {
+			for(int j=0; j<tableTaken[0].length; j++) {
+				tableTaken[i][j] = false;
+				tableLeftRightAttached[i][j] = false;
+				tableUpDownAttached[i][j] = false;
+			}
+		}
+		
+		for(int s=0; s<shapes.size(); s++) {
+			ShapePos curShape = shapes.get(s);
+			boolean curTable[][] = curShape.table;
+
+			for(int i=0; i<curTable.length; i++) {
+				for(int j=0; j<curTable[0].length; j++) {
+					if(curTable[i][j] == TAKEN) {
+						int iBoard = curShape.getI() + i;
+						int jBoard = curShape.getJ() + j;
+						
+						if(iBoard >=0 && iBoard<height
+						&& jBoard >=0 && jBoard<width) {
+							if(tableTaken[iBoard][jBoard] == false) {
+								tableTaken[iBoard][jBoard] = true;
+							}
+
+							if(j+1 < curTable[0].length) {
+								if(curTable[i][j+1] == TAKEN) {
+									tableLeftRightAttached[iBoard][jBoard] = true;
+								}
+							}
+							ret = ret.multiply(MULT);
+							if(i+1 < curTable.length) {
+								if(curTable[i+1][j] == TAKEN) {
+									tableUpDownAttached[iBoard][jBoard] = true;
+								}
+							}
+							
+							
+						}
+					}
+				}
+			}
+		}
+		
+		for(int i=0; i<height; i++) {
+			for(int j=0; j<width; j++) {
+				if(tableTaken[i][j]) {
+					ret = ret.add(BigInteger.ONE);
+				}
+				ret = ret.multiply(MULT);
+
+				if(tableLeftRightAttached[i][j]) {
+                   ret = ret.add(BigInteger.ONE);
+				}
+				ret = ret.multiply(MULT);
+				
+				if(tableUpDownAttached[i][j]) {
+					ret = ret.add(BigInteger.ONE);
+				}
+				
+				ret = ret.multiply(MULT);
+			}
+		}
+		/*
+		 * if(indexSelected >=0) {
+			ret += "Current Shape selected location (i, j) = " + this.shapes.get(indexSelected).getI() + ", " + this.shapes.get(indexSelected).getJ() + "\n";
+		} else {
+			ret += "No Shape selected!" + "\n";
+		}
+		ret += "Current Goal Shape location (i, j) = " + this.getGoalShape().getI() + ", " + this.getGoalShape().getJ() + "\n";
+		ret += "Goal location (i, j) = " + this.getGoalShape().goali + ", " + this.getGoalShape().goalj + "\n";
+		ret+= "\n\n";
+		
+		
+		 */
+		for(int i=0; i<Math.log(this.shapes.size()) + 2; i++) {
+			ret = ret.multiply(MULT);
+		}
+		if(this.indexSelected == -1) {
+			ret = ret.add(new BigInteger("" + this.shapes.size()));
+		} else {
+			ret = ret.add(new BigInteger("" + this.indexSelected));
+		}
+		for(int i=0; i<Math.log(width * height) + 2; i++) {
+			ret = ret.multiply(MULT);
+		}
+		ret = ret.add(new BigInteger("" + (this.getGoalShape().getI() * this.getGoalShape().getJ()) ) );
+		
+		
+		//sopl("TEST: " + ret.toString());
+		return ret.toString();
+	}
+	//Every unique pos should have it's own string...
+	public String prettyPrint() {
 		if(isPossiblePos() == false) {
 			sopl("ERROR: trying to print illegal position");
 			System.exit(1);
@@ -651,7 +762,7 @@ public class BoardPos  implements AstarNode{
 		testNumRegistered++;
 		testNumCurrent++;
 		
-		if(testNumRegistered % 30 == 0) {
+		if(testNumRegistered % 1000 == 0) {
 			sopl("TEST HEAP SPACE TAKEN: Num registered: " +testNumRegistered + " (current: " + testNumCurrent + ")");
 		}
 		//END TESTING
