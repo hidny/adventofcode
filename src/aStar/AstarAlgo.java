@@ -9,6 +9,8 @@ import HeapTree.HeapTreeMT;
 
 public class AstarAlgo {
 
+	public static final int GOAL_FOUND = -1;
+	
 	public static int astarSize(AstarNode start, AstarNode goal) {
 		 ArrayList<AstarNode>  temp = astar(start, goal);
 		 
@@ -77,7 +79,7 @@ public class AstarAlgo {
 				return reconstruct_path(cameFrom, current);
 			
 			//Alternative way to show solution. //TODO TEST
-			} else if(goal == null && current.getAdmissibleHeuristic(null) == -1) {
+			} else if(goal == null && current.getAdmissibleHeuristic(null) == GOAL_FOUND) { // GOAL_FOUND = -1
 				return reconstruct_path(cameFrom, current);
 			}
 			//TESTING

@@ -10,8 +10,7 @@ import java.util.Stack;
 
 import number.IsNumber;
 import utils.Mapping;
-
-//   https://bewuethr.github.io
+import utils.Sort;
 
 public class prob2 {
 
@@ -54,6 +53,10 @@ public class prob2 {
 			
 			ArrayList ints = new ArrayList<Integer>();
 			
+			for(int i=0; i<lines.size(); i++) {
+				int temp = Integer.parseInt(lines.get(i));
+				count+=temp;
+			}
 			
 			sopl("Answer: " + count);
 			in.close();

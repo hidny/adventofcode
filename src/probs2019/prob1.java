@@ -52,7 +52,17 @@ public class prob1 {
 			ArrayList ints = new ArrayList<Integer>();
 			for(int i=0; i<lines.size(); i++) {
 				ints.add(count);
-				count += Integer.parseInt(lines.get(i % lines.size()));
+
+				int temp = Integer.parseInt(lines.get(i % lines.size())) / 3 -2;
+				
+				do {
+				
+				if(temp >0) {
+					count += temp;
+				}
+				temp = temp / 3 -2;
+				
+				} while(temp > 0);
 				
 			}
 			

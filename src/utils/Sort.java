@@ -1,5 +1,9 @@
 package utils;
 
+import java.util.ArrayList;
+
+import probs2019.prob2ob;
+
 public class Sort {
 	
 	public static void main(String args[]) {
@@ -16,7 +20,6 @@ public class Sort {
 		}
 		
 	}
-	
 	
 	
 	public static String[] sort(String a[] ) {
@@ -86,6 +89,19 @@ public class Sort {
 		return retS;
 		
 	}
+
+	//pre: Array list must be Comparable for this to work
+	//It also returns an object array...
+	public static Object[] sort(ArrayList<Comparable> a) {
+		Comparable aArray[] = new Comparable[a.size()];
+		
+		for(int i=0; i<aArray.length; i++) {
+			aArray[i] = a.get(i);
+		}
+		
+		return Sort.quickSort(aArray);
+	}
+	
 	public static Object[] quickSort(Comparable a[]) {
 		return quickSort(a, 0, a.length);
 	}

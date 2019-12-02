@@ -10,13 +10,15 @@ import java.util.Stack;
 
 import number.IsNumber;
 import utils.Mapping;
+import utils.Sort;
 
-public class prob3 {
+public class prob0template {
 
+	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2019/prob2019in3.txt"));
+			 in = new Scanner(new File("in2019/prob2019in2.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;

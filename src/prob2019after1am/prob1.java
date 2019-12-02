@@ -1,4 +1,4 @@
-package probs2019;
+package prob2019after1am;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -10,15 +10,16 @@ import java.util.Stack;
 
 import number.IsNumber;
 import utils.Mapping;
+//   https://bewuethr.github.io
 
-public class prob3 {
+public class prob1 {
 
+	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2019/prob2019in3.txt"));
-			int numTimes = 0;
-			 
+			 in = new Scanner(new File("in2019/prob2019in1.txt"));
+			
 			int count = 0;
 			boolean part2 = false;
 			String line = "";
@@ -48,12 +49,21 @@ public class prob3 {
 				
 			}
 			
-			
 			ArrayList ints = new ArrayList<Integer>();
-			
 			for(int i=0; i<lines.size(); i++) {
-				int temp = Integer.parseInt(lines.get(i));
-				count+=temp;
+				ints.add(count);
+
+				int temp = Integer.parseInt(lines.get(i % lines.size())) / 3 -2;
+				
+				do {
+				
+				if(temp >0) {
+					count += temp;
+				}
+				temp = temp / 3 -2;
+				
+				} while(part2 && temp > 0);
+				
 			}
 			
 			sopl("Answer: " + count);
@@ -64,7 +74,7 @@ public class prob3 {
 		} finally {
 		}
 	}
-
+	
 	public static void sop(Object a) {
 		System.out.print(a.toString());
 	}
@@ -74,24 +84,6 @@ public class prob3 {
 
 	public static void sopl() {
 		System.out.println();
-	}
-	
-	public static int pint(String s) {
-		if (IsNumber.isNumber(s)) {
-			return Integer.parseInt(s);
-		} else {
-			sop("Error: (" + s + " is not a number");
-			return -1;
-		}
-	}
-	
-	public static void exit() {
-		exit(0);
-	}
-	public static void exit(int code) {
-		sop("Exit with code " + code);
-		
-		System.exit(code);
 	}
 
 }
