@@ -2,6 +2,8 @@ package utils;
 
 import java.util.ArrayList;
 
+//Wait... I could just use a hash map...
+//Maybe delete this.
 public class Mapping {
 
 	//TODO: can't this mapping file be better

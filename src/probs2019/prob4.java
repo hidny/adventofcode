@@ -12,13 +12,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob2 {
+public class prob4 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2019/prob2019in2.txt"));
+			 in = new Scanner(new File("in2019/prob2019in4.txt"));
+			 //in = new Scanner(new File("in2019/prob2019in4.txt.test"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -29,68 +30,55 @@ public class prob2 {
 			Stack stack = new Stack();
 			HashSet set = new HashSet();
 			
-			Mapping dict = new Mapping();
+			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
+			
 			ArrayList <String>lines = new ArrayList<String>();
 			
 			
 			int LIMIT = 20000;
 			boolean table[][] = new boolean[LIMIT][LIMIT];
 			
-			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
 			//dir: 0 up
 			//1 right
 			//2 down
 			//3 left
+			//147981-691423
+			int start = 147981;
+			int end = 691423;
 			
-			while(in.hasNextLine()) {
-				line = in.nextLine();
-				lines.add(line);
+			
+			
+			for(int i=start; i<=end; i++) {
+				int digits[] = getDigits(i);
 				
+				boolean good = true;
+				boolean foundMatch = false;
 				
-			}
-			
-			
-			
-			
-			for(int i=0; i<100; i++) {
-				for(int j=0; j<100; j++) {
-					String cmds[] = lines.get(0).split(",");
-					cmds[1] = i + "";
-					cmds[2] = j + "";
-					int count2 = 100*i + j;
-					
-					int position = 0;
-					
-					while(pint(cmds[position]) != 99) {
-						int temp = -1;
-						if(pint(cmds[position]) == 1) {
-							temp = pint(cmds[pint(cmds[position + 1])]) + pint(cmds[pint(cmds[position + 2])]);
-						} else if(pint(cmds[position]) == 2) {
-							temp = pint(cmds[pint(cmds[position + 1])]) * pint(cmds[pint(cmds[position + 2])]);
+				for(int j=0; j<digits.length; j++) {
+					if(j > 0 && digits[j-1] > digits[j]) {
+						good =false;
+						break;
+					} else if(j > 0 && digits[j-1] == digits[j]) {
+						
+						if(j > 1 && digits[j-1] == digits[j-2]) {
+							//nope
+						} else if(j<digits.length-1 && digits[j] == digits[j+1]) {
+							//nope
 						} else {
-							cmds[0] = -1 + "";
-							break;
+							foundMatch = true;
 						}
-						
-						cmds[pint(cmds[position + 3])] = temp + "";
-						
-						position += 4;
-					}
-					
-					sopl(i + " " + j + " " + cmds[0]);
-					if(pint(cmds[0]) == 19690720) {
-
-						sopl("Ans" + count2);
-						exit(1);
 					}
 					
 				}
+				
+				if(foundMatch && good) {
+					count++;
+				}
+				
 			}
 			
-			
-			
-			
+			sopl("Answer: " + count);
 			in.close();
 			
 		} catch(Exception e) {
@@ -98,7 +86,18 @@ public class prob2 {
 		} finally {
 		}
 	}
-
+	
+	//Why didn't I just convert to string? A: Because this is the first solution iIthought of and then I stopped thinking. :(
+	public static int[] getDigits(int num) {
+		int digits[] = new int[6];
+		
+		int cur = num;
+		for(int i=5; i>=0; i--) {
+			digits[i] = cur % 10;
+			cur /=10;
+		}
+		return digits;
+	}
 	public static void sop(Object a) {
 		System.out.print(a.toString());
 	}

@@ -18,7 +18,8 @@ public class prob0template {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2019/prob2019in2.txt"));
+			 in = new Scanner(new File("in2019/prob2019in3.txt"));
+			 //in = new Scanner(new File("in2019/prob2019in3.txt.test"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -29,14 +30,14 @@ public class prob0template {
 			Stack stack = new Stack();
 			HashSet set = new HashSet();
 			
-			Mapping dict = new Mapping();
+			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
+			
 			ArrayList <String>lines = new ArrayList<String>();
 			
 			
 			int LIMIT = 20000;
 			boolean table[][] = new boolean[LIMIT][LIMIT];
 			
-			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
 			//dir: 0 up
 			//1 right

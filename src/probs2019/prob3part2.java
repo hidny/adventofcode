@@ -2,6 +2,7 @@ package probs2019;
 import java.io.File;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -12,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob3 {
+public class prob3part2 {
 
 	public static void main(String[] args) {
 		Scanner in;
@@ -27,6 +28,9 @@ public class prob3 {
 
 			LinkedList queue = new LinkedList();
 			Stack stack = new Stack();
+			
+			
+			HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 			HashSet set = new HashSet();
 			
 			Mapping dict = new Mapping();
@@ -58,31 +62,46 @@ public class prob3 {
 			int currentj=0;
 			int currenti = 0;
 			
+			int numMoves=0;
+			
 			for(int i=0; i<cmds1.length; i++) {
 				int num = pint(cmds1[i].substring(1));
 				
+				//ugly copy/pasta... didn't want to make a function
 				if(cmds1[i].startsWith("R")) {
 					for(int j=1; j<=num; j++) {
+						numMoves++;
 						currentj++;
-						set.add(new Integer(100000* currenti + currentj));
+						
+						//I know I should use constants, but wanted to save 10 seconds... LOL
+						if(map.get(new Integer(100000* currenti + currentj)) == null) {
+							map.put(new Integer(100000* currenti + currentj), new Integer("" + numMoves));
+						}
 					}
 					
 				} else if(cmds1[i].startsWith("D")) {
 					for(int j=1; j<=num; j++) {
+						numMoves++;
 						currenti++;
-						set.add(new Integer(100000* currenti + currentj));
+						if(map.get(new Integer(100000* currenti + currentj)) == null) {
+							map.put(new Integer(100000* currenti + currentj), new Integer("" + numMoves));
+						}
 					}
 					
 				} else if(cmds1[i].startsWith("U")) {
 					for(int j=1; j<=num; j++) {
-						currenti--;
-						set.add(new Integer(100000* currenti + currentj));
+						numMoves++;
+						currenti--;if(map.get(new Integer(100000* currenti + currentj)) == null) {
+							map.put(new Integer(100000* currenti + currentj), new Integer("" + numMoves));
+						}
 					}
 					
 				} else if(cmds1[i].startsWith("L")) {
 					for(int j=1; j<=num; j++) {
-						currentj--;
-						set.add(new Integer(100000* currenti + currentj));
+						numMoves++;
+						currentj--;if(map.get(new Integer(100000* currenti + currentj)) == null) {
+							map.put(new Integer(100000* currenti + currentj), new Integer("" + numMoves));
+						}
 					}
 					
 				} else {
@@ -94,6 +113,7 @@ public class prob3 {
 			currentj=0;
 		    currenti = 0;
 			int answer =10000000;
+			numMoves=0;
 			
 			for(int i=0; i<cmds2.length; i++) {
 				int num = pint(cmds2[i].substring(1));
@@ -101,8 +121,9 @@ public class prob3 {
 				if(cmds2[i].startsWith("R")) {
 					for(int j=1; j<=num; j++) {
 						currentj++;
-						if(set.contains(new Integer(100000* currenti + currentj))) {
-							int temp = Math.abs(currenti) + Math.abs(currentj);
+						numMoves++;
+						if(map.get(new Integer(100000* currenti + currentj)) != null) {
+							int temp = numMoves + map.get(new Integer(100000* currenti + currentj));
 							
 							if(temp < answer) {
 								answer = temp;
@@ -113,8 +134,9 @@ public class prob3 {
 				} else if(cmds2[i].startsWith("D")) {
 					for(int j=1; j<=num; j++) {
 						currenti++;
-						if(set.contains(new Integer(100000* currenti + currentj))) {
-							int temp = Math.abs(currenti) + Math.abs(currentj);
+						numMoves++;
+						if(map.get(new Integer(100000* currenti + currentj)) != null) {
+							int temp = numMoves + map.get(new Integer(100000* currenti + currentj));
 							
 							if(temp < answer) {
 								answer = temp;
@@ -125,8 +147,9 @@ public class prob3 {
 				} else if(cmds2[i].startsWith("U")) {
 					for(int j=1; j<=num; j++) {
 						currenti--;
-						if(set.contains(new Integer(100000* currenti + currentj))) {
-							int temp = Math.abs(currenti) + Math.abs(currentj);
+						numMoves++;
+						if(map.get(new Integer(100000* currenti + currentj)) != null) {
+							int temp = numMoves + map.get(new Integer(100000* currenti + currentj));
 							
 							if(temp < answer) {
 								answer = temp;
@@ -137,8 +160,9 @@ public class prob3 {
 				} else if(cmds2[i].startsWith("L")) {
 					for(int j=1; j<=num; j++) {
 						currentj--;
-						if(set.contains(new Integer(100000* currenti + currentj))) {
-							int temp = Math.abs(currenti) + Math.abs(currentj);
+						numMoves++;
+						if(map.get(new Integer(100000* currenti + currentj)) != null) {
+							int temp = numMoves + map.get(new Integer(100000* currenti + currentj));
 							
 							if(temp < answer) {
 								answer = temp;
