@@ -18,4 +18,9 @@ public class IsNumber {
 			return false;
 		}
 	}
+	
+	public static void main( String args[]) {
+		System.out.println(isLong("0033933999992442222"));
+		System.out.println(Long.parseLong("0033933999992442222"));
+	}
 }
