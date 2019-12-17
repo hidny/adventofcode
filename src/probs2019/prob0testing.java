@@ -22,7 +22,7 @@ public class prob0testing {
 		list.add(new prob2ob(2));
 		list.add(new prob2ob(1));
 		
-		Object sorted[] = utils.Sort.sort(list);
+		Object sorted[] = utils.Sort.sortList(list);
 		for(int i=0; i<sorted.length; i++) {
 			sopl(((prob2ob)sorted[i]).num);
 		}
@@ -35,7 +35,7 @@ public class prob0testing {
 		list2.add(new Integer(2));
 		list2.add(new Integer(1));
 		
-		Object sorted2[] = utils.Sort.sort(list2);
+		Object sorted2[] = utils.Sort.sortList(list2);
 		for(int i=0; i<sorted2.length; i++) {
 			sopl(sorted2[i]);
 		}
@@ -60,7 +60,7 @@ public class prob0testing {
 			listNum.add((Comparable)iter.next());
 		}
 		
-		Object sortedList[]  = utils.Sort.sort(listNum);
+		Object sortedList[]  = utils.Sort.sortList(listNum);
 		
 		for(int i=0; i<sortedList.length; i++) {
 			sopl(sortedList[i]);

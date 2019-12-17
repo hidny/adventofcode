@@ -19,8 +19,8 @@ public class prob10 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2019/prob2019in10.txt"));
-			 //in = new Scanner(new File("in2019/prob2019in10.txt.test"));
+			in = new Scanner(new File("in2019/prob2019in10.txt"));
+			// in = new Scanner(new File("in2019/prob2019in10.txt.test"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -64,7 +64,6 @@ public class prob10 {
 							for(int j=0; j<lines.get(0).length(); j++) {
 								
 								if(lines.get(i).charAt(j) == '#') {
-									curNum++;
 									
 									for(int k=1; k<Math.abs(utilsPE.GCD.getGCD(i - i1, j-j1)); k++) {
 										if(lines.get(i1 + 
@@ -72,7 +71,6 @@ public class prob10 {
 												.charAt(j1 + 
 														(int)((k*(j-j1))/Math.abs(utilsPE.GCD.getGCD(i - i1, j-j1)))) == '#') {
 											sopl("cover");
-											curNum--;
 											continue OUT;
 											//.charAt(j1 + (int)(k*(j-j1)/Math.abs(utilsPE.GCD.getGCD(i - i1, j-j1)) == '#') {
 												
@@ -85,7 +83,6 @@ public class prob10 {
 											if(lines.get(i1 + k *(i-i1)/Math.abs(i - i1))
 													.charAt(j1) == '#') {
 												sopl("cover |");
-												curNum--;
 												continue OUT;
 												//.charAt(j1 + (int)(k*(j-j1)/Math.abs(utilsPE.GCD.getGCD(i - i1, j-j1)) == '#') {
 													
@@ -99,13 +96,16 @@ public class prob10 {
 											if(lines.get(i1)
 													.charAt(j1 + k *(j-j1)/Math.abs(j - j1)) == '#') {
 												sopl("cover --");
-												curNum--;
 												continue OUT;
 												//.charAt(j1 + (int)(k*(j-j1)/Math.abs(utilsPE.GCD.getGCD(i - i1, j-j1)) == '#') {
 													
 											}
 										}
 									}
+									
+									//At this point, the asteroid can be seen
+									curNum++;
+									
 								}
 							}
 						}

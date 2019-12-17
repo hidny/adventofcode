@@ -1,4 +1,4 @@
-package prob2019after1am;
+package probs2019after1am;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -68,20 +68,39 @@ public class IntCode {
 		
 	}
 	
+
+	private boolean pauseOnOutput = false;
+	
+	public void setPauseOnOutput() {
+		this.pauseOnOutput = true;
+	}
 	//TODO: make into object so mult instances can run at once.
+	
+	public LinkedList<Long> inputQueue = new LinkedList<Long>();
+	
 	public String cmds[];
 	
 	public Hashtable<Long, String> extra = new Hashtable<Long, String>();
 	
+	private long position = 0;
+
 	public long relativeBase = 0;
 
-	public LinkedList<Long> inputQueue = new LinkedList<Long>();
+	private boolean halted = false;
 	
-	public void runProg() {
+	public boolean isHalted() {
+		return halted;
+	}
+	
+	private IntCodeInputReader inputReader;
+	public void setInputReader(IntCodeInputReader r) {
+		inputReader = r;
+	}
+	
+	public long runProg() {
 		
-		long position = 0;
 		
-		sopl("Start");
+		//sopl("Start");
 		
 		while(pint(getCmds(position)) % 100 != 99) {
 		
@@ -165,10 +184,30 @@ public class IntCode {
 				
 			} else if(opCode == 3) {
 				//INPUT HERE
-				setCmds(var1, "" + inputQueue.getFirst());
+				if(inputQueue.isEmpty()) {
+					
+					if(inputReader == null) {
+						sopl("ERROR: empty input queue and null inputReader... intCode doesn\'t know what the input should be!");
+					} else {
+						sopl("WARN: empty input");
+					}
+					
+					setCmds(var1, "" + inputReader.getInput());
+					
+				} else {
+					setCmds(var1, "" + inputQueue.getFirst());
+					inputQueue.removeFirst();
+				}
 				
 			} else if(opCode == 4) {
-				sopl("Output: " + var1);
+				if(this.pauseOnOutput) {
+
+					position += lngth;
+					return var1;
+				} else {
+					sopl("Output: " + var1);
+					
+				}
 				
 			} else if(opCode == 5) {
 				//sopl(var1 + "!= lit(0) ??");
@@ -220,6 +259,10 @@ public class IntCode {
 			
 			position += lngth;
 		}
+		
+		//return sucess...
+		halted = true;
+		return 99L;
 	}
 	
 

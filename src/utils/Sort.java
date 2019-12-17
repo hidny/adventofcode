@@ -92,7 +92,7 @@ public class Sort {
 
 	//pre: Array list must be Comparable for this to work
 	//It also returns an object array...
-	public static Object[] sort(ArrayList<Comparable> a) {
+	public static Object[] sortList(ArrayList<Comparable> a) {
 		Comparable aArray[] = new Comparable[a.size()];
 		
 		for(int i=0; i<aArray.length; i++) {

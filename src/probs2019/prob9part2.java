@@ -18,7 +18,7 @@ public class prob9part2 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2019/prob2019in9.txt"));
+			in = new Scanner(new File("in2019/prob2019in9.txt"));
 
 			String line = "";
 
