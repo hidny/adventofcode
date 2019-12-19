@@ -11,7 +11,6 @@ import java.util.Stack;
 import aStar.AstarAlgo;
 import aStar.AstarNode;
 import number.IsNumber;
-import probs2018.prob18goal;
 import probs2018.prob22pos;
 import utils.Mapping;
 import utils.Sort;
@@ -25,7 +24,7 @@ public class prob18 {
 		Scanner in;
 		try {
 			
-			String filename = "in2019/prob2019in18.txt.test3";
+			String filename = "in2019/prob2019in18.txt";
 			 //in = new Scanner(new File("in2019/prob2019in18.txt"));
 			 in = new Scanner(new File(filename));
 			 
@@ -97,11 +96,8 @@ public class prob18 {
 	public static int veryBestFound = 99999;
 	public static int getBestPath(prob18state startState) {
 
-		//TODO: keep a count of these to save time?
-		ArrayList<prob18goal> goals = getGoals(startState.map);
-
-		//TODO: keep a count of these to save time?
-		ArrayList<String> doorsCurrentlyClosedAndKeys = getDoorsAndKeys(startState.map);
+		ArrayList<prob18goal> goals = startState.getGoals();
+		ArrayList<String> doorsCurrentlyClosedAndKeys = startState.getDoorsAndKeys();
 		
 		//sopl("Doors closed: ");
 		//for(int i=0; i<doorsCurrentlyClosed.size(); i++) {
@@ -123,52 +119,19 @@ public class prob18 {
 			
 			boolean lockedOut = false;
 			for(int j=0; j<doorsCurrentlyClosedAndKeys.size(); j++) {
-				//blocked.add(listOfBlackedDoors.get(i).toKey());
 				
 				//sopl("DEBUG trial for goal " + i + ": " + startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i + "," + doorsCurrentlyClosed.get(j));
 				if(blocked.contains(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i + "," + doorsCurrentlyClosedAndKeys.get(j))) {
 					lockedOut = true;
 					break;
 				}
-				//TODO
 			}
 			
-			
-			//OLD ASTAR
-			//TODO
-			int testDEBUG = -1;
-			
-			ArrayList<AstarNode> path;
-			
-			//TODO: KEY: only use astar at beginning, so you could avoid recompute!!!
-			/*path = AstarAlgo.astar(startState, null);
-			if(path == null) {
-				//sopl("no path");
-				testDEBUG = -1;
-			} else {
-				testDEBUG = path.size() - 1;;
-				//sopl("Found path for " + startState);
-				int numMoves = path.size() - 1;
-				nextStepStates.add(new prob18state(startState.getStateMapAfterGoal(), startState.numMovesToGetToStartOfGoal + numMoves));
-			}
-			
-			//END OLD ASTAR with key blocks...
-			*/
-			
-			//NEW DIST
 			if(lockedOut == false) {
 				int numMoves = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
-				nextStepStates.add(new prob18state(startState.getStateMapAfterGoal(), startState.numMovesToGetToStartOfGoal + numMoves));
+				nextStepStates.add(new prob18state(startState.getStateMapAfterGoal(), startState.numMovesToGetToStartOfGoal + numMoves, startState.getGoalsAfterAttainingSingleGoal(), startState.getDoorsAndKeysAfterAttainingSingleGoal()));
 				
-				//if(testDEBUG != numMoves) {
-				//	sopl("ERROR: old and right: " + testDEBUG + " vs wrong " + numMoves);
-				//}
-			} else {
-				//if(testDEBUG != -1) {
-				//	sopl("ERROR: new dist says impossible");
-				//}
 			}
-			//END NEW DIST
 			
 		}
 		
@@ -183,7 +146,7 @@ public class prob18 {
 		for(int i=0; i<list.length; i++) {
 			
 			//TODO: put it back... took away for testing
-			if(veryBestFound <= minNumMovesNeededForPathGivenCurrentTrailTrial2((prob18state)list[i])) {
+			if(veryBestFound <= minNumMovesNeededForPathGivenCurrentTrailSpanningTree((prob18state)list[i])) {
 				//sopl("Denied!");
 				continue;
 			}
@@ -210,57 +173,9 @@ public class prob18 {
 		return best;
 	}
 	
-	/*
-	public static int minNumMovesNeededForPathGivenCurrentTrail(prob18state startState) { 
+	public static int minNumMovesNeededForPathGivenCurrentTrailSpanningTree(prob18state startState) { 
 		
-		ArrayList<prob18goal> goals = getGoals(startState.map);
-		
-		//If 1 more goal, then whatever
-		if(goals.size() <= 1) {
-			return 0;
-		}
-		
-		int smallestDist[] = new int[goals.size() + 1];
-		for(int i=0; i<smallestDist.length; i++) {
-			smallestDist[i] = 100000;
-		}
-		for(int i=0; i<goals.size(); i++) {
-			int dist = Math.abs(goals.get(i).i - startState.coordY) + Math.abs(goals.get(i).j - startState.coordX);
-			if(dist < smallestDist[goals.size()]) {
-				smallestDist[goals.size()] = dist;
-			}
-		}
-		
-		for(int i=0; i<goals.size(); i++) {
-			for(int j=0; j<goals.size(); j++) {
-				int dist = Math.abs(goals.get(i).i - goals.get(j).i) + Math.abs(goals.get(i).j - goals.get(j).j);
-				if(dist < smallestDist[i]) {
-					smallestDist[i] = dist;
-				}
-			}
-		}
-		
-		int ret = 0;
-		int max = 0;
-		for(int i=0; i<smallestDist.length; i++) {
-			ret += smallestDist[i];
-			if(i<goals.size() && smallestDist[i] > max) {
-				max = smallestDist[i];
-			}
-		}
-		
-		ret -= max;
-		
-		return startState.numMovesToGetToStartOfGoal + ret;
-	}
-	
-	*/
-	
-	
-	//Bad algo to find min spanning tree....
-	public static int minNumMovesNeededForPathGivenCurrentTrailTrial2(prob18state startState) { 
-		
-		ArrayList<prob18goal> goals = getGoals(startState.map);
+		ArrayList<prob18goal> goals = startState.getGoals();
 		
 		//If 1 more goal, then whatever
 		if(goals.size() <= 1) {
@@ -271,54 +186,90 @@ public class prob18 {
 		for(int i=0; i<smallestDist.length; i++) {
 			smallestDist[i] = 100000;
 		}
+		
+		
+		ArrayList<Comparable> edges = new ArrayList<Comparable>();
+		
 		//TODO:
 		for(int i=0; i<goals.size(); i++) {
-			/*int dist = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
+			int dist = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
 			
-			distTable[i][goals.size()] = dist;
-			distTable[goals.size()][i] = dist;
+			if(dist == 0) {
+				sopl("DEBUG dist 1");
+				exit(1);
+			}
+			edges.add(new prob18edge(i, goals.size(), dist));
 			
 		}
 		
 		for(int i=0; i<goals.size(); i++) {
 			for(int j=i+1; j<goals.size(); j++) {
-
-				//sopl(goals.get(j).j + "," + goals.get(j).i + "," + goals.get(i).j + "," + goals.get(i).i);
+					
 				int dist = distances.get(goals.get(j).j + "," + goals.get(j).i + "," + goals.get(i).j + "," + goals.get(i).i);
-				*/
-			int dist = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
-			
-			if(dist < smallestDist[goals.size()]) {
-				smallestDist[goals.size()] = dist;
+				
+				if(dist == 0) {
+					sopl("DEBUG dist 2");
+					exit(1);
+				}
+				edges.add(new prob18edge(i, j, dist));
 			}
 		}
 		
-		for(int i=0; i<goals.size(); i++) {
-			for(int j=0; j<goals.size(); j++) {
+		
+		//TODO: TEST
+		Object sortedEdges[] = utils.Sort.sortList(edges);
+		
+		boolean taken[] = new boolean[goals.size() + 1];
+		
+		int numEdgesNeeded = taken.length - 1;
+		
+		int numEdgesUsed = 0;
+		
+		int minSpanningTreeWeight = 0;
+		
+		boolean connections[][] = new boolean[taken.length][taken.length];
+		
+		for(int i=0; numEdgesUsed < numEdgesNeeded; i++) {
+			prob18edge tmp = (prob18edge)sortedEdges[i];
+			if(connections[tmp.getI()][tmp.getJ()] == false) {
+				minSpanningTreeWeight += tmp.getWeigth();
 				
-				if(i != j ) {
-					int dist = distances.get(goals.get(j).j + "," + goals.get(j).i + "," + goals.get(i).j + "," + goals.get(i).i);
-					
-					if(dist < smallestDist[i]) {
-						smallestDist[i] = dist;
+				//START Adjust connections:
+				connections[tmp.getI()][tmp.getJ()] = true;
+				connections[tmp.getJ()][tmp.getI()] = true;
+				
+				for(int x=0; x<connections.length; x++) {
+					if(connections[tmp.getI()][x] == true) {
+						connections[tmp.getJ()][x] = true;
+						connections[x][tmp.getJ()] = true;
+						
+					} else if(connections[tmp.getJ()][x] == true) {
+						connections[tmp.getI()][x] = true;
+						connections[x][tmp.getI()] = true;
 					}
 				}
+				//END Adjust connections
+				
+				if(taken[tmp.getI()] == false) {
+					taken[tmp.getI()] = true;
+					
+				}
+				
+				if(taken[tmp.getJ()] == false) {
+					taken[tmp.getJ()] = true;
+				}
+
+				
+				numEdgesUsed++;
 			}
+			
 		}
+		//END TODO TEST
 		
-		int ret = 0;
-		int max = 0;
-		for(int i=0; i<smallestDist.length; i++) {
-			ret += smallestDist[i];
-			if(i<goals.size() && smallestDist[i] > max) {
-				max = smallestDist[i];
-			}
-		}
 		
-		ret -= max;
-		
-		return startState.numMovesToGetToStartOfGoal + ret;
+		return startState.numMovesToGetToStartOfGoal + minSpanningTreeWeight;
 	}
+	
 	
 	
 
@@ -410,98 +361,9 @@ public class prob18 {
 			}
 		}
 		
-		
-		
 		sopl("-------");
 	}
-	/*
-	//Find min spanning tree.... and ret weight
-	public static int minNumMovesNeededForPathGivenCurrentTrailTrial3(prob18state startState) { 
-		
-		
-		
-		ArrayList<prob18goal> goals = getGoals(startState.map);
-		
-		//If 1 more goal, then whatever
-		if(goals.size() <= 1) {
-			return 0;
-		}
-		
-		int distTable[][] = new int[goals.size() + 1][goals.size() + 1];
-		
-		for(int i=0; i<goals.size(); i++) {
-			
-			//sopl(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
-			int dist = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
-			
-			distTable[i][goals.size()] = dist;
-			distTable[goals.size()][i] = dist;
-			
-		}
-		
-		for(int i=0; i<goals.size(); i++) {
-			for(int j=i+1; j<goals.size(); j++) {
-
-				//sopl(goals.get(j).j + "," + goals.get(j).i + "," + goals.get(i).j + "," + goals.get(i).i);
-				int dist = distances.get(goals.get(j).j + "," + goals.get(j).i + "," + goals.get(i).j + "," + goals.get(i).i);
-				
-				distTable[i][j] = dist;
-				distTable[j][i] = dist;
-			}
-		}
-
-		//TODO: get min spamming tree: in O(n^2).... I don't know.
-		int ret = 0;
-		
-		for(int i=1; i<distTable.length; i++) {
-			int min = 0;
-			for(int j=0; j<i; j++) {
-				if(min == 0 || distTable[i][j] < min) {
-					min = distTable[i][j];
-				}
-			}
-			
-			ret += min;
-			//sopl(ret);
-		}
-		
-		return startState.numMovesToGetToStartOfGoal + ret;
-	}*/
 	
-
-	public static ArrayList<prob18goal> getGoals(char map[][]) {
-		ArrayList<prob18goal> goals = new ArrayList<prob18goal>();
-		
-		for(int i=0; i<map.length; i++) {
-			for(int j=0; j<map[0].length; j++) {
-				if(map[i][j] >= 'a' && map[i][j] <= 'z') {
-					prob18goal temp = new prob18goal();
-					temp.i = i;
-					temp.j = j;
-					temp.key = map[i][j];
-					goals.add(temp);
-				}
-			}
-		}
-		return goals;
-	}
-	
-	public static ArrayList<String> getDoorsAndKeys(char map[][]) {
-		ArrayList<String> doors = new ArrayList<String>();
-		
-		for(int i=0; i<map.length; i++) {
-			for(int j=0; j<map[0].length; j++) {
-				if((map[i][j] >= 'A' && map[i][j] <= 'Z') || (map[i][j] >= 'a' && map[i][j] <= 'z')) {
-					prob18goal temp = new prob18goal();
-					temp.i = i;
-					temp.j = j;
-					temp.key = map[i][j];
-					doors.add("" + map[i][j]);
-				}
-			}
-		}
-		return doors;
-	}
 	
 	public static void sop(Object a) {
 		System.out.print(a.toString());

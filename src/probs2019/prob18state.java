@@ -19,9 +19,10 @@ public class prob18state implements Comparable, aStar.AstarNode {
 	public int numMovesToGetToStartOfGoal = -1;
 	
 	public prob18state(char map[][]) {
-		this(map, 0);
+		this(map, 0, null, null);
 	}
-	public prob18state(char map[][], int numMovesFromStartOfGoal) {
+
+	public prob18state(char map[][], int numMovesFromStartOfGoal, ArrayList<prob18goal> goals, ArrayList<String> getDoorsAndKeys) {
 		
 		this.map = new char[map.length][map[0].length];
 		for(int i=0; i<map.length; i++) {
@@ -36,6 +37,8 @@ public class prob18state implements Comparable, aStar.AstarNode {
 			}
 		}
 		
+		this.goals = goals;
+		this.getDoorsAndKeys = getDoorsAndKeys;
 		this.numMovesToGetToStartOfGoal = numMovesFromStartOfGoal;
 	}
 	
@@ -69,6 +72,81 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		return newMap;
 	}
 	
+
+	private ArrayList<prob18goal> goals;
+	private  ArrayList<String> getDoorsAndKeys;
+
+	//pre: goals != null...
+	public ArrayList<prob18goal> getGoalsAfterAttainingSingleGoal() {
+		ArrayList<prob18goal> ret = new ArrayList<prob18goal>();
+		char goalObtained = map[coordGoalY][coordGoalX];
+		
+		for(int i=0; i<goals.size(); i++) {
+			if(goals.get(i).key != goalObtained) {
+				ret.add(goals.get(i));
+			}
+		}
+		
+		return ret;
+	}
+	
+	public ArrayList<String>  getDoorsAndKeysAfterAttainingSingleGoal() {
+		ArrayList<String> ret = new ArrayList<String>();
+		char goalObtained = map[coordGoalY][coordGoalX];
+		char doorOpened = (char)(map[coordGoalY][coordGoalX] + 'A' - 'a');
+		
+		for(int i=0; i<getDoorsAndKeys.size(); i++) {
+			if(getDoorsAndKeys.get(i).equals("" + goalObtained) == false && getDoorsAndKeys.get(i).equals("" + doorOpened) == false) {
+				ret.add(getDoorsAndKeys.get(i));
+			}
+		}
+		
+		return ret;
+	}
+	
+	
+	
+	public ArrayList<prob18goal> getGoals() {
+		if(this.goals != null) {
+			return this.goals;
+		}
+		this.goals = new ArrayList<prob18goal>();
+		
+		for(int i=0; i<map.length; i++) {
+			for(int j=0; j<map[0].length; j++) {
+				if(map[i][j] >= 'a' && map[i][j] <= 'z') {
+					prob18goal temp = new prob18goal();
+					temp.i = i;
+					temp.j = j;
+					temp.key = map[i][j];
+					this.goals.add(temp);
+				}
+			}
+		}
+		return this.goals;
+	}
+	
+	public ArrayList<String> getDoorsAndKeys() {
+		if(this.getDoorsAndKeys != null) {
+			return this.getDoorsAndKeys;
+		}
+		
+		this.getDoorsAndKeys = new ArrayList<String>();
+		
+		for(int i=0; i<map.length; i++) {
+			for(int j=0; j<map[0].length; j++) {
+				if((map[i][j] >= 'A' && map[i][j] <= 'Z') || (map[i][j] >= 'a' && map[i][j] <= 'z')) {
+					prob18goal temp = new prob18goal();
+					temp.i = i;
+					temp.j = j;
+					temp.key = map[i][j];
+					this.getDoorsAndKeys.add("" + map[i][j]);
+				}
+			}
+		}
+		return this.getDoorsAndKeys;
+	}
+	
 	public prob18state(char map[][], int coordX, int coordY, int coordGoalX, int coordGoalY) {
 		this.map = map;
 		this.coordY = coordY;
@@ -93,7 +171,7 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		}
 		
 		if(Math.abs(this.coordGoalX - coordX) + Math.abs(this.coordGoalY - coordY) == 0) {
-			return -1; //GOAL_FOUND TOOD CONST
+			return -1; //GOAL_FOUND TODO CONST
 		}
 		
 		return Math.abs(this.coordGoalX - coordX) + Math.abs(this.coordGoalY - coordY);
@@ -127,10 +205,6 @@ public class prob18state implements Comparable, aStar.AstarNode {
 	}
 	
 	
-	//TODO
-	
-	public static char friendsMap[][];
-	
 	public boolean isWallorLockedDoorOrWrongKey(int coordX, int coordY) {
 
 		//negative values are invalid, as they represent a location outside the building.
@@ -150,8 +224,6 @@ public class prob18state implements Comparable, aStar.AstarNode {
 	}
 	
 	
-	
-	
 	//AHA:
 	//This helps. I have to override equals so the hash will use hashCode... :(
 	public boolean  equals (Object object) {
@@ -168,18 +240,9 @@ public class prob18state implements Comparable, aStar.AstarNode {
 	}
 	
 	public String toString() {
-		
-		/*String mapDEBUG = "\n";
-		for(int i=0; i<map.length; i++) {
-			for(int j=0; j<map[0].length; j++) {
-				mapDEBUG += map[i][j];
-			}
-			mapDEBUG += "\n";
-		}*/
-
-		
-		return /*mapDEBUG + */"( " + this.coordX + ", " + this.coordY + ")";
+		return "( " + this.coordX + ", " + this.coordY + ")";
 	}
+
 	@Override
 	public int compareTo(Object o) {
 		if(((prob18state)o).numMovesToGetToStartOfGoal < this.numMovesToGetToStartOfGoal) {
