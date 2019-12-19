@@ -1,6 +1,8 @@
 package probs2019;
 
 import java.util.ArrayList;
+
+import aStar.AstarAlgo;
 import aStar.AstarNode;
 
 //Much simpler algo that just gets distance from A to B:
@@ -43,7 +45,7 @@ public class prob18stateAtoB implements aStar.AstarNode {
 		}
 		
 		if(Math.abs(this.coordGoalX - coordX) + Math.abs(this.coordGoalY - coordY) == 0) {
-			return -1; //GOAL_FOUND TOOD CONST
+			return AstarAlgo.GOAL_FOUND;
 		}
 		
 		return Math.abs(this.coordGoalX - coordX) + Math.abs(this.coordGoalY - coordY);
@@ -53,7 +55,7 @@ public class prob18stateAtoB implements aStar.AstarNode {
 	public ArrayList<AstarNode> getNodeNeighbours() {
 		ArrayList<AstarNode> ret = new ArrayList<AstarNode>();
 
-		//Order it for prob 15:
+		//Order it for 2018 day 15:
 		ret.add(new prob18stateAtoB(map, coordX, coordY-1, coordGoalX, coordGoalY, ClosedDoorsOrKeyBlocks));
 		ret.add(new prob18stateAtoB(map, coordX-1, coordY, coordGoalX, coordGoalY, ClosedDoorsOrKeyBlocks));
 		ret.add(new prob18stateAtoB(map, coordX+1, coordY, coordGoalX, coordGoalY, ClosedDoorsOrKeyBlocks));
@@ -120,16 +122,17 @@ public class prob18stateAtoB implements aStar.AstarNode {
 	}
 	
 	public String toString() {
-		
-		/*String mapDEBUG = "\n";
+		return"( " + this.coordX + ", " + this.coordY + ")";
+	}
+	
+	public String debugMap() {
+		String mapDEBUG = "\n";
 		for(int i=0; i<map.length; i++) {
 			for(int j=0; j<map[0].length; j++) {
 				mapDEBUG += map[i][j];
 			}
 			mapDEBUG += "\n";
-		}*/
-
-		
-		return /*mapDEBUG + */"( " + this.coordX + ", " + this.coordY + ")";
+		}
+		return mapDEBUG;
 	}
 }

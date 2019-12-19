@@ -1,15 +1,15 @@
-package probs2019;
+package utils.graph;
 
 import java.util.ArrayList;
 import aStar.AstarNode;
 
-public class prob18edge implements Comparable {
+public class GraphEdge implements Comparable {
 
 	private int i;
 	private int j;
 	private int weigth;
 	
-	public prob18edge(int i, int j, int weigth) {
+	public GraphEdge(int i, int j, int weigth) {
 		super();
 		this.i = i;
 		this.j = j;
@@ -54,9 +54,9 @@ public class prob18edge implements Comparable {
 
 	@Override
 	public int compareTo(Object o) {
-		if(this.weigth > ((prob18edge)o).weigth) {
+		if(this.weigth > ((GraphEdge)o).weigth) {
 			return 1;
-		} else if(this.weigth < ((prob18edge)o).weigth) {
+		} else if(this.weigth < ((GraphEdge)o).weigth) {
 			return -1;
 		} else {
 			return 0;

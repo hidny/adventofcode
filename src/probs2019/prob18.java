@@ -4,57 +4,32 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.Scanner;
-import java.util.Stack;
 
 import aStar.AstarAlgo;
 import aStar.AstarNode;
 import number.IsNumber;
-import probs2018.prob22pos;
-import utils.Mapping;
 import utils.Sort;
+import utils.graph.*;
 
 public class prob18 {
 
-	//4672 still too high!
-	
-	//4908 too high...
 	public static void main(String[] args) {
 		Scanner in;
 		try {
 			
 			String filename = "in2019/prob2019in18.txt";
-			 //in = new Scanner(new File("in2019/prob2019in18.txt"));
-			 in = new Scanner(new File(filename));
+			in = new Scanner(new File(filename));
 			 
-			 sopl("Very best start: " + veryBestFound);
+			sopl("Very best start: " + veryBestFound);
 			 
 			sopl(filename);
 			
-			int numTimes = 0;
-			 
-			int count = 0;
-			boolean part2 = false;
 			String line = "";
 
-			LinkedList queue = new LinkedList();
-			Stack stack = new Stack();
-			HashSet set = new HashSet();
-			
-			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
-			
 			ArrayList <String>lines = new ArrayList<String>();
 			
 			
-			int LIMIT = 20000;
-			boolean table[][] = new boolean[LIMIT][LIMIT];
-			
-			
-			//dir: 0 up
-			//1 right
-			//2 down
-			//3 left
 			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
@@ -79,7 +54,6 @@ public class prob18 {
 			//START
 			prob18state startState = new prob18state(origMap);
 			
-			
 			int answer = getBestPath(startState);
 			
 			sopl("Answer: " + answer);
@@ -91,37 +65,109 @@ public class prob18 {
 		}
 	}
 	
-	//public static int veryBestFound = 4676;
+
 	
-	public static int veryBestFound = 99999;
+	public static Hashtable<String, Integer> distances = new Hashtable<String, Integer>();
+	
+	public static ArrayList<prob18DistWithConstraint> listOfPartiallyBlackingKeysOrDoors = new ArrayList<prob18DistWithConstraint>();
+	
+	public static HashSet<String> listOfCompletelyBlackingKeysOrDoors = new HashSet<String>();
+	
+	public static void setDistanceBetweenPlayerAndGoals(char origMap[][]) {
+		
+		//ugly quad loops...
+		for(int i=0; i<origMap.length; i++) {
+			for(int j=0; j<origMap[0].length; j++) {
+				if((origMap[i][j] >= 'a' && origMap[i][j] <= 'z') || origMap[i][j] == '@') {
+					
+					for(int i2=i; i2<origMap.length; i2++) {
+						
+						for(int j2=0; j2<origMap[0].length; j2++) {
+							if(i2 == i && j2<j) {
+								//Skip to start scanning after an (i, j) location
+								j2 = j;
+								continue;
+							}
+							if((origMap[i2][j2] >= 'a' && origMap[i2][j2] <= 'z') || origMap[i2][j2] == '@') {
+								
+								ArrayList<AstarNode> path = AstarAlgo.astar(new prob18stateAtoB(origMap, j, i, j2, i2), null);
+								
+								int dist = path.size() - 1;
+								
+								distances.put(j + "," + i + "," + j2 + "," + i2, dist);
+								distances.put(j2 + "," + i2 + "," + j + "," + i, dist);
+								
+								for(int p=1; p< path.size() - 1; p++) {
+
+									char spot = origMap[((prob18stateAtoB)path.get(p)).coordY][((prob18stateAtoB)path.get(p)).coordX];
+
+									if((spot>= 'A' && spot <= 'Z') || (spot>= 'a' && spot <= 'z')) {
+										
+										ArrayList<String> singleConstraint = new ArrayList<String>();
+										singleConstraint.add(spot + "");
+										
+										ArrayList<AstarNode> pathConstraint = AstarAlgo.astar(new prob18stateAtoB(origMap, j, i, j2, i2, singleConstraint), null);
+										
+										int dist2 = -1;
+										if(pathConstraint == null) {
+											dist2 = -1;
+										} else {
+											dist2 = pathConstraint.size() - 1;
+											
+											sopl("ERROR: door only acts as a shortcut... the Advent of code problem didn't have this, so I didn't think about it.");
+											
+											exit(1);
+										}
+										
+										sopl("Constraint key: " + new prob18DistWithConstraint(dist2, j, i, j2, i2, singleConstraint).toKey());
+										sopl("Constraint key: " + new prob18DistWithConstraint(dist2, j2, i2, j, i, singleConstraint).toKey());
+										
+										listOfPartiallyBlackingKeysOrDoors.add(new prob18DistWithConstraint(dist2, j, i, j2, i2, singleConstraint));
+										listOfPartiallyBlackingKeysOrDoors.add(new prob18DistWithConstraint(dist2, j2, i2, j, i, singleConstraint));
+										
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
+		for(int i=0; i<listOfPartiallyBlackingKeysOrDoors.size(); i++) {
+			if(listOfPartiallyBlackingKeysOrDoors.get(i).dist == -1) {
+				listOfCompletelyBlackingKeysOrDoors.add(listOfPartiallyBlackingKeysOrDoors.get(i).toKey());
+				sopl("BLOCKED:" + listOfPartiallyBlackingKeysOrDoors.get(i).toKey());
+			}
+		}
+		
+		sopl("-------");
+	}
+	
+	
+	
+	public static int veryBestFound = Integer.MAX_VALUE;
+
 	public static int getBestPath(prob18state startState) {
 
 		ArrayList<prob18goal> goals = startState.getGoals();
 		ArrayList<String> doorsCurrentlyClosedAndKeys = startState.getDoorsAndKeys();
 		
-		//sopl("Doors closed: ");
-		//for(int i=0; i<doorsCurrentlyClosed.size(); i++) {
-		//	sop(doorsCurrentlyClosed.get(i) + ", ");
-		//}
-		//sopl();
-		
 		if(goals.size() == 0) {
 			return startState.numMovesToGetToStartOfGoal;
 		}
-		
 		
 		ArrayList<Comparable> nextStepStates= new ArrayList<Comparable>();
 		
 		for(int i=0; i<goals.size(); i++) {
 
-			//blocked.add(listOfBlackedDoors.get(i).toKey());
 			startState.setGoal(goals.get(i).j, goals.get(i).i);
 			
 			boolean lockedOut = false;
 			for(int j=0; j<doorsCurrentlyClosedAndKeys.size(); j++) {
 				
-				//sopl("DEBUG trial for goal " + i + ": " + startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i + "," + doorsCurrentlyClosed.get(j));
-				if(blocked.contains(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i + "," + doorsCurrentlyClosedAndKeys.get(j))) {
+				if(listOfCompletelyBlackingKeysOrDoors.contains(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i + "," + doorsCurrentlyClosedAndKeys.get(j))) {
 					lockedOut = true;
 					break;
 				}
@@ -135,24 +181,15 @@ public class prob18 {
 			
 		}
 		
-		
-		//if(startState.numMovesToGetToStartOfGoal > 0) {
-		//	sopl("debug");
-		//}
 		Object list[] = Sort.sortList(nextStepStates);
 		
 		int best = 9999999;
 		
 		for(int i=0; i<list.length; i++) {
 			
-			//TODO: put it back... took away for testing
-			if(veryBestFound <= minNumMovesNeededForPathGivenCurrentTrailSpanningTree((prob18state)list[i])) {
-				//sopl("Denied!");
+			if(veryBestFound <= minPossibleNumMovesNeededForPath((prob18state)list[i])) {
 				continue;
 			}
-			
-			
-			//sopl("Trying: " + (prob18state)list[i]);
 			
 			int cur = getBestPath((prob18state)list[i]);
 			
@@ -167,203 +204,65 @@ public class prob18 {
 			
 		}
 		
-		//sopl("test list");
-		
-		//sopl(best);
 		return best;
 	}
 	
-	public static int minNumMovesNeededForPathGivenCurrentTrailSpanningTree(prob18state startState) { 
+	public static int minPossibleNumMovesNeededForPath(prob18state startState) { 
 		
 		ArrayList<prob18goal> goals = startState.getGoals();
 		
-		//If 1 more goal, then whatever
-		if(goals.size() <= 1) {
-			return 0;
+		//If 2 goals or less, the calculation for the minimum spanning tree is simple:
+		if(goals.size() <= 2) {
+			if(goals.size() == 2) {
+				int d1 = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(0).j + "," + goals.get(0).i);
+				int d2 = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(1).j + "," + goals.get(1).i);
+				int d3 = distances.get(goals.get(0).j + "," + goals.get(0).i + "," + goals.get(1).j + "," + goals.get(1).i);
+				
+				return d1 + d2 + d3 - Math.max(d1, Math.max(d2, d3));
+
+			} else if(goals.size() == 1) {
+				return distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(0).j + "," + goals.get(0).i);
+
+			} else {
+				return 0;
+			}
 		}
 		
-		int smallestDist[] = new int[goals.size() + 1];
-		for(int i=0; i<smallestDist.length; i++) {
-			smallestDist[i] = 100000;
-		}
-		
-		
+//If more than 2 goals, then find min spanning tree with the algo:
+
 		ArrayList<Comparable> edges = new ArrayList<Comparable>();
 		
-		//TODO:
+		//Add edges from the player's current location to the goal nodes:
 		for(int i=0; i<goals.size(); i++) {
 			int dist = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
 			
 			if(dist == 0) {
-				sopl("DEBUG dist 1");
+				sopl("ERROR #1 dist 0");
 				exit(1);
 			}
-			edges.add(new prob18edge(i, goals.size(), dist));
+			edges.add(new GraphEdge(i, goals.size(), dist));
 			
 		}
 		
+		//Add edges between the goal nodes:
 		for(int i=0; i<goals.size(); i++) {
 			for(int j=i+1; j<goals.size(); j++) {
 					
 				int dist = distances.get(goals.get(j).j + "," + goals.get(j).i + "," + goals.get(i).j + "," + goals.get(i).i);
 				
 				if(dist == 0) {
-					sopl("DEBUG dist 2");
+					sopl("ERROR #2 dist 0");
 					exit(1);
 				}
-				edges.add(new prob18edge(i, j, dist));
+				edges.add(new GraphEdge(i, j, dist));
 			}
 		}
 		
 		
-		//TODO: TEST
-		Object sortedEdges[] = utils.Sort.sortList(edges);
-		
-		boolean taken[] = new boolean[goals.size() + 1];
-		
-		int numEdgesNeeded = taken.length - 1;
-		
-		int numEdgesUsed = 0;
-		
-		int minSpanningTreeWeight = 0;
-		
-		boolean connections[][] = new boolean[taken.length][taken.length];
-		
-		for(int i=0; numEdgesUsed < numEdgesNeeded; i++) {
-			prob18edge tmp = (prob18edge)sortedEdges[i];
-			if(connections[tmp.getI()][tmp.getJ()] == false) {
-				minSpanningTreeWeight += tmp.getWeigth();
-				
-				//START Adjust connections:
-				connections[tmp.getI()][tmp.getJ()] = true;
-				connections[tmp.getJ()][tmp.getI()] = true;
-				
-				for(int x=0; x<connections.length; x++) {
-					if(connections[tmp.getI()][x] == true) {
-						connections[tmp.getJ()][x] = true;
-						connections[x][tmp.getJ()] = true;
-						
-					} else if(connections[tmp.getJ()][x] == true) {
-						connections[tmp.getI()][x] = true;
-						connections[x][tmp.getI()] = true;
-					}
-				}
-				//END Adjust connections
-				
-				if(taken[tmp.getI()] == false) {
-					taken[tmp.getI()] = true;
-					
-				}
-				
-				if(taken[tmp.getJ()] == false) {
-					taken[tmp.getJ()] = true;
-				}
-
-				
-				numEdgesUsed++;
-			}
-			
-		}
-		//END TODO TEST
-		
+		int minSpanningTreeWeight = GraphUtils.getMinWeightSpanningTree(goals.size() + 1, edges);
 		
 		return startState.numMovesToGetToStartOfGoal + minSpanningTreeWeight;
 	}
-	
-	
-	
-
-	public static Hashtable<String, Integer> distances = new Hashtable<String, Integer>();
-	
-	public static ArrayList<prob18DistWithConstraint> listOfBlackedDoors = new ArrayList<prob18DistWithConstraint>();
-	
-
-	public static HashSet<String> blocked = new HashSet<String>();
-	
-	public static void setDistanceBetweenPlayerAndGoals(char origMap[][]) {
-		
-		//ugly quad loops...
-		for(int i=0; i<origMap.length; i++) {
-			for(int j=0; j<origMap[0].length; j++) {
-				if((origMap[i][j] >= 'a' && origMap[i][j] <= 'z') || origMap[i][j] == '@') {
-					
-					for(int i2=i; i2<origMap.length; i2++) {
-						if(i2 == 3) {
-							sopl("Debug i2");
-						}
-						for(int j2=0; j2<origMap[0].length; j2++) {
-							if(i2 == i && j2<j) {
-								j2 = j;
-								continue;
-							}
-							if((origMap[i2][j2] >= 'a' && origMap[i2][j2] <= 'z') || origMap[i2][j2] == '@') {
-								
-								ArrayList<AstarNode> path = AstarAlgo.astar(new prob18stateAtoB(origMap, j, i, j2, i2), null);
-								
-								int dist = path.size() - 1;
-								
-								
-								
-								//sopl(j + "," + i + "," + j2 + "," + i2);
-								//sopl(j2 + "," + i2 + "," + j + "," + i);
-								
-								distances.put(j + "," + i + "," + j2 + "," + i2, dist);
-								distances.put(j2 + "," + i2 + "," + j + "," + i, dist);
-								
-								
-								int numDoorContraintDEBUG = 0;
-								//TODO: consider doors...
-								for(int p=1; p< path.size() - 1; p++) {
-									char spot = origMap[((prob18stateAtoB)path.get(p)).coordY][((prob18stateAtoB)path.get(p)).coordX] ;
-									if((spot>= 'A' && spot <= 'Z') || (spot>= 'a' && spot <= 'z')) {
-										numDoorContraintDEBUG++;
-										if(numDoorContraintDEBUG >= 2) {
-											sopl(j + "," + i + "," + j2 + "," + i2 + " has " + numDoorContraintDEBUG + " door/key constraints");
-										}
-										ArrayList<String> singleConstraint = new ArrayList<String>();
-										singleConstraint.add(spot + "");
-										
-										ArrayList<AstarNode> pathConstraint = AstarAlgo.astar(new prob18stateAtoB(origMap, j, i, j2, i2, singleConstraint), null);
-										
-										int dist2 = -1;
-										if(pathConstraint == null) {
-											dist2 = -1;
-										} else {
-											dist2 = pathConstraint.size() - 1;
-											
-											sopl("Constraint key ERROR: " + new prob18DistWithConstraint(dist2, j, i, j2, i2, singleConstraint).toKey());
-											
-											//No door delays trip ever... huh...
-											sopl("pathConstraint: " + dist2);
-											exit(1);
-										}
-										
-										sopl("Constraint key: " + new prob18DistWithConstraint(dist2, j, i, j2, i2, singleConstraint).toKey());
-										sopl("Constraint key: " + new prob18DistWithConstraint(dist2, j2, i2, j, i, singleConstraint).toKey());
-										
-										listOfBlackedDoors.add(new prob18DistWithConstraint(dist2, j, i, j2, i2, singleConstraint));
-										listOfBlackedDoors.add(new prob18DistWithConstraint(dist2, j2, i2, j, i, singleConstraint));
-										
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		
-		for(int i=0; i<listOfBlackedDoors.size(); i++) {
-			if(listOfBlackedDoors.get(i).dist == -1) {
-				blocked.add(listOfBlackedDoors.get(i).toKey());
-				sopl("BLOCKED:" + listOfBlackedDoors.get(i).toKey());
-			}
-		}
-		
-		sopl("-------");
-	}
-	
 	
 	public static void sop(Object a) {
 		System.out.print(a.toString());

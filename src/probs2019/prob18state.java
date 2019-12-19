@@ -1,6 +1,8 @@
 package probs2019;
 
 import java.util.ArrayList;
+
+import aStar.AstarAlgo;
 import aStar.AstarNode;
 
 public class prob18state implements Comparable, aStar.AstarNode {
@@ -171,7 +173,7 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		}
 		
 		if(Math.abs(this.coordGoalX - coordX) + Math.abs(this.coordGoalY - coordY) == 0) {
-			return -1; //GOAL_FOUND TODO CONST
+			return AstarAlgo.GOAL_FOUND;
 		}
 		
 		return Math.abs(this.coordGoalX - coordX) + Math.abs(this.coordGoalY - coordY);
@@ -181,7 +183,7 @@ public class prob18state implements Comparable, aStar.AstarNode {
 	public ArrayList<AstarNode> getNodeNeighbours() {
 		ArrayList<AstarNode> ret = new ArrayList<AstarNode>();
 
-		//Order it for prob 15:
+		//Order it for 2018 day 15:
 		ret.add(new prob18state(map, coordX, coordY-1, coordGoalX, coordGoalY));
 		ret.add(new prob18state(map, coordX-1, coordY, coordGoalX, coordGoalY));
 		ret.add(new prob18state(map, coordX+1, coordY, coordGoalX, coordGoalY));

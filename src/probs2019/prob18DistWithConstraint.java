@@ -35,5 +35,4 @@ public class prob18DistWithConstraint {
 	public String toString() {
 		return toKey();
 	}
-	//TODO
 }
