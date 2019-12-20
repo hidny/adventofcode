@@ -13,7 +13,9 @@ public class prob18state implements Comparable, aStar.AstarNode {
 
 	private int coordGoalX = -1;
 	private int coordGoalY = -1;
-	
+
+	//I tried only having 1 reference map, but that was even slower!
+	//It's better to have the map update after every goal is attained.
 	public char map[][];
 	
 	
@@ -31,7 +33,6 @@ public class prob18state implements Comparable, aStar.AstarNode {
 			for(int j=0; j<map[0].length; j++) {
 				if(map[i][j] == '@') {
 					this.coordX = j;
-					//TODO: y starts from top?
 					this.coordY = i;
 				}
 				this.map[i][j] = map[i][j];
@@ -44,6 +45,8 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		this.numMovesToGetToStartOfGoal = numMovesFromStartOfGoal;
 	}
 	
+	
+	//This function isn't worth optimizing...
 	//pre: got goal
 	public char[][] getStateMapAfterGoal() {
 		char newMap[][] = new char[map.length][map[0].length];
@@ -128,6 +131,7 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		return this.goals;
 	}
 	
+	//TODO: could make this slightly faster by keeping a list of coords...
 	public ArrayList<String> getDoorsAndKeys() {
 		if(this.getDoorsAndKeys != null) {
 			return this.getDoorsAndKeys;
@@ -189,7 +193,7 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		ret.add(new prob18state(map, coordX+1, coordY, coordGoalX, coordGoalY));
 		ret.add(new prob18state(map, coordX, coordY+1, coordGoalX, coordGoalY));
 		
-		for(int i=0; i<ret.size(); i++) {
+      for(int i=0; i<ret.size(); i++) {
 			int x = ((prob18state)ret.get(i)).coordX;
 			int y = ((prob18state)ret.get(i)).coordY;
 			if(isWallorLockedDoorOrWrongKey( x, y ) ) {
@@ -212,15 +216,23 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		//negative values are invalid, as they represent a location outside the building.
 		if(coordX < 0 || coordY < 0 || coordX >= map[0].length || coordY >= map.length) {
 			return true;
-		}
-		
-		if((map[coordY][coordX] >= 'a' && map[coordY][coordX] <= 'z') && (coordGoalX != coordX || coordGoalY != coordY)) {
+
+		} else if(map[coordY][coordX] == '#') {
 			return true;
-		}
+			
+		} else if(map[coordY][coordX] == '.') {
+			return false;
+			
+		} else if((map[coordY][coordX] >= 'A' && map[coordY][coordX] <= 'Z') || (map[coordY][coordX] >= 'a' && map[coordY][coordX] <= 'z')) {
+			if((coordGoalX != coordX || coordGoalY != coordY)) {
+				return true;
+			} else {
+				return false;
+			}
 		
-		if(map[coordY][coordX] == '#' || (map[coordY][coordX] >= 'A' && map[coordY][coordX] <= 'Z')) {
-			return true;
 		} else {
+			System.out.println("ERROR: unknown block");
+			System.exit(1);
 			return false;
 		}
 	}

@@ -14,7 +14,7 @@ import utils.Sort;
 
 import probs2019after1am.*;
 
-public class prob19part2 {
+public class prob19part2BAD {
 
 	
 	public static void main(String[] args) {
@@ -28,6 +28,9 @@ public class prob19part2 {
 			boolean part2 = true;
 			String line = "";
 
+			LinkedList queue = new LinkedList();
+			Stack stack = new Stack();
+			HashSet set = new HashSet();
 			
 			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
@@ -54,69 +57,51 @@ public class prob19part2 {
 			
 			//pause on output, so I can process it...
 			
-			int FACTOR = 10000;
-			
+			int SQUARE_LENGTH = 9;
 			
 			long answer = -1;
 			long dist=0;
 			
 			
-			long distRangeMax = -1;
-			
-			int minj=0;
-			int maxj=0;
-			
-			
-			boolean hasBeam = false;
-			LinkedList<Integer> queue = new LinkedList<Integer>();
-			
-			int MAX_WAIT_FOR_BEAM = 100;
-			
-			
-			int BLOCK_SIZE = 100;
-			
-			int oldMax = -1;
-			
-			for(int i=0; true; i++) {
-				sopl(i + ": minj = " + minj + ", maxj = " + maxj + ", oldMax = " + oldMax);
+			FOUNDANS:
+			for(dist = 0; dist<=10000; dist++) {
+				for(long j=0; j<=dist; j++) {
+					//1470087
+					long x = j;
+					long y = dist-j;
 				
-				for(int j=minj; j<minj + MAX_WAIT_FOR_BEAM; j++) {
-					if(runProg(j, i, line) == 1) {
-						minj = j;
-						hasBeam = true;
-						break;
+					long ret = runProg(x, y, line);
+					
+					if(ret == 1) {
+						table[(int)y][(int)x] = true;
+					} else {
+						table[(int)y][(int)x] = false;
 					}
-				}
-				if(hasBeam) {
-					for(int j=Math.max(minj, maxj); true; j++) {
-						if(runProg(j, i, line) == 0) {
-							maxj = j;
-							break;
+					
+					if(ret == 1 && x >=SQUARE_LENGTH && y >= SQUARE_LENGTH) {
+						if(table[(int)(y - SQUARE_LENGTH + 1)][(int)x] == true &&  table[(int)(y)][(int)(x-SQUARE_LENGTH + 1)]) {
+							answer = 10000 * (x -SQUARE_LENGTH + 1) + (y - SQUARE_LENGTH + 1);
+							break FOUNDANS;
 						}
 					}
-				}
-				
-				queue.add(maxj);
-				
-				while(queue.size() > BLOCK_SIZE) {
-					queue.remove();
-				}
-				
-				if(queue.size() ==BLOCK_SIZE) {
-					oldMax = queue.getFirst();
-				}
-				
-				if(minj + BLOCK_SIZE <= oldMax) {
 					
-					//619948 too low...
-					int answerY = i-BLOCK_SIZE + 1;
-					int answerX = minj;
-					
-					answer = FACTOR* answerX + answerY;
-					break;
 				}
-				
 			}
+
+			sopl();
+			for(int i=0; i<dist; i++) {
+				for(int j=0; j<dist; j++) {
+					if(j == answer /10000 && i == answer % 10000) {
+						sop("O");
+					} else if(table[i][j]) {
+						sop("#");
+					} else{
+						sop(".");
+					}
+				}
+				sopl();
+			}
+			sopl();
 			
 			sopl("Answer: " + answer);
 			
@@ -128,7 +113,6 @@ public class prob19part2 {
 		} finally {
 		}
 	}
-	
 	
 	public static long runProg(long x, long y, String line) {
 		
@@ -144,6 +128,27 @@ public class prob19part2 {
 		return ret;
 	}
 	
+	public static long BLACK = 0L;
+	public static long WHITE = 1L;
+	
+	public static long getColour(Hashtable<String, Long> paint, int x, int y) {
+		if(paint.get(x + "," + y) == null) {
+			return BLACK;
+		} else if(paint.get(x + "," + y) == BLACK) {
+			return BLACK;
+		} else {
+			return WHITE;
+		}
+	}
+	
+
+	public static void setColour(Hashtable<String, Long> paint, int x, int y, long colour) {
+		if(paint.get(x + "," + y) != null) {
+			paint.remove(x + "," + y);
+		}
+		paint.put(x + "," + y, colour);
+	}
+
 	public static void sop(Object a) {
 		System.out.print(a.toString());
 	}
