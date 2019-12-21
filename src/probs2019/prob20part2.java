@@ -57,8 +57,8 @@ public class prob20part2 {
 			//TODO: breadth first search
 			LinkedList<prob20objpart2> queue = new LinkedList<prob20objpart2>();
 			
-			int startLocation[] = getOtherWarpLocation(origMap, 'A', 'A', -1, -1);
-			int endLocation[] = getOtherWarpLocation(origMap, 'Z', 'Z', -1, -1);
+			int startLocation[] = prob20.getOtherWarpLocation(origMap, 'A', 'A', -1, -1);
+			int endLocation[] = prob20.getOtherWarpLocation(origMap, 'Z', 'Z', -1, -1);
 			
 			int answer = -1;
 			
@@ -206,10 +206,10 @@ public class prob20part2 {
 										int warp[] = null;
 										if(i2 < i3 || j2 < j3) {
 											//Find the other warp location with label (i2, j2) then (i3, j3)
-											warp = getOtherWarpLocation(origMap, origMap[i2][j2], origMap[i3][j3], i, j);
+											warp = prob20.getOtherWarpLocation(origMap, origMap[i2][j2], origMap[i3][j3], i, j);
 										} else {
 											//Find the other warp location with labels reversed (i3, j3) then (i2, j2) 
-											warp = getOtherWarpLocation(origMap, origMap[i3][j3], origMap[i2][j2], i, j);
+											warp = prob20.getOtherWarpLocation(origMap, origMap[i3][j3], origMap[i2][j2], i, j);
 										}
 										
 										if(warp != null) {
@@ -279,85 +279,7 @@ public class prob20part2 {
 		}
 	}
 	
-	//pre: label1 is left or above label2
-	//get i, j coord of warp label
-	public static int[] getOtherWarpLocation(char origMap[][], char label1, char label2, int origI, int origJ) {
-		
-		int tempRet[] = null;
-		boolean isRealWarp = false;
-		
-		
-		for(int i=0; i<origMap.length; i++) {
-			for(int j=0; j<origMap[i].length; j++) {
-				if(origMap[i][j] == label1 || origMap[i][j] == label2) {
-					
-					
-					for(int i2=Math.max(i-1, 0); i2<=Math.min(i+1, origMap.length - 1); i2++) {
-						for(int j2=Math.max(j-1, 0); j2<=Math.min(j+1, origMap[i2].length - 1); j2++) {
-							
-							if(i2 == i && j2 == j) {
-								continue;
-							}
-							
-							if(i2 ==origI && j2 == origJ) {
-								continue;
-							}
-							
-							if(i2 != i && j2 != j) {
-								continue;
-							}
-							
-							//At this point (i, j) and (i2, j2) match label1 and label2,
-							//but we don't know if this is the original warp location
-							//and we don't know if the labels are reversed.
-							
-							//sopl(i2 +"," + j2);
-							
-							if(origMap[i2][j2] == EMPTY && (i2 == i || j2==j)) {
-								//At this point, we know it's not the original warp location:
-								tempRet = new int[] {i2, j2};
-							}
-							
 
-							//Check if labels are in the right order
-							//(The creator of this problem could have just not had labels that match another label when reversed,
-							// but that'd be tooo easy)
-							if(i < i2 || j < j2) {
-								if(origMap[i][j] == label1 && origMap[i2][j2] == label2) {
-									//At this point we know the order is right (i,j) then (i2, i2)
-									isRealWarp = true;
-								}
-							} else if(i2 < i || j2 < j) {
-								if(origMap[i2][j2] == label1 && origMap[i][j] == label2)  {
-									//At this point we know the order is right (i2,j2) then (i, i)
-
-									isRealWarp = true;
-								}
-								
-							} else {
-								//At this point, we know the labels are in reverse order
-								isRealWarp = false;
-							}
-							
-							
-						}
-					}
-					
-					if(isRealWarp && tempRet != null) {
-						//If it's the real warp and a landing spot was found, return it:
-						return tempRet;
-						
-					} else {
-						tempRet = null;
-						isRealWarp = false;
-					}
-				}
-			}
-		}
-		
-		
-		return null;
-	}
 	
 
 	public static void sop(Object a) {
