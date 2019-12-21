@@ -20,8 +20,9 @@ public class prob20part2 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			//String filename = "in2019/prob2019in20.txt.testpart2";
 			String filename = "in2019/prob2019in20.txt";
+			//String filename = "in2019/prob2019in20.txt.testpart2";
+			//String filename = "in2019/prob2019in20.txt";
 			in = new Scanner(new File(filename));
 			 
 			 
@@ -41,11 +42,15 @@ public class prob20part2 {
 			}
 			
 			origMap = new char[lines.size()][lines.get(0).length()];
+			explored = new boolean[lines.size()][lines.get(0).length()][100000];
 			
 			for(int i=0; i<origMap.length; i++) {
 				for(int j=0; j<origMap[0].length; j++) {
 					origMap[i][j] = lines.get(i).charAt(j);
 
+					for(int k=0; k<explored[i][j].length; k++) {
+						explored[i][j][k] = false;
+					}
 				}
 			}
 			
@@ -58,12 +63,34 @@ public class prob20part2 {
 			int answer = -1;
 			
 			dist.put(startLocation[0] +"," + startLocation[1] + "," + 0, 0);
+			explored[startLocation[0]][startLocation[1]][0] = true;
 			
 			queue.add(new prob20objpart2(startLocation[0], startLocation[1], 0, dist.get(startLocation[0] +"," + startLocation[1] + "," + 0)));
+
+			LinkedList<prob20objpart2> deleteQueue = new LinkedList<prob20objpart2>();
+			int oldMaxDist = 0;
 			
 			while(queue.size() > 0) {
 				prob20objpart2 cur = queue.getFirst();
 				queue.remove();
+
+				deleteQueue.add(cur);
+				if(cur.dist > oldMaxDist) {
+					oldMaxDist = cur.dist;
+					
+					while(deleteQueue.getFirst().dist <= cur.dist - 2) {
+						prob20objpart2 tmp = deleteQueue.getFirst();
+						
+						if(dist.containsKey(tmp.i + "," + tmp.j + "," + tmp.k) == false) {
+							sopl("ERROR deleting hash indexes");
+							exit(1);
+						}
+						dist.remove(tmp.i + "," + tmp.j + "," + tmp.k);
+						
+						deleteQueue.remove();
+						
+					}
+				}
 				
 				 ArrayList<prob20objpart2> neighbours = getNeighbours(cur.i, cur.j, cur.k);
 				 
@@ -78,47 +105,29 @@ public class prob20part2 {
 			}
 			
 			
-			sopl("LEVEL 0");
-			for(int i=0; i<origMap.length; i++) {
-				for(int j=0; j<origMap[i].length; j++) {
-					if(dist.get(i +"," + j + "," + 0) != null) {
-						String ret = "" + dist.get(i +"," + j + "," + 0)%10;
-						sop(ret);
-					} else {
-						sop(origMap[i][j]);
+			//PRINT DEBUG
+			for(int k=0; k<Math.min(2000, debugMaxK + 2); k++) {
+				sopl("LEVEL " + k);
+				for(int i=0; i<origMap.length; i++) {
+					for(int j=0; j<origMap[i].length; j++) {
+						if(dist.get(i +"," + j + "," + k) != null) {
+							String ret = "" + dist.get(i +"," + j + "," + k)%10;
+							sop(ret);
+						} else if(explored[i][j][k]) {
+							sop("x");
+						} else {
+							sop(origMap[i][j]);
+						}
 					}
+					sopl();
 				}
+	
+				sopl();
 				sopl();
 			}
-
-			sopl();
-			sopl();
-			sopl("LEVEL 1");
-			for(int i=0; i<origMap.length; i++) {
-				for(int j=0; j<origMap[i].length; j++) {
-					if(dist.get(i +"," + j + "," + 1) != null) {
-						String ret = "" + dist.get(i +"," + j + "," + 1)%10;
-						sop(ret);
-					} else {
-						sop(origMap[i][j]);
-					}
-				}
-				sopl();
-			}
-			sopl();
-			sopl();
-			sopl("LEVEL 2");
-			for(int i=0; i<origMap.length; i++) {
-				for(int j=0; j<origMap[i].length; j++) {
-					if(dist.get(i +"," + j + "," + 2) != null) {
-						String ret = "" + dist.get(i +"," + j + "," + 2)%10;
-						sop(ret);
-					} else {
-						sop(origMap[i][j]);
-					}
-				}
-				sopl();
-			}
+			
+			sopl("Max dist: " + oldMaxDist);
+			sopl("Max level:: " + debugMaxK);
 			sopl("Answer: " + answer);
 			
 			in.close();
@@ -129,14 +138,19 @@ public class prob20part2 {
 		}
 	}
 	
+	
+	
 	public static char origMap[][];
 	
 	public static Hashtable<String, Integer> dist = new Hashtable<String, Integer>();
+	public static boolean explored[][][];
 	
 	public static char EMPTY = '.';
 	public static char WALL = '#';
 	
 	public static int debugMaxK = 0;
+	
+	public static int OUTSIDE_BORDER = 5;
 	
 	public static ArrayList<prob20objpart2> getNeighbours(int i, int j, int k) {
 		
@@ -149,37 +163,29 @@ public class prob20part2 {
 		for(int i2=Math.max(i-1, 0); i2<=Math.min(i+1, origMap.length - 1); i2++) {
 			for(int j2=Math.max(j-1, 0); j2<=Math.min(j+1, origMap[i2].length - 1); j2++) {
 				
-				if(dist.get(i2 +"," + j2 + "," + k) != null) {
+				
+				if(explored[i2][j2][k]) {
 					continue;
 				}
 				
+				
 				if(i2 == i || j2==j) {
+					//At this point (i2, j2) is not (i, j) and might be worth exploring:
+
 					if(origMap[i2][j2] == EMPTY) {
+						
+						//If (i2, j2) is an EMPTY space, explore it:
 						ret.add(new prob20objpart2(i2, j2, k, dist.get(i +"," + j + "," + k)  + 1));
 						
 						dist.put(i2 +"," + j2 + "," + k, dist.get(i +"," + j + "," + k)  + 1);
+						explored[i2][j2][k] = true;
 						
 					} else if(origMap[i2][j2] >= 'A' && origMap[i2][j2] <= 'Z') {
 						
-						int newK = -1;
-						if(i2 < 5 || origMap.length - 5 < i2 || j2 < 5 || origMap[i2].length -5 < j2) {
-							newK = k - 1;
-							
-							
-							if(newK < 0) {
-								//The only outer that works is the ZZ and AA (start and end)
-								continue;
-							}
-						} else {
-							newK = k + 1;
-							
-							if(newK > debugMaxK) {
-								debugMaxK = newK;
-								sopl("New max level: " + debugMaxK);
-							}
-						}
+
+						//If (i2, j2) is a WARP location WARP to the correct other location...
+						//or don't warp if it's AA or ZZ.
 						
-						//sopl("TEST");
 						for(int i3=Math.max(i2-1, 0); i3<=Math.min(i2+1, origMap.length - 1); i3++) {
 							for(int j3=Math.max(j2-1, 0); j3<=Math.min(j2+1, origMap[i3].length - 1); j3++) {
 								
@@ -189,17 +195,68 @@ public class prob20part2 {
 								
 								if((i3 == i2 || j3==j2)) {
 									
+									
 									//sopl(i2 +"," + j2 +": " + i3 +"," + j3);
 									if(origMap[i3][j3] >= 'A' && origMap[i3][j3] <= 'Z') {
+
+										//At this point (i2, j2) and (i3, j3) are the 2 label locations,
+										//and we'll find the other label location to warp to and warp there
 										
 										//sopl(origMap[i3][j3]);
+										int warp[] = null;
+										if(i2 < i3 || j2 < j3) {
+											//Find the other warp location with label (i2, j2) then (i3, j3)
+											warp = getOtherWarpLocation(origMap, origMap[i2][j2], origMap[i3][j3], i, j);
+										} else {
+											//Find the other warp location with labels reversed (i3, j3) then (i2, j2) 
+											warp = getOtherWarpLocation(origMap, origMap[i3][j3], origMap[i2][j2], i, j);
+										}
 										
-										int warp[] = getOtherWarpLocation(origMap, origMap[i2][j2], origMap[i3][j3], i, j);
-										
-										if(warp != null && dist.get(warp[0] +"," + warp[1] + "," + newK) == null) {
-											ret.add(new prob20objpart2(warp[0], warp[1], newK, dist.get(i +"," + j + "," + k)  + 1));
+										if(warp != null) {
 											
-											dist.put(warp[0] +"," + warp[1] + "," + newK, dist.get(i +"," + j + "," + k)  + 1);
+											int newK = k;
+											
+											
+											if( isWarpingOutsideBorder(origMap, i2, j2) 
+													&& isWarpingOutsideBorder(origMap, warp[0], warp[1]) == false) {
+												//GO DOWN A LEVEL (UNLESS ALREADY IN LEVEL 0)
+												newK = k - 1;
+												
+												if(newK < 0) {
+													continue;
+												}
+												
+											} else if( isWarpingOutsideBorder(origMap, i2, j2) == false
+													&& isWarpingOutsideBorder(origMap, warp[0], warp[1]) ) {
+												//GO UP A LEVEL (UNLESS IN LEVEL 0)
+												newK = k + 1;
+	
+												if(newK %10 == 0 && newK > debugMaxK) {
+													debugMaxK = newK;
+													sopl("New max level: " + debugMaxK);
+												}
+												
+	
+												if(newK > 10000) {
+													sopl("ERROR: TOO FAR!");
+													continue;
+												}
+											} else {
+												sopl("ERROR: bad warp! (They are either both outside doors, or inside doors)");
+												sopl(i + "," + j + "," + origMap[i2][j2] + "," + origMap[i3][j3]);
+												sopl(warp[0] + "," + warp[1]);
+												exit(1);
+											}
+											
+	
+											if(explored[warp[0]][warp[1]][newK] == false) {
+												
+												//Add warp location as area to explore if not explored:
+												ret.add(new prob20objpart2(warp[0], warp[1], newK, dist.get(i +"," + j + "," + k)  + 1));
+												dist.put(warp[0] +"," + warp[1] + "," + newK, dist.get(i +"," + j + "," + k)  + 1);
+												explored[warp[0]][warp[1]][newK] = true;
+
+											}
 										}
 									}
 								}
@@ -213,22 +270,26 @@ public class prob20part2 {
 		return ret;
 	}
 	
+	//post: if warp location (i, j) is on the outside, it's warping to the next level...
+	public static boolean isWarpingOutsideBorder(char origMap[][], int i, int j) {
+		if( i < OUTSIDE_BORDER || origMap.length - OUTSIDE_BORDER < i || j < OUTSIDE_BORDER || origMap[i].length - OUTSIDE_BORDER < j) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	//pre: label1 is left or above label2
 	//get i, j coord of warp label
 	public static int[] getOtherWarpLocation(char origMap[][], char label1, char label2, int origI, int origJ) {
 		
 		int tempRet[] = null;
-		int ret[] = null;
 		boolean isRealWarp = false;
-		if(label1 =='A' || label2 == 'A') {
-			//sopl("debug");
-		}
 		
-		//sopl("TEST" + label1 +", " + label2 + ", " + origI + ", " + origJ);
+		
 		for(int i=0; i<origMap.length; i++) {
 			for(int j=0; j<origMap[i].length; j++) {
 				if(origMap[i][j] == label1 || origMap[i][j] == label2) {
-					//sopl("!: " + label1 + "1: " + i + "," + j);
-					//sopl("2:" + label2 + "1: " + i + "," + j);
 					
 					
 					for(int i2=Math.max(i-1, 0); i2<=Math.min(i+1, origMap.length - 1); i2++) {
@@ -246,17 +307,36 @@ public class prob20part2 {
 								continue;
 							}
 							
+							//At this point (i, j) and (i2, j2) match label1 and label2,
+							//but we don't know if this is the original warp location
+							//and we don't know if the labels are reversed.
+							
 							//sopl(i2 +"," + j2);
 							
 							if(origMap[i2][j2] == EMPTY && (i2 == i || j2==j)) {
-							//	sopl(label1 + "2: " +i2 +","+j2);
-							//	sopl(label2 + "2: " +i2 +","+j2);
+								//At this point, we know it's not the original warp location:
 								tempRet = new int[] {i2, j2};
 							}
 							
-							if((origMap[i][j] == label1 && origMap[i2][j2] == label2 )
-								|| (origMap[i][j] == label2 && origMap[i2][j2] == label1 )) {
-								isRealWarp = true;
+
+							//Check if labels are in the right order
+							//(The creator of this problem could have just not had labels that match another label when reversed,
+							// but that'd be tooo easy)
+							if(i < i2 || j < j2) {
+								if(origMap[i][j] == label1 && origMap[i2][j2] == label2) {
+									//At this point we know the order is right (i,j) then (i2, i2)
+									isRealWarp = true;
+								}
+							} else if(i2 < i || j2 < j) {
+								if(origMap[i2][j2] == label1 && origMap[i][j] == label2)  {
+									//At this point we know the order is right (i2,j2) then (i, i)
+
+									isRealWarp = true;
+								}
+								
+							} else {
+								//At this point, we know the labels are in reverse order
+								isRealWarp = false;
 							}
 							
 							
@@ -264,6 +344,7 @@ public class prob20part2 {
 					}
 					
 					if(isRealWarp && tempRet != null) {
+						//If it's the real warp and a landing spot was found, return it:
 						return tempRet;
 						
 					} else {
@@ -278,26 +359,6 @@ public class prob20part2 {
 		return null;
 	}
 	
-	public static long BLACK = 0L;
-	public static long WHITE = 1L;
-	
-	public static long getColour(Hashtable<String, Long> paint, int x, int y) {
-		if(paint.get(x + "," + y) == null) {
-			return BLACK;
-		} else if(paint.get(x + "," + y) == BLACK) {
-			return BLACK;
-		} else {
-			return WHITE;
-		}
-	}
-	
-
-	public static void setColour(Hashtable<String, Long> paint, int x, int y, long colour) {
-		if(paint.get(x + "," + y) != null) {
-			paint.remove(x + "," + y);
-		}
-		paint.put(x + "," + y, colour);
-	}
 
 	public static void sop(Object a) {
 		System.out.print(a.toString());

@@ -59,10 +59,33 @@ public class prob20 {
 			
 			dist[startLocation[0]][startLocation[1]] = 0;
 			queue.add(new prob20obj(startLocation[0], startLocation[1], dist[startLocation[0]][startLocation[1]]));
+
+			LinkedList<prob20obj> deleteQueue = new LinkedList<prob20obj>();
+			
+			int oldMaxDist = 0;
 			
 			while(queue.size() > 0) {
 				prob20obj cur = queue.getFirst();
 				queue.remove();
+				
+				deleteQueue.add(cur);
+				if(cur.dist > oldMaxDist) {
+					oldMaxDist = cur.dist;
+					
+					while(deleteQueue.getFirst().dist <= cur.dist - 2) {
+						prob20obj tmp = deleteQueue.getFirst();
+						
+						if(dist[tmp.i][tmp.j] == -1) {
+							sopl("ERROR deleting array element");
+							exit(1);
+						}
+						dist[tmp.i][tmp.j] = -1;
+						
+						deleteQueue.remove();
+						
+					}
+				}
+				
 				
 				 ArrayList<prob20obj> neighbours = getNeighbours(cur.i, cur.j);
 				 
