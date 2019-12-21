@@ -211,14 +211,14 @@ public class prob18 {
 		
 		ArrayList<prob18goal> goals = startState.getGoals();
 		
-		//If 2 goals or less, the calculation for the minimum spanning tree is simple:
+		//If 2 goals or less, the calculation for the minimum num moves is simple:
 		if(goals.size() <= 2) {
 			if(goals.size() == 2) {
 				int d1 = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(0).j + "," + goals.get(0).i);
 				int d2 = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(1).j + "," + goals.get(1).i);
 				int d3 = distances.get(goals.get(0).j + "," + goals.get(0).i + "," + goals.get(1).j + "," + goals.get(1).i);
 				
-				return d1 + d2 + d3 - Math.max(d1, Math.max(d2, d3));
+				return d3 + Math.min(d1, d2);
 
 			} else if(goals.size() == 1) {
 				return distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(0).j + "," + goals.get(0).i);
