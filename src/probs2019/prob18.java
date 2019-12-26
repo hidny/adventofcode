@@ -69,11 +69,17 @@ public class prob18 {
 	
 	public static Hashtable<String, Integer> distances = new Hashtable<String, Integer>();
 	
-	public static ArrayList<prob18DistWithConstraint> listOfPartiallyBlackingKeysOrDoors = new ArrayList<prob18DistWithConstraint>();
+	public static ArrayList<prob18DistWithConstraint> listOfPartiallyBlackingKeysOrDoors;
 	
 	public static HashSet<String> listOfCompletelyBlackingKeysOrDoors = new HashSet<String>();
-	
+
 	public static void setDistanceBetweenPlayerAndGoals(char origMap[][]) {
+		setDistanceBetweenPlayerAndGoals(origMap, 0);
+	}
+	
+	public static void setDistanceBetweenPlayerAndGoals(char origMap[][], int mapIndex) {
+
+		listOfPartiallyBlackingKeysOrDoors = new ArrayList<prob18DistWithConstraint>();
 		
 		//ugly quad loops...
 		for(int i=0; i<origMap.length; i++) {
@@ -94,8 +100,8 @@ public class prob18 {
 								
 								int dist = path.size() - 1;
 								
-								distances.put(j + "," + i + "," + j2 + "," + i2, dist);
-								distances.put(j2 + "," + i2 + "," + j + "," + i, dist);
+								distances.put(mapIndex + "," + j + "," + i + "," + j2 + "," + i2, dist);
+								distances.put(mapIndex + "," + j2 + "," + i2 + "," + j + "," + i, dist);
 								
 								for(int p=1; p< path.size() - 1; p++) {
 
@@ -119,11 +125,11 @@ public class prob18 {
 											exit(1);
 										}
 										
-										sopl("Constraint key: " + new prob18DistWithConstraint(dist2, j, i, j2, i2, singleConstraint).toKey());
-										sopl("Constraint key: " + new prob18DistWithConstraint(dist2, j2, i2, j, i, singleConstraint).toKey());
+										sopl("Constraint key: " + new prob18DistWithConstraint(dist2, mapIndex, j, i, j2, i2, singleConstraint).toKey());
+										sopl("Constraint key: " + new prob18DistWithConstraint(dist2, mapIndex, j2, i2, j, i, singleConstraint).toKey());
 										
-										listOfPartiallyBlackingKeysOrDoors.add(new prob18DistWithConstraint(dist2, j, i, j2, i2, singleConstraint));
-										listOfPartiallyBlackingKeysOrDoors.add(new prob18DistWithConstraint(dist2, j2, i2, j, i, singleConstraint));
+										listOfPartiallyBlackingKeysOrDoors.add(new prob18DistWithConstraint(dist2, mapIndex, j, i, j2, i2, singleConstraint));
+										listOfPartiallyBlackingKeysOrDoors.add(new prob18DistWithConstraint(dist2, mapIndex, j2, i2, j, i, singleConstraint));
 										
 									}
 								}
@@ -167,14 +173,14 @@ public class prob18 {
 			boolean lockedOut = false;
 			for(int j=0; j<doorsCurrentlyClosedAndKeys.size(); j++) {
 				
-				if(listOfCompletelyBlackingKeysOrDoors.contains(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i + "," + doorsCurrentlyClosedAndKeys.get(j))) {
+				if(listOfCompletelyBlackingKeysOrDoors.contains(startState.getMapIndex() + "," + startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i + "," + doorsCurrentlyClosedAndKeys.get(j))) {
 					lockedOut = true;
 					break;
 				}
 			}
 			
 			if(lockedOut == false) {
-				int numMoves = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
+				int numMoves = distances.get(startState.getMapIndex() + "," + startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
 				nextStepStates.add(new prob18state(startState.getStateMapAfterGoal(), startState.numMovesToGetToStartOfGoal + numMoves, startState.getGoalsAfterAttainingSingleGoal(), startState.getDoorsAndKeysAfterAttainingSingleGoal()));
 				
 			}
@@ -214,17 +220,17 @@ public class prob18 {
 		//If 2 goals or less, the calculation for the minimum num moves is simple:
 		if(goals.size() <= 2) {
 			if(goals.size() == 2) {
-				int d1 = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(0).j + "," + goals.get(0).i);
-				int d2 = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(1).j + "," + goals.get(1).i);
-				int d3 = distances.get(goals.get(0).j + "," + goals.get(0).i + "," + goals.get(1).j + "," + goals.get(1).i);
+				int d1 = distances.get(startState.getMapIndex() + "," + startState.coordX + "," + startState.coordY + "," + goals.get(0).j + "," + goals.get(0).i);
+				int d2 = distances.get(startState.getMapIndex() + "," + startState.coordX + "," + startState.coordY + "," + goals.get(1).j + "," + goals.get(1).i);
+				int d3 = distances.get(startState.getMapIndex() + "," + goals.get(0).j + "," + goals.get(0).i + "," + goals.get(1).j + "," + goals.get(1).i);
 				
-				return d3 + Math.min(d1, d2);
+				return startState.numMovesToGetToStartOfGoal + d3 + Math.min(d1, d2);
 
 			} else if(goals.size() == 1) {
-				return distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(0).j + "," + goals.get(0).i);
+				return startState.numMovesToGetToStartOfGoal + distances.get(startState.getMapIndex() + "," + startState.coordX + "," + startState.coordY + "," + goals.get(0).j + "," + goals.get(0).i);
 
 			} else {
-				return 0;
+				return startState.numMovesToGetToStartOfGoal;
 			}
 		}
 		
@@ -234,7 +240,9 @@ public class prob18 {
 		
 		//Add edges from the player's current location to the goal nodes:
 		for(int i=0; i<goals.size(); i++) {
-			int dist = distances.get(startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
+			//sopl("DEBUG: " + startState.getMapIndex() + "," + startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
+			//sopl(startState.getMapIndex());
+			int dist = distances.get(startState.getMapIndex() + "," + startState.coordX + "," + startState.coordY + "," + goals.get(i).j + "," + goals.get(i).i);
 			
 			if(dist == 0) {
 				sopl("ERROR #1 dist 0");
@@ -248,7 +256,7 @@ public class prob18 {
 		for(int i=0; i<goals.size(); i++) {
 			for(int j=i+1; j<goals.size(); j++) {
 					
-				int dist = distances.get(goals.get(j).j + "," + goals.get(j).i + "," + goals.get(i).j + "," + goals.get(i).i);
+				int dist = distances.get(startState.getMapIndex() + "," + goals.get(j).j + "," + goals.get(j).i + "," + goals.get(i).j + "," + goals.get(i).i);
 				
 				if(dist == 0) {
 					sopl("ERROR #2 dist 0");

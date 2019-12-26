@@ -17,4 +17,5 @@ public class prob18goal {
 	public char key;
 	public int i;
 	public int j;
+	public int k;
 }

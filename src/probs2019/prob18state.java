@@ -19,7 +19,19 @@ public class prob18state implements Comparable, aStar.AstarNode {
 	public char map[][];
 	
 	
+	private int mapIndex = 0;
 	
+	
+	
+	public int getMapIndex() {
+		return mapIndex;
+	}
+
+	public void setMapIndex(int setMapIndex) {
+		this.mapIndex = setMapIndex;
+	}
+
+
 	public int numMovesToGetToStartOfGoal = -1;
 	
 	public prob18state(char map[][]) {
@@ -41,7 +53,7 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		}
 		
 		this.goals = goals;
-		this.getDoorsAndKeys = getDoorsAndKeys;
+		this.doorsAndKeys = getDoorsAndKeys;
 		this.numMovesToGetToStartOfGoal = numMovesFromStartOfGoal;
 	}
 	
@@ -77,9 +89,16 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		return newMap;
 	}
 	
+	//for part 2
+	public char getDoorToOpen(int coordX, int coordY) {
+		char goalObtained = map[coordY][coordX];
+		
+		char DoorOpened = (char)(goalObtained +'A' - 'a');
+		return DoorOpened;
+	}
 
 	private ArrayList<prob18goal> goals;
-	private  ArrayList<String> getDoorsAndKeys;
+	private  ArrayList<String> doorsAndKeys;
 
 	//pre: goals != null...
 	public ArrayList<prob18goal> getGoalsAfterAttainingSingleGoal() {
@@ -100,15 +119,14 @@ public class prob18state implements Comparable, aStar.AstarNode {
 		char goalObtained = map[coordGoalY][coordGoalX];
 		char doorOpened = (char)(map[coordGoalY][coordGoalX] + 'A' - 'a');
 		
-		for(int i=0; i<getDoorsAndKeys.size(); i++) {
-			if(getDoorsAndKeys.get(i).equals("" + goalObtained) == false && getDoorsAndKeys.get(i).equals("" + doorOpened) == false) {
-				ret.add(getDoorsAndKeys.get(i));
+		for(int i=0; i<doorsAndKeys.size(); i++) {
+			if(doorsAndKeys.get(i).equals("" + goalObtained) == false && doorsAndKeys.get(i).equals("" + doorOpened) == false) {
+				ret.add(doorsAndKeys.get(i));
 			}
 		}
 		
 		return ret;
 	}
-	
 	
 	
 	public ArrayList<prob18goal> getGoals() {
@@ -123,8 +141,13 @@ public class prob18state implements Comparable, aStar.AstarNode {
 					prob18goal temp = new prob18goal();
 					temp.i = i;
 					temp.j = j;
+					
+					
 					temp.key = map[i][j];
 					this.goals.add(temp);
+
+					//for part2:
+					temp.k = this.mapIndex;
 				}
 			}
 		}
@@ -133,11 +156,11 @@ public class prob18state implements Comparable, aStar.AstarNode {
 	
 	//TODO: could make this slightly faster by keeping a list of coords...
 	public ArrayList<String> getDoorsAndKeys() {
-		if(this.getDoorsAndKeys != null) {
-			return this.getDoorsAndKeys;
+		if(this.doorsAndKeys != null) {
+			return this.doorsAndKeys;
 		}
 		
-		this.getDoorsAndKeys = new ArrayList<String>();
+		this.doorsAndKeys = new ArrayList<String>();
 		
 		for(int i=0; i<map.length; i++) {
 			for(int j=0; j<map[0].length; j++) {
@@ -146,11 +169,30 @@ public class prob18state implements Comparable, aStar.AstarNode {
 					temp.i = i;
 					temp.j = j;
 					temp.key = map[i][j];
-					this.getDoorsAndKeys.add("" + map[i][j]);
+					this.doorsAndKeys.add("" + map[i][j]);
 				}
 			}
 		}
-		return this.getDoorsAndKeys;
+		return this.doorsAndKeys;
+	}
+
+	//For part 2:
+	public ArrayList<String>  getDoorsAndKeysAfterOpeningSingleDoor(char doorOpened) {
+		ArrayList<String> ret = new ArrayList<String>();
+		
+		if(doorOpened < 'A' || doorOpened > 'Z') {
+			System.out.println("ERROR: unexpected input for getDoorsAndKeysAfterOpeningSingleDoor");
+			System.exit(1);
+		}
+		
+		for(int i=0; i<doorsAndKeys.size(); i++) {
+			if(doorsAndKeys.get(i).equals("" + doorOpened) == false) {
+				ret.add(doorsAndKeys.get(i));
+			}
+		}
+		
+		
+		return ret;
 	}
 	
 	public prob18state(char map[][], int coordX, int coordY, int coordGoalX, int coordGoalY) {

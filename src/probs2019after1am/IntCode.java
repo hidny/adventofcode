@@ -183,18 +183,27 @@ public class IntCode {
 				setCmds(var3,  temp + "");
 				
 			} else if(opCode == 3) {
+				sopl("get Input");
 				//INPUT HERE
 				if(inputQueue.isEmpty()) {
 					
 					if(inputReader == null) {
 						sopl("ERROR: empty input queue and null inputReader... intCode doesn\'t know what the input should be!");
 					} else {
-						sopl("WARN: empty input");
+						//sopl("WARN: empty input");
 					}
 					
-					setCmds(var1, "" + inputReader.getInput());
+					//TODO: TEST
+					long inputRec = inputReader.getInput();
+					//sop((char)inputRec);
+					setCmds(var1, "" + inputRec);
 					
 				} else {
+					//sopl("input queue");
+					
+					//if(inputQueue.getFirst() > 0 && inputQueue.getFirst() < 256) {
+					//	sop(((char)(long)inputQueue.getFirst()));
+					//}
 					setCmds(var1, "" + inputQueue.getFirst());
 					inputQueue.removeFirst();
 				}
