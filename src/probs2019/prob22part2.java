@@ -2,15 +2,9 @@ package probs2019;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.Scanner;
-import java.util.Stack;
 
 import number.IsNumber;
-import utils.Mapping;
-import utils.Sort;
 import utilsPE.NumberTheory;
 
 public class prob22part2 {
@@ -76,6 +70,7 @@ public class prob22part2 {
 			long a = -1;
 			long b = -1;
 
+			//Using BigInteger so I can avoid overflow errors:
 			BigInteger aBig = BigInteger.ONE;
 			BigInteger bBig = BigInteger.ZERO;
 			//long a = 1;
@@ -104,7 +99,6 @@ public class prob22part2 {
 					
 					aBig = aBig.multiply(new BigInteger("" + mult));
 					bBig = bBig.multiply(new BigInteger("" + mult));
-					
 					//a *= mult;
 					//b *= mult;
 					
@@ -213,11 +207,7 @@ public class prob22part2 {
 				sopl("TEST");
 			}
 			sopl("Answer found: " + finalResult.longValue());
-
 			// 42152620178084
-			//(TOO HIGH)
-			
-			sopl();
 			
 			
 			in.close();

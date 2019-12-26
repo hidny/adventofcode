@@ -205,7 +205,15 @@ public class IntCode {
 					//	sop(((char)(long)inputQueue.getFirst()));
 					//}
 					setCmds(var1, "" + inputQueue.getFirst());
+					
+					sopl("TEST: " + inputQueue.getFirst());
+					
+					if(inputQueue.get(0) < 1 || inputQueue.get(0) > 4) {
+						sopl("DEBUG: ERROR: invalid input in intcode!");
+					}
+					
 					inputQueue.removeFirst();
+					
 				}
 				
 			} else if(opCode == 4) {
