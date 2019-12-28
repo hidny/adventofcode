@@ -73,7 +73,7 @@ public class prob23part2 {
 			
 			int numInputFetchesInARowWithoutOutputOrRealInput[] = new int[NUM_MACHINES];
 			
-			//TODO: lower to 3??
+			//If a machine gets 5 default inputs without outputing or getting real input, let's consider that idle...
 			int PART2_IDLE_LIMIT = 5;
 			
 			OUTER:
@@ -105,8 +105,8 @@ public class prob23part2 {
 				sopl("Next iteration of all " + NUM_MACHINES + " machines.");
 
 				for(int i=0; i<NUM_MACHINES; i++) {
-					if(intCode[i].isHalted() ) {
-						
+
+					if(intCode[i].isHalted() ) {						
 						if(haltedList[i] == false) {
 							sopl("Machine " + i + " is halted");
 							haltedList[i] = true;
@@ -123,8 +123,7 @@ public class prob23part2 {
 					
 					long ret = intCode[i].runProg();
 					
-					//TODO: check if ret is actual output (intCode[i].prob23LastReturnOutputs())
-					
+					//Check if ret is actual outputs:
 					boolean lastReturnOutputs = intCode[i].isLastProgOutputActualOutput();
 					
 					if(lastReturnOutputs) {
@@ -132,9 +131,7 @@ public class prob23part2 {
 						numInputFetchesInARowWithoutOutputOrRealInput[i] = 0;
 
 						sopl("Got " + ret);
-						//Get X and Y
-						//TODO: should I not use intCode[i].setProcessUntilOutput() ?
-						//TODO 2: check that there's no input...
+						//Get X and Y:
 						intCode[i].setProcessUntilOutput();
 						long x = intCode[i].runProg();
 						long y = intCode[i].runProg();
@@ -159,9 +156,6 @@ public class prob23part2 {
 							
 							currentNATX = x;
 							currentNATY = y;
-							
-							/*
-							*/
 							
 						} else  {
 							sopl("ERROR: prog output: " + ret);
