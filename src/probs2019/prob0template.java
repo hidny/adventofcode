@@ -30,6 +30,7 @@ public class prob0template {
 			Stack stack = new Stack();
 			HashSet set = new HashSet();
 			
+			
 			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
 			ArrayList <String>lines = new ArrayList<String>();

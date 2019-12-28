@@ -86,24 +86,72 @@ public class IntCode {
 
 	public long relativeBase = 0;
 
+
+	//Prob 23 features:
+	private boolean hasDefaultInput = false;
+	private long defaultInput = -1;
+	public void setDefaultInput(long input) {
+		hasDefaultInput = true;
+		defaultInput = -1;
+	}
+	
+	private boolean processSingleLineEveryRun = false;
+	private boolean lastProgOutputActualOutput = false;
+	public void setProcessSingleLineAtATime() {
+		processSingleLineEveryRun = true;
+	}
+	
+	public void setProcessUntilOutput() {
+		processSingleLineEveryRun = false;
+	}
+	
+	public boolean isLastProgOutputActualOutput() {
+		if(processSingleLineEveryRun == false) {
+			sopl("ERROR: checking isLastProgOutputActualOutput() when it is always going to return actual output");
+			exit(1);
+		}
+		return lastProgOutputActualOutput;
+	}
+	
+	private int numInputFetchesInARowWithoutOutputOrRealInput = 0;
+	public int checkNumEmptyInputFetchesInARowWithoutOutputOrRealInput() {
+		return numInputFetchesInARowWithoutOutputOrRealInput;
+	}
+	public void makeMachineNotSeemIdle() {
+		numInputFetchesInARowWithoutOutputOrRealInput = 0;
+	}
+	//End prob 23 features
+	
+
+	private IntCodeInputReader inputReader;
+	public void setInputReader(IntCodeInputReader r) {
+		inputReader = r;
+	}
+
 	private boolean halted = false;
 	
 	public boolean isHalted() {
 		return halted;
 	}
 	
-	private IntCodeInputReader inputReader;
-	public void setInputReader(IntCodeInputReader r) {
-		inputReader = r;
-	}
+	
 	
 	public long runProg() {
 		
+		boolean firstLineProcessed = false;
+		lastProgOutputActualOutput = false;
 		
 		//sopl("Start");
 		
 		while(pint(getCmds(position)) % 100 != 99) {
 		
+			//Context switching for prob 23
+			if(processSingleLineEveryRun && firstLineProcessed) {
+				return 1729;
+			}
+			firstLineProcessed = true;
+			//END context switching for prob 23
+			
 			long lngth = 4;
 			long opCode = pint(getCmds(position)) % 10;
 			
@@ -187,16 +235,18 @@ public class IntCode {
 				//INPUT HERE
 				if(inputQueue.isEmpty()) {
 					
-					if(inputReader == null) {
-						sopl("ERROR: empty input queue and null inputReader... intCode doesn\'t know what the input should be!");
+					if(hasDefaultInput) {
+						numInputFetchesInARowWithoutOutputOrRealInput++;
+						setCmds(var1, "" + defaultInput);
+						
 					} else {
-						//sopl("WARN: empty input");
+						if(inputReader == null) {
+							sopl("ERROR: empty input queue and null inputReader... intCode doesn\'t know what the input should be!");
+						}
+						
+						long inputRec = inputReader.getInput();
+						setCmds(var1, "" + inputRec);
 					}
-					
-					//TODO: TEST
-					long inputRec = inputReader.getInput();
-					//sop((char)inputRec);
-					setCmds(var1, "" + inputRec);
 					
 				} else {
 					//sopl("input queue");
@@ -206,6 +256,11 @@ public class IntCode {
 					//}
 					setCmds(var1, "" + inputQueue.getFirst());
 					
+					//Prob 23 code:
+					if(numInputFetchesInARowWithoutOutputOrRealInput > 0) {
+						numInputFetchesInARowWithoutOutputOrRealInput = 0;
+					}
+					//END prob 23 code
 					
 					inputQueue.removeFirst();
 					
@@ -215,6 +270,16 @@ public class IntCode {
 				if(this.pauseOnOutput) {
 
 					position += lngth;
+
+					lastProgOutputActualOutput = true;
+					
+
+					//Prob 23 code:
+					if(numInputFetchesInARowWithoutOutputOrRealInput > 0) {
+						numInputFetchesInARowWithoutOutputOrRealInput = 0;
+					}
+					//END prob 23 code
+					
 					return var1;
 				} else {
 					sopl("Output: " + var1);
@@ -270,6 +335,7 @@ public class IntCode {
 			}
 			
 			position += lngth;
+			
 		}
 		
 		//return sucess...
