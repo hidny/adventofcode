@@ -113,13 +113,15 @@ public class IntCode {
 		return lastProgOutputActualOutput;
 	}
 	
-	private int numInputFetchesInARowWithoutOutputOrRealInput = 0;
-	public int checkNumEmptyInputFetchesInARowWithoutOutputOrRealInput() {
-		return numInputFetchesInARowWithoutOutputOrRealInput;
+	boolean lastInstructionGettingDefaultInput = false;
+	public boolean isLastInstructionGettingDefaultInput() {
+		if(hasDefaultInput == false) {
+			sopl("ERROR: checking isLastInstructionGettingDefaultInput() when it has no default Input");
+			exit(1);
+		}
+		return lastInstructionGettingDefaultInput;
 	}
-	public void makeMachineNotSeemIdle() {
-		numInputFetchesInARowWithoutOutputOrRealInput = 0;
-	}
+	
 	//End prob 23 features
 	
 
@@ -140,6 +142,7 @@ public class IntCode {
 		
 		boolean firstLineProcessed = false;
 		lastProgOutputActualOutput = false;
+		lastInstructionGettingDefaultInput = false;
 		
 		//sopl("Start");
 		
@@ -236,7 +239,8 @@ public class IntCode {
 				if(inputQueue.isEmpty()) {
 					
 					if(hasDefaultInput) {
-						numInputFetchesInARowWithoutOutputOrRealInput++;
+						lastInstructionGettingDefaultInput = true;
+
 						setCmds(var1, "" + defaultInput);
 						
 					} else {
@@ -256,12 +260,6 @@ public class IntCode {
 					//}
 					setCmds(var1, "" + inputQueue.getFirst());
 					
-					//Prob 23 code:
-					if(numInputFetchesInARowWithoutOutputOrRealInput > 0) {
-						numInputFetchesInARowWithoutOutputOrRealInput = 0;
-					}
-					//END prob 23 code
-					
 					inputQueue.removeFirst();
 					
 				}
@@ -272,14 +270,7 @@ public class IntCode {
 					position += lngth;
 
 					lastProgOutputActualOutput = true;
-					
 
-					//Prob 23 code:
-					if(numInputFetchesInARowWithoutOutputOrRealInput > 0) {
-						numInputFetchesInARowWithoutOutputOrRealInput = 0;
-					}
-					//END prob 23 code
-					
 					return var1;
 				} else {
 					sopl("Output: " + var1);

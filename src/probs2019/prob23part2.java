@@ -71,6 +71,8 @@ public class prob23part2 {
 			boolean idleList[] = new boolean[NUM_MACHINES];
 			int numMachinesIdle = 0;
 			
+			int numInputFetchesInARowWithoutOutputOrRealInput[] = new int[NUM_MACHINES];
+			
 			//TODO: lower to 3??
 			int PART2_IDLE_LIMIT = 5;
 			
@@ -91,7 +93,7 @@ public class prob23part2 {
 					numMachinesIdle = 0;
 					for(int i=0; i<NUM_MACHINES; i++) {
 						idleList[i] = false;
-						intCode[i].makeMachineNotSeemIdle();
+						numInputFetchesInARowWithoutOutputOrRealInput[i] = 0;
 					}
 					
 					setOfYValuesSent.add(currentNATY + "");
@@ -126,6 +128,8 @@ public class prob23part2 {
 					boolean lastReturnOutputs = intCode[i].isLastProgOutputActualOutput();
 					
 					if(lastReturnOutputs) {
+						
+						numInputFetchesInARowWithoutOutputOrRealInput[i] = 0;
 
 						sopl("Got " + ret);
 						//Get X and Y
@@ -138,6 +142,8 @@ public class prob23part2 {
 						
 						if(ret >=0 && ret < NUM_MACHINES) {
 
+							numInputFetchesInARowWithoutOutputOrRealInput[(int)ret] = 0;
+							
 							sopl("Got " + ret + ", " + x + "," + y);
 							//Add to input queue of machine ret.
 							
@@ -161,16 +167,18 @@ public class prob23part2 {
 							sopl("ERROR: prog output: " + ret);
 							exit(1);
 						}
+					} else if(intCode[i].isLastInstructionGettingDefaultInput()) {
+						numInputFetchesInARowWithoutOutputOrRealInput[i]++;
 					}
 					
 					
 					//Update on whether intCodeMachine is idle or Not
-					if(intCode[i].checkNumEmptyInputFetchesInARowWithoutOutputOrRealInput() >= PART2_IDLE_LIMIT) {
+					if(numInputFetchesInARowWithoutOutputOrRealInput[i] >= PART2_IDLE_LIMIT) {
 						if(idleList[i] == false) {
 							idleList[i] = true;
 							numMachinesIdle++;
 						}
-					} else if(intCode[i].checkNumEmptyInputFetchesInARowWithoutOutputOrRealInput() == 0) {
+					} else if(numInputFetchesInARowWithoutOutputOrRealInput[i] == 0) {
 						if(idleList[i] == true) {
 							idleList[i] = false;
 							numMachinesIdle--;
