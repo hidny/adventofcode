@@ -5,6 +5,11 @@ import java.util.ArrayList;
 public class GraphUtils {
 
 	
+	//TODO: THIS IS TOTALLY WRONG (BUG DISCOVERED MAY 30th 2020)
+	
+	//See PositonFilterTests in weirdMathProblems for the correction, but don't copy paste because
+	// that function doesn't actually get minWeightSpanningTree
+	
 	//TODO: TEST (it worked for Advent of code 2019 day 18...)
 	public static int getMinWeightSpanningTree(int numVertices, ArrayList<Comparable> edges) {
 		int minSpanningTreeWeight = 0;
