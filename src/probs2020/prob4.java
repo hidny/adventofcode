@@ -12,15 +12,13 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob1 {
+public class prob4 {
 
-	//day1 part 1
-	//2:38.01
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2020/prob2020in1.txt"));
+			 in = new Scanner(new File("in2020/prob2020in4.txt"));
 			 //in = new Scanner(new File("in2020/prob2020in1.txt.test"));
 			int numTimes = 0;
 			 
@@ -51,20 +49,64 @@ public class prob1 {
 				line = in.nextLine();
 				lines.add(line);
 				
+				
 			}
+			
 			
 			ArrayList ints = new ArrayList<Integer>();
 			
+			String array[] = {"byr",
+			"iyr",
+			"eyr",
+			"hgt",
+			"hcl",
+			"ecl",
+			"pid",
+			"cid"} ;
 			
+			
+			boolean found[] = new boolean[array.length];
+			
+			for(int j=0; j<found.length; j++) {
+				found[j] = false;
+			}
+			boolean counted = false;
 			for(int i=0; i<lines.size(); i++) {
-				int temp1 = Integer.parseInt(lines.get(i));
-				for(int j=i+1; j<lines.size(); j++) {
-					int temp2 = Integer.parseInt(lines.get(j));
+				
+				line = lines.get(i);
+				
+				if(line.equals("")) {
+
+					for(int j=0; j<found.length; j++) {
+						found[j] = false;
+					}
+					counted = false;
+				}
+				
+				
+				String token[] = line.split(" ");
+				for(int j=0; j<token.length; j++) {
+					String key = token[j].split(":")[0];
 					
-					if(temp1 + temp2 == 2020) {
-						count = temp1 * temp2;
+					for(int k=0; k<array.length; k++) {
+						if(key.equals(array[k])) {
+							found[k] = true;
+						}
+					}
+				}
+				
+				boolean countIt = true;
+				for(int j=0; j<array.length; j++) {
+					if(found[j] == false && j!=7) {
+						countIt = false;
 						break;
 					}
+				}
+				
+				
+				if(countIt && counted == false) {
+					count++;
+					counted = true;
 				}
 			}
 			

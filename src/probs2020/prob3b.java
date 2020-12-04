@@ -12,15 +12,13 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob1 {
+public class prob3b {
 
-	//day1 part 1
-	//2:38.01
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2020/prob2020in1.txt"));
+			 in = new Scanner(new File("in2020/prob2020in3.txt"));
 			 //in = new Scanner(new File("in2020/prob2020in1.txt.test"));
 			int numTimes = 0;
 			 
@@ -51,20 +49,29 @@ public class prob1 {
 				line = in.nextLine();
 				lines.add(line);
 				
+				
 			}
+			
 			
 			ArrayList ints = new ArrayList<Integer>();
 			
+			for(int i=0; i<lines.size(); i++) {
+				String line2 = lines.get(i);
+				
+				for(int j=0; j<100 * line2.length(); j++) {
+					if(line2.charAt(j % line2.length()) == '#') {
+						table[i][j] = false;
+					} else {
+						table[i][j] = true;
+					}
+				}
+			}
+			
 			
 			for(int i=0; i<lines.size(); i++) {
-				int temp1 = Integer.parseInt(lines.get(i));
-				for(int j=i+1; j<lines.size(); j++) {
-					int temp2 = Integer.parseInt(lines.get(j));
-					
-					if(temp1 + temp2 == 2020) {
-						count = temp1 * temp2;
-						break;
-					}
+				String line2 = lines.get(i);
+				if(line2.charAt((3*i) % line2.length()) == '#') {
+					count++;
 				}
 			}
 			

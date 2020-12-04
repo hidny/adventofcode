@@ -12,16 +12,13 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob1 {
+public class prob2 {
 
-	//day1 part 1
-	//2:38.01
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2020/prob2020in1.txt"));
-			 //in = new Scanner(new File("in2020/prob2020in1.txt.test"));
+			 in = new Scanner(new File("in2020/prob2020in2.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -51,21 +48,35 @@ public class prob1 {
 				line = in.nextLine();
 				lines.add(line);
 				
+				
 			}
+			
 			
 			ArrayList ints = new ArrayList<Integer>();
 			
-			
 			for(int i=0; i<lines.size(); i++) {
-				int temp1 = Integer.parseInt(lines.get(i));
-				for(int j=i+1; j<lines.size(); j++) {
-					int temp2 = Integer.parseInt(lines.get(j));
-					
-					if(temp1 + temp2 == 2020) {
-						count = temp1 * temp2;
-						break;
+				
+				String temp = lines.get(i);
+				String token[] = temp.split(" ");
+				String tokenS[] = token[0].split("-");
+				int min = pint(tokenS[0]);
+				int max = pint(tokenS[1]);
+				
+				String c = token[1].split(":")[0];
+				
+				String pass = token[2];
+				
+				int num = 0;
+				for(int j=0; j<pass.length(); j++) {
+					if((pass.charAt(j) + "").equals(c)) {
+						num++;
 					}
 				}
+				
+				if(num >= min && num <= max) {
+					count++;
+				}
+				
 			}
 			
 			sopl("Answer: " + count);

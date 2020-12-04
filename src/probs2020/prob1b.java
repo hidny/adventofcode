@@ -12,10 +12,10 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob1 {
+public class prob1b {
 
-	//day1 part 1
-	//2:38.01
+	//day1 part 2
+	//6:56.90
 	
 	public static void main(String[] args) {
 		Scanner in;
@@ -24,7 +24,7 @@ public class prob1 {
 			 //in = new Scanner(new File("in2020/prob2020in1.txt.test"));
 			int numTimes = 0;
 			 
-			int count = 0;
+			long count = 0;
 			boolean part2 = false;
 			String line = "";
 
@@ -55,16 +55,24 @@ public class prob1 {
 			
 			ArrayList ints = new ArrayList<Integer>();
 			
-			
+			OUT:
 			for(int i=0; i<lines.size(); i++) {
-				int temp1 = Integer.parseInt(lines.get(i));
+				long temp1 = Integer.parseInt(lines.get(i));
 				for(int j=i+1; j<lines.size(); j++) {
-					int temp2 = Integer.parseInt(lines.get(j));
-					
-					if(temp1 + temp2 == 2020) {
-						count = temp1 * temp2;
-						break;
+					long temp2 = Integer.parseInt(lines.get(j));
+					for(int k=j+1; k<lines.size(); k++) {
+						long temp3 = Integer.parseInt(lines.get(k));
+
+						if(temp1 + temp2 +temp3  == 2020) {
+							count = temp1 * temp2 * temp3;
+							sopl(temp1);
+							sopl(temp2);
+							sopl(temp3);
+							sopl("---");
+						}
+						
 					}
+					
 				}
 			}
 			
