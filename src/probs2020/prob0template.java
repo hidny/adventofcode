@@ -24,7 +24,6 @@ public class prob0template {
 			 
 			int count = 0;
 			boolean part2 = false;
-			String line = "";
 
 			LinkedList queue = new LinkedList();
 			Stack stack = new Stack();
@@ -46,7 +45,7 @@ public class prob0template {
 			//3 left
 			
 			while(in.hasNextLine()) {
-				line = in.nextLine();
+				String line = in.nextLine();
 				lines.add(line);
 				
 				
@@ -56,8 +55,14 @@ public class prob0template {
 			ArrayList ints = new ArrayList<Integer>();
 			
 			for(int i=0; i<lines.size(); i++) {
+				
 				int temp = Integer.parseInt(lines.get(i));
 				count+=temp;
+				
+				String line = lines.get(i);
+				String lineCopy = String.copyValueOf(line.toCharArray());
+
+				
 			}
 			
 			sopl("Answer: " + count);
