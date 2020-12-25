@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Set;
@@ -29,7 +30,19 @@ public class prob14b {
 			Stack stack = new Stack();
 			HashSet set = new HashSet();
 			
+			/*
+			 * 
+			set.add("1");
+			set.add(34);
 			
+			Iterator it = set.iterator();
+			
+			while(it.hasNext()) {
+				sopl(it.next());
+			}
+			exit(1);
+			
+			 */
 			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
 			ArrayList <String>lines = new ArrayList<String>();
