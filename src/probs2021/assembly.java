@@ -1,4 +1,4 @@
-package probs2020;
+package probs2021;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -12,21 +12,17 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob1 {
+public class assembly {
 
-	//day1 part 1
-	//2:38.01
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2020/prob2020in1.txt"));
-			 //in = new Scanner(new File("in2020/prob2020in1.txt.test"));
+			 in = new Scanner(new File("in2020/prob2020in8.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
 			boolean part2 = false;
-			String line = "";
 
 			LinkedList queue = new LinkedList();
 			Stack stack = new Stack();
@@ -48,25 +44,78 @@ public class prob1 {
 			//3 left
 			
 			while(in.hasNextLine()) {
-				line = in.nextLine();
+				String line = in.nextLine();
 				lines.add(line);
 				
+				
 			}
+			
 			
 			ArrayList ints = new ArrayList<Integer>();
 			
-			for(int i=3; i<lines.size(); i++) {
+			for(int i=0; i<lines.size(); i++) {
 				
-				int prev = 
-					 pint(lines.get(i-1)) + pint(lines.get(i-2)) + pint(lines.get(i-3));
-				int cur = pint(lines.get(i)) + pint(lines.get(i-1)) + pint(lines.get(i-2));
 				
-				if(cur > prev) {
-					count++;
+				String line = lines.get(i);
+				
+				if(line.trim().equals("")) {
+					//Blank line means something this year...
+				}
+				
+				
+			}
+			
+			
+			long registers[] = new long[64];
+			
+			
+			
+			boolean used[] = new boolean[lines.size()];
+			int acc = 0;
+			
+			for(int pc=0; pc<lines.size(); pc++) {
+				
+				used[pc] = true;
+				
+				
+				String cmd = lines.get(pc).toLowerCase();
+				
+				String token[] = cmd.split(" ");
+				
+				sopl(pc);
+				int num1 = pint(token[1]);
+				
+				int num2 = -1;
+				if(token.length > 2) {
+					num2 = pint(token[2]);
+				}
+				
+				if(token[1].contains("-") && num1 >=0) {
+					sopl("error: " + num1 );
+					exit(1);
+				}
+				
+				if(cmd.startsWith("nop")) {
+					
+				} else if(cmd.startsWith("acc")) {
+					
+					acc += num1;
+					
+				} else if(cmd.startsWith("jmp")) {
+					
+					pc += num1;
+					pc--;
+					
+				} else if(cmd.startsWith("beq")) {
+					//TODO
+					
+				} else {
+					sopl("Error1");
+					exit(1);
 				}
 			}
 			
-			sopl("Answer: " + count);
+			sopl("Answer: " + acc);
 			in.close();
 			
 		} catch(Exception e) {

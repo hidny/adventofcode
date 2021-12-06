@@ -19,10 +19,10 @@ public class BoardPos  implements AstarNode{
 		
 		//TODO: fakeProblem2 is easy for me, but still takes long for computer...
 		// investigate ways to make it go faster
-		doProblem22();
+		//doProblem22();
 		
-		Scanner in = new Scanner(System.in);
-		in.next();
+	///Scanner in = new Scanner(System.in);
+		//in.next();
 		doProblem50();
 	}
 	
@@ -430,6 +430,10 @@ public class BoardPos  implements AstarNode{
 		} else {
 			return 1;
 		}
+	}
+	
+	public int hashCode() {
+		return this.toString().hashCode();
 	}
 		
 	

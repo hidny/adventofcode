@@ -43,7 +43,7 @@ public class AstarAlgo {
 		// h(n) <= actual cost of getting there.
 		
 		//fScoreOpenNodes holds the set of open nodes left to explore.
-		//Note that it also holds the fScore, put that's only used for debugging purposes.
+		//Note that it also holds the fScore, but that's only used for debugging purposes.
 		
 		HashMap<AstarNode, Long> fScoreOpenNodes = new HashMap<AstarNode, Long>();
 		HeapTreeMT fScoreQuickMinFinder = new HeapTreeMT();
@@ -78,7 +78,7 @@ public class AstarAlgo {
 			if((goal != null && current.hashCode() == goal.hashCode())) {
 				return reconstruct_path(cameFrom, current);
 			
-			//Alternative way to show solution. //TODO TEST
+			//Alternative way to show solution.
 			} else if(goal == null && current.getAdmissibleHeuristic(null) == GOAL_FOUND) { // GOAL_FOUND = -1
 				return reconstruct_path(cameFrom, current);
 			}
@@ -89,6 +89,8 @@ public class AstarAlgo {
 			fScoreOpenNodes.remove(current);
 			
 			closedSet.add(current);
+			System.out.println("TEST Closed set size: " + closedSet.size());
+			System.exit(1);
 			
 			ArrayList<AstarNode> neighbours = current.getNodeNeighbours();
 			
@@ -96,6 +98,8 @@ public class AstarAlgo {
 				currentNeighbour = neighbours.get(i);
 				// Ignore the neighbor which is already evaluated
 				if(closedSet.contains(currentNeighbour)) {
+					System.out.println("TEST CLOSED SET CONTAINS IT");
+					System.exit(1);
 					continue;
 				}
 				

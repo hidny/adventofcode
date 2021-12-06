@@ -1,4 +1,4 @@
-package probs2020;
+package probs2021;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ public class prob1 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2020/prob2020in1.txt"));
-			 //in = new Scanner(new File("in2020/prob2020in1.txt.test"));
+			 in = new Scanner(new File("in2021/prob2021in1.txt"));
+			 //in = new Scanner(new File("in2021/prob2020in1.txt.test"));
 			int numTimes = 0;
 			 
 			int count = 0;

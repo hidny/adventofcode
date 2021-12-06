@@ -1,4 +1,4 @@
-package probs2020;
+package probs2021;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -12,21 +12,18 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob1 {
+public class prob3b {
 
-	//day1 part 1
-	//2:38.01
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2020/prob2020in1.txt"));
-			 //in = new Scanner(new File("in2020/prob2020in1.txt.test"));
+			 in = new Scanner(new File("in2021/prob2021in3.txt"));
+			 //in = new Scanner(new File("in2021/prob2021in3.txt.test"));
 			int numTimes = 0;
 			 
 			int count = 0;
 			boolean part2 = false;
-			String line = "";
 
 			LinkedList queue = new LinkedList();
 			Stack stack = new Stack();
@@ -38,8 +35,8 @@ public class prob1 {
 			ArrayList <String>lines = new ArrayList<String>();
 			
 			
-			int LIMIT = 20000;
-			boolean table[][] = new boolean[LIMIT][LIMIT];
+			//int LIMIT = 20000;
+			//boolean table[][] = new boolean[LIMIT][LIMIT];
 			
 			
 			//dir: 0 up
@@ -48,25 +45,58 @@ public class prob1 {
 			//3 left
 			
 			while(in.hasNextLine()) {
-				line = in.nextLine();
+				String line = in.nextLine();
 				lines.add(line);
 				
+				
 			}
+			
 			
 			ArrayList ints = new ArrayList<Integer>();
 			
-			for(int i=3; i<lines.size(); i++) {
+			int array0[] = new int[lines.get(0).length()];
+			int array1[] = new int[lines.get(0).length()];
+			
+			int numEp = 0;
+			int numGam = 0;
+			
+			for(int i=0; i<lines.size(); i++) {
 				
-				int prev = 
-					 pint(lines.get(i-1)) + pint(lines.get(i-2)) + pint(lines.get(i-3));
-				int cur = pint(lines.get(i)) + pint(lines.get(i-1)) + pint(lines.get(i-2));
+				//int temp = Integer.parseInt(lines.get(i));
+				//count+=temp;
 				
-				if(cur > prev) {
-					count++;
+				String line = lines.get(i);
+				
+				for(int j=0; j<line.length(); 
+						j++) {
+					
+					if(line.charAt(j) == '0') {
+						array0[j]++;
+					} else if(line.charAt(j) == '1') {
+						array1[j]++;
+					} else{
+						sopl("doh");
+					}
+				}
+				
+				
+				
+				
+			}
+			
+
+			for(int j=0; j<array0.length; 
+					j++) {
+				if(array0[j] > array1[j]) {
+					numEp = 2* numEp + 1;
+					numGam = 2* numGam;
+				} else if(array0[j] < array1[j]) {
+					numEp = 2* numEp;
+					numGam = 2* numGam + 1;
 				}
 			}
 			
-			sopl("Answer: " + count);
+			sopl("Answer: " + (numEp*numGam));
 			in.close();
 			
 		} catch(Exception e) {
@@ -89,6 +119,15 @@ public class prob1 {
 	public static int pint(String s) {
 		if (IsNumber.isNumber(s)) {
 			return Integer.parseInt(s);
+		} else {
+			sop("Error: (" + s + " is not a number");
+			return -1;
+		}
+	}
+
+	public static long plong(String s) {
+		if (IsNumber.isLong(s)) {
+			return Long.parseLong(s);
 		} else {
 			sop("Error: (" + s + " is not a number");
 			return -1;
