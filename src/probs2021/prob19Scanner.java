@@ -87,28 +87,36 @@ public class prob19Scanner {
 	
 	
 	public static prob19Scanner tryToCombineScanners(prob19Scanner a, prob19Scanner b) {
-		boolean array[][] = new boolean[a.points.size()][b.points.size()];
+		
+		//Thought about using deduction, but then I got lazy...
+		//boolean array[][] = new boolean[a.points.size()][b.points.size()];
+		
 		
 		
 		int origDiffsX[] = null;
 		int NotXOrientation[] = new int[6];
-		int numPossibleXOrientation = 6;
+		//int numPossibleXOrientation = 6;
 		
 
 		int origDiffsY[] = null;
 		int NotYOrientation[] = new int[6];
-		int numPossibleYOrientation = 6;
+		//int numPossibleYOrientation = 6;
 		
 		int origDiffsZ[] = null;
 		int NotZOrientation[] = new int[6];
-		int numPossibleZOrientation = 6;
+		//int numPossibleZOrientation = 6;
+		
+		boolean nothingCloseToMatching = true;
 		
 		for(int i=0; i<a.points.size(); i++) {
 			for(int j=0; j<b.points.size(); j++) {
 
 				
 				if(prob19Point.couldBeSamePoint(a.pointDistArray[i], b.pointDistArray[j])) {
-					array[i][j] = true;
+					
+					nothingCloseToMatching = false;
+					
+					//array[i][j] = true;
 					String coord1[]  =a.points.get(i).split(",");
 					String coord2[] = b.points.get(j).split(",");
 					
@@ -134,11 +142,7 @@ public class prob19Scanner {
 						for(int k=0; k<curDiffX.length; k++) {
 							if(curDiffX[k] != origDiffsX[k]) {
 								NotXOrientation[k]++;
-								numPossibleXOrientation--;
 								
-								if(numPossibleXOrientation == 0) {
-									sopl("doh1!");
-								}
 							}
 						}
 					}
@@ -153,11 +157,7 @@ public class prob19Scanner {
 						for(int k=0; k<curDiffY.length; k++) {
 							if(curDiffY[k] != origDiffsY[k]) {
 								NotYOrientation[k]++;
-								numPossibleYOrientation--;
 								
-								if(numPossibleYOrientation == 0) {
-									sopl("doh2!");
-								}
 							}
 						}
 					}
@@ -174,11 +174,7 @@ public class prob19Scanner {
 						for(int k=0; k<curDiffZ.length; k++) {
 							if(curDiffZ[k] != origDiffsZ[k]) {
 								NotZOrientation[k]++;
-								numPossibleZOrientation--;
 								
-								if(numPossibleZOrientation == 0) {
-									sopl("doh3!");
-								}
 							}
 						}
 					}
@@ -186,6 +182,11 @@ public class prob19Scanner {
 				}
 				
 			}
+		}
+		
+		if(nothingCloseToMatching) {
+			//If no points seems like a match, stop trying to combine scanners:
+			return null;
 		}
 		
 		
@@ -531,150 +532,3 @@ public class prob19Scanner {
 		System.out.println();
 	}
 }
-
-/*
-
-public static void tryToCombineScanners(prob19Scanner a, prob19Scanner b) {
-	boolean array[][] = new boolean[a.points.size()][b.points.size()];
-	
-	
-	int origDiffsX[] = null;
-	int NotXOrientation[] = new int[6];
-	int numPossibleXOrientation = 6;
-	
-
-	int origDiffsY[] = null;
-	int NotYOrientation[] = new int[6];
-	int numPossibleYOrientation = 6;
-	
-	int origDiffsZ[] = null;
-	int NotZOrientation[] = new int[6];
-	int numPossibleZOrientation = 6;
-	
-	for(int i=0; i<a.points.size(); i++) {
-		for(int j=0; j<b.points.size(); j++) {
-
-			
-			if(prob19Point.couldBeSamePoint(a.pointDistArray[i], b.pointDistArray[j])) {
-				array[i][j] = true;
-				String coord1[]  =a.points.get(i).split(",");
-				String coord2[] = b.points.get(j).split(",");
-				
-				int x1 = pint(coord1[0]);
-				int y1 = pint(coord1[1]);
-				int z1 = pint(coord1[2]);
-				
-
-				
-				int x2 = pint(coord2[0]);
-				int y2 = pint(coord2[1]);
-				int z2 = pint(coord2[2]);
-				int x2Neg = -pint(coord2[0]);
-				int y2Neg = -pint(coord2[1]);
-				int z2Neg = -pint(coord2[2]);
-				
-				int curDiffX[] = new int[]{x2 - x1, y2 - x1, z2 - x1, x2Neg - x1, y2Neg - x1, z2Neg - x1};
-				
-				if(origDiffsX == null) {
-					origDiffsX = curDiffX;
-				} else {
-					
-					for(int k=0; k<curDiffX.length; k++) {
-						if(curDiffX[k] != origDiffsX[k]) {
-							NotXOrientation[k]++;
-							numPossibleXOrientation--;
-							
-							if(numPossibleXOrientation == 0) {
-								sopl("doh!");
-							}
-						}
-					}
-				}
-				
-				//TODO copy/paste code
-				int curDiffY[] = new int[]{x2 - y1, y2 - y1, z2 - y1, x2Neg - y1, y2Neg - y1, z2Neg - y1};
-				
-				if(origDiffsY == null) {
-					origDiffsY = curDiffY;
-				} else {
-					
-					for(int k=0; k<curDiffY.length; k++) {
-						if(curDiffY[k] != origDiffsY[k]) {
-							NotYOrientation[k]++;
-							numPossibleYOrientation--;
-							
-							if(numPossibleYOrientation == 0) {
-								sopl("doh!");
-							}
-						}
-					}
-				}
-				//TODO copy/paste code
-				
-
-				//TODO copy/paste code
-				int curDiffZ[] = new int[]{x2 - z1, y2 - z1, z2 - z1, x2Neg - z1, y2Neg - z1, z2Neg - z1};
-				
-				if(origDiffsZ == null) {
-					origDiffsZ = curDiffZ;
-				} else {
-					
-					for(int k=0; k<curDiffZ.length; k++) {
-						if(curDiffZ[k] != origDiffsZ[k]) {
-							NotZOrientation[k]++;
-							numPossibleZOrientation--;
-							
-							if(numPossibleZOrientation == 0) {
-								sopl("doh!");
-							}
-						}
-					}
-				}
-				//TODO copy/paste code
-			}
-			
-		}
-	}
-	
-	
-	sopl("hgello");
-	int min = Integer.MAX_VALUE;
-	int bestIndexX = 0;
-	for(int i=0; i<NotXOrientation.length; i++) {
-		if(NotXOrientation[i] < min) {
-			min = NotXOrientation[i];
-			bestIndexX =i;
-		}
-		sopl(NotXOrientation[i]);
-	}
-	
-	sopl("Best index X: " + bestIndexX);
-
-	min = Integer.MAX_VALUE;
-	int bestIndexY= 0;
-	for(int i=0; i<NotYOrientation.length; i++) {
-		if(NotYOrientation[i] < min) {
-			min = NotYOrientation[i];
-			bestIndexY =i;
-		}
-		sopl(NotXOrientation[i]);
-	}
-	
-	sopl("Best index Y: " + bestIndexY);
-	
-	min = Integer.MAX_VALUE;
-	int bestIndexZ= 0;
-	for(int i=0; i<NotZOrientation.length; i++) {
-		if(NotZOrientation[i] < min) {
-			min = NotZOrientation[i];
-			bestIndexZ =i;
-		}
-		sopl(NotZOrientation[i]);
-	}
-	
-	sopl("Best index Z: " + bestIndexZ);
-	
-	
-	
-	
-}*/

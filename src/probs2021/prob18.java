@@ -81,7 +81,7 @@ public class prob18 {
 					sum = new prob18tree(sum, a);
 					prob18tree.printTree(sum);
 					sopl();
-					sopl("reduce:");
+					sopl("Reduce:");
 					sum = prob18tree.reduce2(sum);
 					prob18tree.printTree(sum);
 					sopl();

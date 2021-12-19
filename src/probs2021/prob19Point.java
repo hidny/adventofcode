@@ -48,7 +48,7 @@ public class prob19Point {
 		
 		
 		//Didn't use these vars...
-		//I think these these used properly 
+		//I think if these vars were used properly along with other vars, I 
 		//could've disproven a few pairs of points, but I got lazy...
 		//int distFromEdge = a.minDistFromEdge();
 		//int distFromEdge2 = b.minDistFromEdge();

@@ -121,6 +121,7 @@ public class prob19 {
 					
 					if(done[i] == false) {
 						
+						sopl();
 						sopl("Combining with scanner " + i);
 						prob19Scanner tmp  = prob19Scanner.tryToCombineScanners(ret, scanners[i]);
 						if(tmp == null) {
