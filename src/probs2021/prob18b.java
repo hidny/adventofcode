@@ -12,7 +12,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob18 {
+public class prob18b {
 
 	
 	public static void main(String[] args) {
@@ -55,48 +55,41 @@ public class prob18 {
 			
 			
 			
-			ArrayList ints = new ArrayList<Integer>();
 			
 			
-			prob18tree sum = null;
+			long bestManitue = 0;
 			
 			for(int i=0; i<lines.size(); i++) {
-				String line = lines.get(i);
+				String line1 = lines.get(i);
 				
-				
-				prob18tree a = new prob18tree(line, 0 , null);
-				
-				if(sum == null) {
-					sum = a;
+				for(int j=0; j<lines.size(); j++) {
 					
-					prob18tree.printTree(sum);
-					sopl();
+					if(i == j) {
+						continue;
+					}
 					
-					sopl();
-					sopl();
+					String line2 = lines.get(j);
+
+					prob18tree a = new prob18tree(line1, 0 , null);
+					  
+					prob18tree b = new prob18tree(line2, 0 , null);
 					
-					sopl("---------");
+					prob18tree sum = new prob18tree(a, b);
 					
-				} else {
-					sum = new prob18tree(sum, a);
-					prob18tree.printTree(sum);
-					sopl();
-					sopl("Reduce:");
 					sum = prob18tree.reduce(sum);
-					prob18tree.printTree(sum);
-					sopl();
 					
-					sopl();
-					sopl();
+					long curMagniture = prob18tree.getMagnitude(sum);
 					
-					sopl("---------");
+					if(curMagniture > bestManitue) {
+						bestManitue = curMagniture;
+					}
 					
 				}
-			}
-			long answer = prob18tree.getMagnitude(sum);
+			}//end i loop
 			
 			
-			sopl("Answer: " + answer);
+			
+			sopl("Answer: " + bestManitue);
 			in.close();
 			
 		} catch(Exception e) {
