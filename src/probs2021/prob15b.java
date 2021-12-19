@@ -149,7 +149,7 @@ public class prob15b {
 								if(riskLevel[i][j]  > sum + riskLevel[i2][j2]) {
 									riskLevel[i][j] = sum + riskLevel[i2][j2];
 									progress = true;
-									sopl("go back! " + i + ", " + j);
+									//sopl("go back! " + i + ", " + j);
 								}
 								
 								
@@ -167,7 +167,7 @@ public class prob15b {
 			sopl("Answer: " + riskLevel[riskLevel.length - 1][riskLevel[0].length-1]);
 			in.close();
 			
-			int i=riskLevel.length - 1;
+			/*int i=riskLevel.length - 1;
 			int j=riskLevel[0].length-1;
 			
 			int count2 = 0;
@@ -201,7 +201,7 @@ public class prob15b {
 			
 			sopl(lines.size());
 			sopl(lines.get(0).length());
-			
+			*/
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {

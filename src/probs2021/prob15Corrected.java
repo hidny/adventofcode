@@ -159,44 +159,9 @@ public class prob15Corrected {
 			}
 			
 			
-			//2970
 			sopl("Answer: " + riskLevel[riskLevel.length - 1][riskLevel[0].length-1]);
 			in.close();
 			
-			int i=riskLevel.length - 1;
-			int j=riskLevel[0].length-1;
-			
-			int count2 = 0;
-			while(i>0 || j>0) {
-				int irem = i % lines.size();
-				int jrem = j % lines.get(0).length();
-						
-				int iq = i / lines.size();
-				int jq = j /  lines.get(0).length();
-				sopl( 1 + (( iq + jq + pint(lines.get(irem).charAt(jrem) + "") -1) % 9));
-				
-				long above = 99099999;
-				if(i>0 ) {
-					above = riskLevel[i-1][j];
-				}
-				
-				long left = 999999;
-				
-				if(j>0 ) {
-					left = riskLevel[i][j-1];
-				}
-				
-				if(above >= left) {
-					j--;
-				} else {
-					i--;
-				}
-				count2++;
-			}
-			sopl("count2: " + count2);
-			
-			sopl(lines.size());
-			sopl(lines.get(0).length());
 			
 		} catch(Exception e) {
 			e.printStackTrace();
