@@ -58,6 +58,7 @@ public class AstarAlgo {
 			
 			AstarNode current = getLowestFFunctionNode(fScoreOpenNodes, fScoreQuickMinFinder);
 			
+			//System.out.println("Current: " + current);
 			
 			//Uncomment for fun:
 			
@@ -89,8 +90,7 @@ public class AstarAlgo {
 			fScoreOpenNodes.remove(current);
 			
 			closedSet.add(current);
-			System.out.println("TEST Closed set size: " + closedSet.size());
-			System.exit(1);
+			
 			
 			ArrayList<AstarNode> neighbours = current.getNodeNeighbours();
 			
@@ -98,8 +98,6 @@ public class AstarAlgo {
 				currentNeighbour = neighbours.get(i);
 				// Ignore the neighbor which is already evaluated
 				if(closedSet.contains(currentNeighbour)) {
-					System.out.println("TEST CLOSED SET CONTAINS IT");
-					System.exit(1);
 					continue;
 				}
 				

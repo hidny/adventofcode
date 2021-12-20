@@ -136,7 +136,7 @@ public class prob15b {
 						int iq = i / lines.size();
 						int jq = j /  lines.get(0).length();
 						
-						int sum = 1 + (( iq + jq + pint(lines.get(irem).charAt(jrem) + "") -1) % 9);
+						int costOfMove = 1 + (( iq + jq + pint(lines.get(irem).charAt(jrem) + "") -1) % 9);
 						
 						for(int i2=i; i2<=i+1; i2++) {
 							for(int j2=j; j2<=j+1; j2++) {
@@ -146,8 +146,8 @@ public class prob15b {
 								if(i2== i && j2 == j) {
 									continue;
 								}
-								if(riskLevel[i][j]  > sum + riskLevel[i2][j2]) {
-									riskLevel[i][j] = sum + riskLevel[i2][j2];
+								if(riskLevel[i][j]  > costOfMove + riskLevel[i2][j2]) {
+									riskLevel[i][j] = costOfMove + riskLevel[i2][j2];
 									progress = true;
 									//sopl("go back! " + i + ", " + j);
 								}
