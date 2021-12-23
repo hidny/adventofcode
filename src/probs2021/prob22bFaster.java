@@ -103,7 +103,6 @@ public class prob22bFaster {
 			//	origMins[i] = -BLOCK;
 			//	origMaxes[i] = BLOCK;
 			//}
-			sopl("faster? sample");
 			
 			long answer = getNaiveVolume(lines,  origMins, origMaxes);
 			
