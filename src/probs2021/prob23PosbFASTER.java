@@ -14,11 +14,11 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob23Posb implements AstarNode {
+public class prob23PosbFASTER implements AstarNode {
 
 	
 	String curPos = "";
-	public prob23Posb(String pos) {
+	public prob23PosbFASTER(String pos) {
 		curPos = pos;
 		
 	}
@@ -27,7 +27,7 @@ public class prob23Posb implements AstarNode {
 	public static String GOAL = "...........AAAABBBBCCCCDDDD";
 	//public static String GOAL = "...........AABBCCDD";
 	
-	private Hashtable<String, prob23Posb> map = new Hashtable<String, prob23Posb>();
+	private Hashtable<String, prob23PosbFASTER> map = new Hashtable<String, prob23PosbFASTER>();
 
 	
 	public static int neighbours[][] = new int[GOAL.length()][GOAL.length()];
@@ -70,7 +70,7 @@ public class prob23Posb implements AstarNode {
 		sopl(getDistanceToGoal(curLocation, 'A'));
 		
 		
-		prob23Posb pos = new prob23Posb(curLocation);
+		prob23PosbFASTER pos = new prob23PosbFASTER(curLocation);
 		
 		sopl("Map:");
 		sopl(pos.getMap());
@@ -80,15 +80,31 @@ public class prob23Posb implements AstarNode {
 		
 		pos.getNodeNeighbours();
 		
+		
+		
 		ArrayList<AstarNode> path = AstarAlgo.astar(pos, null);
+		
+		sopl("-------------------------");
 		sopl("Path: " + path.size());
 		
 		int answer = 0;
 		for(int i=0; i<path.size() - 1; i++) {
 			answer += path.get(i).getCostOfMove(path.get(i+1));
-			sopl(((prob23Posb)path.get(i)).curPos);
+			
+			if(i== 0) {
+				sopl(((prob23PosbFASTER)path.get(i)).getMap());
+				
+			} else {
+				//I just want to make the solution look good:
+				sopl(((prob23PosbFASTER)path.get(i)).getMapWithMovement((prob23PosbFASTER)path.get(i-1)));
+			}
+			
 			sopl(path.get(i).getCostOfMove(path.get(i+1)));
 		}
+		
+		//Print the last position, just for fun:
+		sopl(((prob23PosbFASTER)path.get(path.size() - 1)).getMapWithMovement((prob23PosbFASTER)path.get(path.size() - 2)));
+		
 		sopl("Answer: " + answer);
 	}
 	
@@ -224,7 +240,6 @@ public class prob23Posb implements AstarNode {
 		}
 		
 
-		long debugClearHole = 0;
 		for(int letterIndex=0; letterIndex<4; letterIndex++) {
 			char letter = (char)('A' + letterIndex);
 			
@@ -248,7 +263,6 @@ public class prob23Posb implements AstarNode {
 					
 
 					if(needToClearHole) {
-						debugClearHole += 4 * energyCost[letterIndex] + 2*j*energyCost[letterIndex];
 						sum += 4 * energyCost[letterIndex] + 2*j*energyCost[letterIndex];
 					}
 				}
@@ -257,12 +271,6 @@ public class prob23Posb implements AstarNode {
 			
 			
 		}
-		
-		/*if(debugClearHole>0) {
-			sopl(this.curPos);
-			sopl("Clear: " + debugClearHole);
-		//	exit(1);
-		}*/
 		
 		
 		
@@ -280,8 +288,6 @@ public class prob23Posb implements AstarNode {
 	
 	@Override
 	public ArrayList<AstarNode> getNodeNeighbours() {
-		// TODO Auto-generated method stub
-		
 
 		
 		//Ignore dead-lock positions:
@@ -318,73 +324,6 @@ public class prob23Posb implements AstarNode {
 			}
 		}
 		
-		/*
-		//bad ignore dead-lock
-		if(this.curPos.charAt(1) != '.') {
-			for(int i=0; i<4; i++) {
-				
-				int indexI = LENGTH_UP + i;
-				
-				if(this.curPos.charAt(indexI) != '.'
-						&& this.curPos.charAt(indexI) != 'A') {
-					
-					
-					for(int j=3; j<=3; j++) {
-
-						if(this.curPos.charAt(j) == 'A') {
-							
-							
-							sopl("Nope");
-							
-							sopl("Count: " + count);
-							sopl("Cur: " + this.curPos);
-							sopl("Dist: " + this.getAdmissibleHeuristic(null));
-							
-							sopl(this.getMap());
-							sopl();
-							sopl();
-							//exit(1);
-							return new ArrayList<AstarNode>();
-						
-								
-						}
-					}
-				}
-			}
-		}
-		if(this.curPos.charAt(LENGTH_UP-2) != '.') {
-			for(int i=0; i<4; i++) {
-				
-				int indexI = LENGTH_UP + DEPTH_HOLE * 3 + i;
-				
-				if(this.curPos.charAt(indexI) != '.'
-						&& this.curPos.charAt(indexI) != 'D') {
-					
-					
-					for(int j=LENGTH_UP-4; j<=LENGTH_UP-4; j++) {
-
-						if(this.curPos.charAt(j) == 'D') {
-							
-							
-							sopl("Nope");
-							
-							sopl("Count: " + count);
-							sopl("Cur: " + this.curPos);
-							sopl("Dist: " + this.getAdmissibleHeuristic(null));
-							
-							sopl(this.getMap());
-							sopl();
-							sopl();
-							//exit(1);
-							return new ArrayList<AstarNode>();
-						
-								
-						}
-					}
-				}
-			}
-		}*/
-		//End ignore dead-lock positions
 		
 		
 		
@@ -402,29 +341,14 @@ public class prob23Posb implements AstarNode {
 			
 			int possibleLandings[] = new int[GOAL.length()];
 			if(i < LENGTH_UP) {
-				//Up to down
-				for(int j=0; j<DEPTH_HOLE; j++) {
-					if( this.curPos.charAt(LENGTH_UP + DEPTH_HOLE*letterIndex + j) == '.') {
-						
-						if(j == 0) {
-							possibleLandings[LENGTH_UP + DEPTH_HOLE*letterIndex + j] = 1;
-							
-						} else if(j>0 && possibleLandings[LENGTH_UP + DEPTH_HOLE*letterIndex + j - 1] == 1) {
-							possibleLandings[LENGTH_UP + DEPTH_HOLE*letterIndex + j - 1] = 0;
-							possibleLandings[LENGTH_UP + DEPTH_HOLE*letterIndex + j] = 1;
-							
-						}
-						
-					} else if( this.curPos.charAt(LENGTH_UP + DEPTH_HOLE*letterIndex + j) != letter) {
-						//Never mind!
-						//sopl("Never mind!");
-
-						possibleLandings = new int[GOAL.length()];
-						
-						break;
-					}
 				
+				//Up to down
+				int slotAcceptingIndex = slotIsAcceptingIndex(letterIndex, this.curPos);
+				
+				if(slotAcceptingIndex >= 0) {
+					possibleLandings[LENGTH_UP + DEPTH_HOLE*letterIndex + slotAcceptingIndex] = 1;
 				}
+				
 				
 			} else {
 				
@@ -446,14 +370,6 @@ public class prob23Posb implements AstarNode {
 					possibleLandings[2+2*j] = 0;
 				}
 				
-				//Remove bad moves:
-				/*if(slotIndex == 3 & this.curPos.charAt(0) != '.' && this.curPos.charAt(1) != '.') {
-					possibleLandings[3] = 0;
-				}
-				if(slotIndex == 0 && this.curPos.charAt(LENGTH_UP - 1) != '.' && this.curPos.charAt(LENGTH_UP - 2) != '.') {
-					possibleLandings[LENGTH_UP - 4] = 0;
-				}*/
-				//End remove bad moves
 				
 				if(i >= LENGTH_UP + DEPTH_HOLE*letterIndex && i <  LENGTH_UP + DEPTH_HOLE*(letterIndex+1)) {
 					
@@ -484,7 +400,7 @@ public class prob23Posb implements AstarNode {
 					ArrayList<Integer> path = getPath(i, j);
 					
 					boolean couldDoIt = true;
-					for(int k=0; k<path.size()-1; k++) {
+					for(int k=0; k<path.size(); k++) {
 						if(this.curPos.charAt(path.get(k)) != '.') {
 							couldDoIt = false;
 						}
@@ -493,7 +409,7 @@ public class prob23Posb implements AstarNode {
 					if(couldDoIt) {
 						String newLocation = swap(this.curPos, i, j);
 						
-						prob23Posb nextNeighbour = null;
+						prob23PosbFASTER nextNeighbour = null;
 						//TODO
 						if(map.containsKey(newLocation)) {
 							//sopl("Already found");
@@ -501,7 +417,7 @@ public class prob23Posb implements AstarNode {
 							
 							//exit(1);
 						} else {
-							nextNeighbour = new prob23Posb(newLocation);
+							nextNeighbour = new prob23PosbFASTER(newLocation);
 							map.put(newLocation, nextNeighbour);
 							count++;
 							
@@ -553,6 +469,39 @@ public class prob23Posb implements AstarNode {
 						
 						} else if(j < LENGTH_UP) {
 							
+							//int letterIndex = (int)(letter - 'A');
+							
+							if(slotIsAccepting(letterIndex, nextNeighbour.curPos)) {
+								ArrayList<Integer> path2 = getPath(j, LENGTH_UP + DEPTH_HOLE * letterIndex);
+								
+								//LENGTH_UP + DEPTH_HOLE*letterIndex + slotAcceptingIndex
+								
+								boolean couldDoIt2 = true;
+								for(int k=0; k<path2.size(); k++) {
+									if(this.curPos.charAt(path2.get(k)) != '.') {
+										couldDoIt2 = false;
+									}
+								}
+								
+								if(couldDoIt2 && 
+										this.getAdmissibleHeuristic(null) == nextNeighbour.getAdmissibleHeuristic(null) + this.getCostOfMove(nextNeighbour)) {
+									
+									//sopl(this.getMap());
+									//sopl(nextNeighbour.getMap());
+									
+									//sopl("forced2");
+									//exit(1);
+									
+									//TODO: did this break it?
+									ret = new ArrayList<AstarNode>();
+									ret.add(nextNeighbour);
+									return ret;
+									//END TODO
+									
+								}
+								
+							}
+							
 							//At this point... make sure it's not impossible???
 							//TODO
 						}
@@ -586,9 +535,43 @@ public class prob23Posb implements AstarNode {
 			
 		}*/
 		
-		//TODO: ahh!
 		return ret;
 	}
+	
+	
+	public static boolean slotIsAccepting(int letterIndex, String pos) {
+		
+		return slotIsAcceptingIndex(letterIndex, pos) >= 0;
+	}
+	
+	public static int slotIsAcceptingIndex(int letterIndex, String pos) {
+		int ret = -1;
+		
+		char letter = (char)('A' + letterIndex);
+		
+		for(int j=0; j<DEPTH_HOLE; j++) {
+			if( pos.charAt(LENGTH_UP + DEPTH_HOLE*letterIndex + j) == '.') {
+				
+				if(j == 0) {
+					ret = j;
+					
+				} else if(j>0 && ret == j -1) {
+					ret = j;
+					
+				}
+				
+			} else if( pos.charAt(LENGTH_UP + DEPTH_HOLE*letterIndex + j) != letter) {
+				
+				ret = -1;
+				break;
+			}
+		
+		}
+		
+		return ret;
+	}
+	
+	
 	
 	public String getMap() {
 		String ret = "";
@@ -607,6 +590,36 @@ public class prob23Posb implements AstarNode {
 		return ret;
 	}
 	
+	public String getMapWithMovement(prob23PosbFASTER prev) {
+		String posWithMotion = "";
+		
+		for(int i=0; i<curPos.length(); i++) {
+			if(curPos.charAt(i) == '.' && prev.curPos.charAt(i) != '.') {
+				
+				posWithMotion = curPos.substring(0, i);
+				posWithMotion += "_";
+				
+				if(i+1 < curPos.length()) {
+					posWithMotion += curPos.substring(i+1, curPos.length());
+				}
+			}
+		}
+		
+		String ret = "";
+		ret = "#" + posWithMotion.substring(0, LENGTH_UP) + "#";
+		ret += "\n";
+		for(int i=0; i<DEPTH_HOLE; i++) {
+			
+			ret += "###";
+			for(int j=0; j<4; j++) {
+				ret += posWithMotion.charAt(LENGTH_UP + j*DEPTH_HOLE  + i);
+				ret+="#";
+			}
+			ret += "##";
+			ret += "\n";
+		}
+		return ret;
+	}
 	
 	@Override
 	public long getCostOfMove(AstarNode nextPos) {
@@ -622,7 +635,7 @@ public class prob23Posb implements AstarNode {
 		for(int letterIndex=0; letterIndex<4; letterIndex++) {
 			char letter = (char)('A' + letterIndex);
 			
-			sum += energyCost[letterIndex] * getDistanceToNeighbour(this.curPos, letter, ((prob23Posb)nextPos).curPos);
+			sum += energyCost[letterIndex] * getDistanceToNeighbour(this.curPos, letter, ((prob23PosbFASTER)nextPos).curPos);
 			
 		}
 		
