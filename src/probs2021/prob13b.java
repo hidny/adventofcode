@@ -57,6 +57,7 @@ public class prob13b {
 			int maxX = 0;
 			int maxY = 0;
 			
+			int lineIndex = -1;
 			for(int i=0; i<lines.size(); i++) {
 				
 				//int temp = Integer.parseInt(lines.get(i));
@@ -67,74 +68,169 @@ public class prob13b {
 				String token[] = line.split(",");
 				
 				if(line.equals("") ) {
+					lineIndex = i;
 					break;
 				}
 				
-				table[pint(token[0])][pint(token[1])] = true;
+				table[pint(token[1])][pint(token[0])] = true;
 				
-				if(pint(token[0]) > maxY) {
-					maxY = pint(token[0]);
+				if(pint(token[1]) > maxY) {
+					maxY = pint(token[1]);
 				}
 				
 
-				if(pint(token[1]) > maxX) {
-					maxX = pint(token[1]);
+				if(pint(token[0]) > maxX) {
+					maxX = pint(token[0]);
 				}
-				
-				/*int amount = pint(token[1]);
-				
-				if(token[0].equals("forward")) {
-					h+= amount;
-					d+= aim*amount;
-				} else if(token[0].equals("down")) {
-					//d+=amount;
-					aim += amount;
-					
-				} else if(token[0].equals("up")) {
-					//d-=amount;
-					aim -= amount;
-				} else {
-					sopl("doh");
-				}*/
-
 				
 				
 			}
 			
-			//fold along x=655
-			int xFold = 655;
 			
-			sopl(maxX);
-			if(maxX - xFold > xFold) {
-				boolean newTable[][] = new boolean[table.length][table[0].length - xFold];
+			boolean newTable[][] = new boolean[maxY+1][maxX+1];
+			for(int i=0; i<newTable.length; i++) {
+				for(int j=0; j<newTable[0].length; j++) {
+					newTable[i][j] = table[i][j];
+				}
+			}
+
+			table = newTable;
+			/*for(int i=0; i<newTable.length; i++) {
+				for(int j=0; j<newTable[0].length; j++) {
+					if(newTable[i][j]) {
+						sop("#");
+					} else {
+						sop(".");
+					}
+				}
+				sopl();
+			}
+			sopl("--");
+			*/
+			for(;lineIndex<lines.size(); lineIndex++) {
 				
+				if(lines.get(lineIndex).equals("")) {
+					continue;
+				}
 				
+				newTable = new boolean[table.length][table[0].length];
 				
-			} else {
-				boolean newTable[][] = new boolean[table.length][table[0].length - xFold];
+				boolean foldedTable[][] = null;
 				
+				int numSym = pint(lines.get(lineIndex).split("=")[1]);
+				if(lines.get(lineIndex).startsWith("fold along y=")) {
+					
+					
+					for(int i=0; i<newTable.length; i++) {
+						for(int j=0; j<newTable[0].length; j++) {
+							
+							newTable[i][j] = table[i][j];
+							
+							int otherNum = -1;
+							
+							otherNum = i + 2 * (numSym-i);
+							
+							
+							if(otherNum >= 0 && otherNum <table.length) {
+								newTable[i][j] = table[i][j] || table[otherNum][j];
+							}
+						}
+					}
+					
+					if(table.length - numSym > numSym) {
+						sopl("1");
+						foldedTable = new boolean[table.length - numSym - 1][table[0].length];
+						
+						for(int i=0; i<foldedTable.length; i++){
+							for(int j=0; j<foldedTable[0].length; j++) {
+								foldedTable[foldedTable.length - 1 - i][j] = newTable[numSym+1+i][j];
+							}
+						}
+					} else {
+						sopl("2");
+						foldedTable = new boolean[numSym][table[0].length];
+						
+						for(int i=0; i<foldedTable.length; i++){
+							for(int j=0; j<foldedTable[0].length; j++) {
+								foldedTable[i][j] = newTable[i][j];
+							}
+						}
+					}
+					
+				} else if(lines.get(lineIndex).startsWith("fold along x=")) {
+					
+					for(int i=0; i<newTable.length; i++) {
+						for(int j=0; j<newTable[0].length; j++) {
+							
+							newTable[i][j] = table[i][j];
+							
+							int otherNum = -1;
+							
+							otherNum = j + 2 * (numSym-j);
+							//sopl(j + " reflects " + otherNum);
+							
+							
+							if(otherNum >= 0 && otherNum <table[0].length) {
+								newTable[i][j] = table[i][j] || table[i][otherNum];
+							}
+						}
+					}
+					
+					if(table[0].length - numSym > numSym) {
+						sopl("3");
+						foldedTable = new boolean[table.length][table[0].length  - numSym - 1];
+						
+						for(int i=0; i<foldedTable.length; i++){
+							for(int j=0; j<foldedTable[0].length; j++) {
+								foldedTable[i][foldedTable[0].length - 1 - j] = newTable[i][numSym+1+j];
+							}
+						}
+					} else {
+						sopl("4");
+						foldedTable = new boolean[table.length][numSym];
+						
+						for(int i=0; i<foldedTable.length; i++){
+							for(int j=0; j<foldedTable[0].length; j++) {
+								foldedTable[i][j] = newTable[i][j];
+							}
+						}
+					}
+					
+				}
+				
+
+				table = foldedTable;
+				
+/*
 				for(int i=0; i<table.length; i++) {
 					for(int j=0; j<table[0].length; j++) {
-						
-						if(j>xFold) {
-							newTable[i][j-xFold] =true;
-						} else {
-							newTable[i][j] = true;
-						}
-					}
-				}
-				for(int i=0; i<newTable.length; i++) {
-					for(int j=0; j<newTable[0].length; j++) {
-						
-						if(newTable[i][j]) {
+						if(table[i][j]) {
+							sop("#");
 							count++;
+						} else {
+							sop(".");
 						}
 					}
+					sopl();
 				}
+	*/			
+				
+			}
+			
+			for(int i=0; i<table.length; i++) {
+				for(int j=0; j<table[0].length; j++) {
+					if(table[i][j]) {
+						sop("#");
+						count++;
+					} else {
+						sop(".");
+					}
+				}
+				sopl();
 			}
 			
 			
-			sopl("Answer: " + count);
+			sopl("Answer for part 1: " + count);
 			in.close();
 			
 		} catch(Exception e) {

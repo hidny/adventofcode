@@ -44,7 +44,13 @@ public class prob23PosbFASTER implements AstarNode {
 		
 //Question:
 		//String curLocation = "...........CBAABDDC";
+		
+		//My problem:
 		String curLocation = "...........CDDBACBABBADDACC";
+		
+		//Marie:
+		//String curLocation = "...........DDDBDCBCBBAAAACC";
+		
 		
 		
 		//String curLocation = "...........BACDBCDA";
@@ -439,7 +445,8 @@ public class prob23PosbFASTER implements AstarNode {
 						
 						
 						
-						if(this.getAdmissibleHeuristic(null) > nextNeighbour.getAdmissibleHeuristic(null) + this.getCostOfMove(nextNeighbour)) {
+						if(this.getAdmissibleHeuristic(null) > nextNeighbour.getAdmissibleHeuristic(null) + this.getCostOfMove(nextNeighbour)
+							&& nextNeighbour.getAdmissibleHeuristic(null) >=0) {
 							
 							sopl("------------");
 							sopl();
@@ -453,10 +460,9 @@ public class prob23PosbFASTER implements AstarNode {
 							sopl();
 							sopl("Cost of move: " + this.getCostOfMove(nextNeighbour));
 							sopl();
-							if(nextNeighbour.getAdmissibleHeuristic(null) >=0) {
-								sopl("Doh!123");
-								exit(1);
-							}
+							
+							sopl("Doh! Impossible move!");
+							exit(1);
 						}
 
 						ret.add(nextNeighbour);

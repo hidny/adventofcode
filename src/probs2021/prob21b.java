@@ -86,7 +86,7 @@ public class prob21b {
 			
 			long numBranches = 1;
 			
-			for(int n=0; n<60; n++) {
+			for(int n=0; n<25; n++) {
 				
 					for(int m=0; m<3; m++) {
 						//Three rolls!
@@ -140,11 +140,13 @@ public class prob21b {
 						}
 						//sopl("Num branches2: " + numBranches);
 					}
+					/*
 					sopl("sum11: " + sum);
 					sopl("sum wins p1: " + numWinsPlayer1);
 					sopl("sum wins p2: " + numWinsPlayer2);
 					sopl("Num branches11: " + numBranches);
 					sopl();
+					*/
 					
 					//TODO: remove winning scores
 					
@@ -187,12 +189,13 @@ public class prob21b {
 						}
 						//sopl("Num branches2: " + numBranches);
 					}
+					/*
 					sopl("sum12: " + sum);
 					sopl("sum wins p1: " + numWinsPlayer1);
 					sopl("sum wins p2: " + numWinsPlayer2);
 					sopl("Num branches12: " + numBranches);
 					sopl();
-					
+					*/
 					
 					for(int m=0; m<3; m++) {
 						//Three rolls!
@@ -242,12 +245,13 @@ public class prob21b {
 						}
 						//sopl("Num branches2: " + numBranches);
 					}
+					/*
 					sopl("sum13: " + sum);
 					sopl("sum wins p1: " + numWinsPlayer1);
 					sopl("sum wins p2: " + numWinsPlayer2);
 					sopl("Num branches13: " + numBranches);
 					sopl();
-					
+					*/
 					
 				
 					//TODO: remove winning scores
@@ -294,7 +298,7 @@ public class prob21b {
 						}
 						//sopl("Num branches2: " + numBranches);
 					}
-					sopl("sum14: " + sum);
+					
 					sopl("sum wins p1: " + numWinsPlayer1);
 					sopl("sum wins p2: " + numWinsPlayer2);
 					sopl("Num branches14: " + numBranches);
@@ -302,6 +306,7 @@ public class prob21b {
 					
 					sopl();
 					sopl();
+					
 				}
 				
 			int sum = 0;

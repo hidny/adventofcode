@@ -12,9 +12,10 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob13 {
+public class prob13a {
 
 	
+
 	public static void main(String[] args) {
 		Scanner in;
 		try {
@@ -95,18 +96,7 @@ public class prob13 {
 			}
 
 			table = newTable;
-			/*for(int i=0; i<newTable.length; i++) {
-				for(int j=0; j<newTable[0].length; j++) {
-					if(newTable[i][j]) {
-						sop("#");
-					} else {
-						sop(".");
-					}
-				}
-				sopl();
-			}
-			sopl("--");
-			*/
+		
 			for(;lineIndex<lines.size(); lineIndex++) {
 				
 				if(lines.get(lineIndex).equals("")) {
@@ -201,36 +191,26 @@ public class prob13 {
 
 				table = foldedTable;
 				
-/*
+
 				for(int i=0; i<table.length; i++) {
 					for(int j=0; j<table[0].length; j++) {
 						if(table[i][j]) {
-							sop("#");
+							//sop("#");
 							count++;
 						} else {
-							sop(".");
+							//sop(".");
 						}
 					}
-					sopl();
+					//sopl();
 				}
-	*/			
 				
-			}
-			
-			for(int i=0; i<table.length; i++) {
-				for(int j=0; j<table[0].length; j++) {
-					if(table[i][j]) {
-						sop("#");
-						count++;
-					} else {
-						sop(".");
-					}
-				}
-				sopl();
+				break;
 			}
 			
 			
-			//sopl("Answer: " + count);
+			
+			
+			sopl("Answer for part 1: " + count);
 			in.close();
 			
 		} catch(Exception e) {

@@ -12,14 +12,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob23 {
+public class prob3a {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2021/prob2021in23.txt"));
-			 in = new Scanner(new File("in2021/prob2021in23.txt"));
+			 in = new Scanner(new File("in2021/prob2021in3.txt"));
+			 //in = new Scanner(new File("in2021/prob2021in3.txt.test"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -54,6 +54,11 @@ public class prob23 {
 			
 			ArrayList ints = new ArrayList<Integer>();
 			
+			int array0[] = new int[lines.get(0).length()];
+			int array1[] = new int[lines.get(0).length()];
+			
+			int numEp = 0;
+			int numGam = 0;
 			
 			for(int i=0; i<lines.size(); i++) {
 				
@@ -61,12 +66,37 @@ public class prob23 {
 				//count+=temp;
 				
 				String line = lines.get(i);
-				String token[] = line.split(" ");
+				
+				for(int j=0; j<line.length(); 
+						j++) {
+					
+					if(line.charAt(j) == '0') {
+						array0[j]++;
+					} else if(line.charAt(j) == '1') {
+						array1[j]++;
+					} else{
+						sopl("doh");
+					}
+				}
+				
+				
 				
 				
 			}
 			
-			sopl("Answer: " + count);
+
+			for(int j=0; j<array0.length; 
+					j++) {
+				if(array0[j] > array1[j]) {
+					numEp = 2* numEp + 1;
+					numGam = 2* numGam;
+				} else if(array0[j] < array1[j]) {
+					numEp = 2* numEp;
+					numGam = 2* numGam + 1;
+				}
+			}
+			
+			sopl("Answer: " + (numEp*numGam));
 			in.close();
 			
 		} catch(Exception e) {
