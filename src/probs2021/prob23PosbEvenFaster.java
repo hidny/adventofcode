@@ -252,6 +252,34 @@ public class prob23PosbEvenFaster implements AstarNode {
 							couldDoIt = false;
 						}
 					}
+					
+					//Shortcut 1:
+					//Don't lift insect up for no reason:
+					int slotIndex = (i - LENGTH_UP) / DEPTH_HOLE;
+					
+					int leftOfSlotIndex = 1 + 2*slotIndex;
+					int rightOfSlotIndex = 3 + 2*slotIndex;
+					
+					if(j == leftOfSlotIndex && this.pos[rightOfSlotIndex] != EMPTY) {
+						if(this.pos[rightOfSlotIndex] != slotIndex + 1) {
+							//sopl("Short cut 1");
+							continue;
+						} else if(isSlotAcceptingAfter1Move(slotIndex, this.pos) == false) {
+							//sopl("Short cut 2");
+							continue;
+							
+						}
+					} else if(j == rightOfSlotIndex && this.pos[leftOfSlotIndex] != EMPTY) {
+						if(this.pos[leftOfSlotIndex] != slotIndex + 1) {
+							//sopl("Short cut 3");
+							continue;
+						} else if(isSlotAcceptingAfter1Move(slotIndex, this.pos) == false) {
+							//sopl("Short cut 4");
+							continue;
+							
+						}
+					}
+					//End shortcut 1
 
 					if(couldDoIt) {
 						
@@ -435,6 +463,46 @@ public class prob23PosbEvenFaster implements AstarNode {
 		return ret;
 	}
 	
+	//Only return true if slot is accepting, or if slot will be accepting after 1 move:
+	public static boolean isSlotAcceptingAfter1Move(int letterIndex, int pos[]) {
+		
+		return slotIsAcceptingAfter1Move(letterIndex, pos) >= 0;
+	}
+	
+	public static int slotIsAcceptingAfter1Move(int letterIndex, int pos[]) {
+		int ret = -1;
+		
+		int letterNum = letterIndex + 1;
+		
+		boolean foundTopInsect = false;
+		
+		for(int j=0; j<DEPTH_HOLE; j++) {
+			if( pos[LENGTH_UP + DEPTH_HOLE*letterIndex + j] == EMPTY) {
+				
+				if(j == 0) {
+					ret = j;
+					
+				} else if(j>0 && ret == j -1) {
+					ret = j;
+					
+				}
+				
+			} else if( pos[LENGTH_UP + DEPTH_HOLE*letterIndex + j] != letterNum) {
+				
+				if(foundTopInsect == false) {
+					foundTopInsect = true;
+				} else {
+					ret = -1;
+					break;
+				}
+			} else if(pos[LENGTH_UP + DEPTH_HOLE*letterIndex + j] == letterNum) {
+				foundTopInsect = true;
+			}
+		
+		}
+		
+		return ret;
+	}
 	
 	
 	public String getMap() {
