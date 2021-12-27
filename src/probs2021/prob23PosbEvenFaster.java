@@ -22,7 +22,7 @@ public class prob23PosbEvenFaster implements AstarNode {
 	public static int DEPTH_HOLE = 4;
 	
 
-	private Hashtable<BigInteger, prob23PosbEvenFaster> map = new Hashtable<BigInteger, prob23PosbEvenFaster>();
+	private static Hashtable<BigInteger, prob23PosbEvenFaster> map = new Hashtable<BigInteger, prob23PosbEvenFaster>();
 
 
 	private BigInteger curPos;
@@ -36,7 +36,6 @@ public class prob23PosbEvenFaster implements AstarNode {
 	public static final int EMPTY = 0;
 	@Override
 	public long getAdmissibleHeuristic(AstarNode goal) {
-		// TODO Auto-generated method stub
 		
 		int sum =0;
 		int energyCost[] = new int[4];
@@ -173,81 +172,117 @@ public class prob23PosbEvenFaster implements AstarNode {
 		
 		//sopl("TEST------------");
 		
+
 		ArrayList<AstarNode> ret = new ArrayList<AstarNode>();
 		
-		NEXT_I:
+		
+		//Check for forcing moves (up to down moves or slot to slot moves)
 		for(int i=0; i<this.pos.length; i++) {
+			if(this.pos[i] == EMPTY) {
+				continue;
+			}
+			
+			int letterIndex = this.pos[i] - 1;
+			
+			if(i >= LENGTH_UP && (i - LENGTH_UP)/DEPTH_HOLE == letterIndex ) {
+				continue;
+			}
+			
+			//Up to down
+			int slotAcceptingIndex = slotIsAcceptingIndex(letterIndex, this.pos);
+			
+			if(slotAcceptingIndex >= 0) {
+				
+				ArrayList<Integer> path = prob23UtilFunctions.getPathFast(i, LENGTH_UP + DEPTH_HOLE*letterIndex);
+				
+				boolean couldDoIt = true;
+				for(int k=0; k<path.size(); k++) {
+					if(this.pos[path.get(k)] != EMPTY) {
+						couldDoIt = false;
+					}
+				}
+				
+				if(couldDoIt) {
+					
+					int landingIndex = LENGTH_UP + DEPTH_HOLE*letterIndex + slotAcceptingIndex;
+					BigInteger newLocationCode = this.curPos.subtract(adjustments[i][pos[i] - 1]).add(adjustments[landingIndex][pos[i] - 1]);
+					
+					prob23PosbEvenFaster nextNeighbour = addToMapAndGetNeighbour(this, newLocationCode, this.pos, i, landingIndex);
+					
+					ret.add(nextNeighbour);
+					
+					return ret;
+				}
+				
+			} else {
+				continue;
+			}
+		}
+		//END CHECK FORCING
+		
+		
+		//CHECK DOWN TO UP & NON-FORCING:
+		NEXT_I:
+		for(int i=LENGTH_UP; i<this.pos.length; i++) {
 			if(this.pos[i] == EMPTY) {
 				continue;
 			}
 			
 			BigInteger tmpCurPosCode = this.curPos.subtract(adjustments[i][pos[i] - 1]);
 			
-			//UP TO HERE
+			
+			//Check if no insect above:
+			int slotIndex = (i - LENGTH_UP) / DEPTH_HOLE;
+			
+			for(int j=LENGTH_UP+slotIndex*DEPTH_HOLE; j<i; j++) {
+				if(this.pos[j] != EMPTY) {
+					continue NEXT_I;
+				}
+			}
+
 			int letterIndex = this.pos[i] - 1;
 			
-			int possibleLandings[] = new int[prob23AllInputsUpTheAnte.GOAL_INT.length];
-			if(i < LENGTH_UP) {
+			//Check if insect is already done:
+			if(i >= LENGTH_UP + DEPTH_HOLE*letterIndex && i <  LENGTH_UP + DEPTH_HOLE*(letterIndex+1)) {
 				
-				//Up to down
-				int slotAcceptingIndex = slotIsAcceptingIndex(letterIndex, this.pos);
-				
-				if(slotAcceptingIndex >= 0) {
-					possibleLandings[LENGTH_UP + DEPTH_HOLE*letterIndex + slotAcceptingIndex] = 1;
-				}
-				
-				
-			} else {
-				
-				int slotIndex = (i - LENGTH_UP) / DEPTH_HOLE;
-				
-				for(int j=LENGTH_UP+slotIndex*DEPTH_HOLE; j<i; j++) {
-					if(this.pos[j] != EMPTY) {
-						continue NEXT_I;
+				boolean isDone = true;
+				for(int j=i+1; j<LENGTH_UP + DEPTH_HOLE*(letterIndex+1); j++) {
+					if(this.pos[j] != this.pos[i]
+							&& this.pos[j] != EMPTY) {
+						isDone = false;
+						break;
 					}
 				}
 				
-				//Down to up
-				possibleLandings = new int[prob23AllInputsUpTheAnte.GOAL_INT.length];
-				for(int j=0; j<LENGTH_UP; j++) {
-					possibleLandings[j] = 1;
-					
+				if(isDone) {
+					continue;
 				}
-				for(int j=0; j<4; j++) {
-					possibleLandings[2+2*j] = 0;
-				}
-				
-				
-				if(i >= LENGTH_UP + DEPTH_HOLE*letterIndex && i <  LENGTH_UP + DEPTH_HOLE*(letterIndex+1)) {
-					
-					boolean isDone = true;
-					for(int j=i+1; j<LENGTH_UP + DEPTH_HOLE*(letterIndex+1); j++) {
-						if(this.pos[j] != this.pos[i]
-								&& this.pos[j] != EMPTY) {
-							isDone = false;
-							break;
-						}
-					}
-					
-					if(isDone) {
-						continue;
-					}
-					
-				}
-				
 				
 			}
 			
+			//Setup possible Landings (basic)
+			int possibleLandings[] = new int[prob23UtilFunctions.GOAL_INT.length];
 			
-
+			possibleLandings = new int[prob23UtilFunctions.GOAL_INT.length];
+			for(int j=0; j<LENGTH_UP; j++) {
+				possibleLandings[j] = 1;
+				
+			}
+			for(int j=0; j<4; j++) {
+				possibleLandings[2+2*j] = 0;
+			}
+			
+			
+			//Go thru possible landings more thoroughly:
+			
 			for(int j=0; j<possibleLandings.length; j++) {
 
+				//Check if landing is free and is feasible:
 				if(this.pos[j] == EMPTY && possibleLandings[j] == 1) {
 
 					
 					//Shortcut 1:
 					//Don't lift insect up for no reason:
-					int slotIndex = (i - LENGTH_UP) / DEPTH_HOLE;
 					
 					int leftOfSlotIndex = 1 + 2*slotIndex;
 					int rightOfSlotIndex = 3 + 2*slotIndex;
@@ -274,8 +309,8 @@ public class prob23PosbEvenFaster implements AstarNode {
 					//End shortcut 1
 
 
-					//TODO: Maybe we don't need to check the path in some cases? Oh well!
-					ArrayList<Integer> path = prob23AllInputsUpTheAnte.getPathFast(i, j);
+					//Check that path isn't blocked:
+					ArrayList<Integer> path = prob23UtilFunctions.getPathFast(i, j);
 					
 					boolean couldDoIt = true;
 					for(int k=0; k<path.size(); k++) {
@@ -283,60 +318,71 @@ public class prob23PosbEvenFaster implements AstarNode {
 							couldDoIt = false;
 						}
 					}
-					//END TODO
+					//END Check that path isn't blocked
+					
 					
 					if(couldDoIt) {
+
+						//ADD UNFORCED MOVE
 						
+						
+						//Shortcut #2:
+						int leftOfSlotIndexBy2 = 1 + 2*slotIndex - 2;
+						int rightOfSlotIndexBy2 = 3 + 2*slotIndex + 2;
+						
+						if(slotIndex == 0) {
+							leftOfSlotIndexBy2 = leftOfSlotIndexBy2 + 1;
+			
+						} else if(slotIndex == 3) {
+							rightOfSlotIndexBy2 = rightOfSlotIndexBy2 -1;
+						}
+						
+						if(j == leftOfSlotIndexBy2 && this.pos[rightOfSlotIndex] != EMPTY) {
+							
+							int numMovesAcceptMin = quickGetNumMoveUntilSlotAccepting(slotIndex);
+							
+							if(this.pos[rightOfSlotIndex] == slotIndex + 1) {
+								numMovesAcceptMin--;
+							}
+							
+							if(slotIndex > 0 && numMovesAcceptMin > 1) {
+								numMovesAcceptMin = Math.min(numMovesAcceptMin, quickGetNumMoveUntilSlotAccepting(slotIndex-1));
+							}
+							
+							if(numMovesAcceptMin > 1) {
+								//sopl("continue1");
+								continue;
+							}
+							
+						} else if(j == rightOfSlotIndexBy2 && this.pos[leftOfSlotIndex] != EMPTY) {
+							
+							int numMovesAcceptMin = quickGetNumMoveUntilSlotAccepting(slotIndex);
+							
+							if(this.pos[leftOfSlotIndex] == slotIndex + 1) {
+								numMovesAcceptMin--;
+							}
+							
+							if(slotIndex < 3 && numMovesAcceptMin > 1) {
+								numMovesAcceptMin = Math.min(numMovesAcceptMin, quickGetNumMoveUntilSlotAccepting(slotIndex+1));
+							}
+							
+							if(numMovesAcceptMin > 1) {
+								//sopl("continue2");
+								continue;
+							}
+						}
+						
+						//END shortcut #2
+
+						//TODO: other short cut move out by 2:
+						//END TODO
 
 						BigInteger newLocationCode = tmpCurPosCode.add(adjustments[j][pos[i] - 1]);
 						
-						prob23PosbEvenFaster nextNeighbour = null;
-						//TODO
-						if(map.containsKey(newLocationCode)) {
-							//sopl("Already found");
-							nextNeighbour = map.get(newLocationCode);
-							
-							//exit(1);
-						} else {
-							
-							int newLocation[] = swap(this.pos, i, j);
-							
-							//TODO: use big int
-							nextNeighbour = new prob23PosbEvenFaster(newLocationCode, newLocation);
-							map.put(newLocationCode, nextNeighbour);
-							
-							//TESTING
-							/*BigInteger codeCopy = getCodeFromScratch(newLocation);
-							
-							if(codeCopy.equals(newLocationCode) == false) {
-								sopl("Doh!");
-								exit(1);
-							}*/
-							//END TESTING
-							count++;
-							
-							if(count % 10000 == 0) {
-								sopl("Neighbour 1:");
-								sopl("Count: " + count);
-								sopl("Cur:\n" + this.getMap());
-								sopl("Dist: " + this.getAdmissibleHeuristic(null));
-								sopl("to:");
-								sopl("next neighbour:\n" + nextNeighbour.getMap());
-								sopl("Dist: " + nextNeighbour.getAdmissibleHeuristic(null));
-								sopl();
-								sopl("Cost of move: " + this.getCostOfMove(nextNeighbour));
-								sopl();
-							
-								
-								sopl();
-								sopl();
-								
-							}
-							
-						}
+						prob23PosbEvenFaster nextNeighbour = addToMapAndGetNeighbour(this, newLocationCode, this.pos, i, j);
 						
 						
-						
+						/*
 						if(this.getAdmissibleHeuristic(null) > nextNeighbour.getAdmissibleHeuristic(null) + this.getCostOfMove(nextNeighbour)
 							&& nextNeighbour.getAdmissibleHeuristic(null) >=0) {
 							
@@ -355,66 +401,25 @@ public class prob23PosbEvenFaster implements AstarNode {
 							
 							sopl("Doh! Impossible move!");
 							exit(1);
-						}
+						}*/
 
 						ret.add(nextNeighbour);
 						
-						//Add forced moves:
-						if(j >= LENGTH_UP) {
-							//sopl("forced");
-							//exit(1);
-							return ret;
-						
-						} else if(j < LENGTH_UP) {
 							
-							//int letterIndex = (int)(letter - 'A');
-							
-							if(slotIsAccepting(letterIndex, nextNeighbour.pos)) {
-								ArrayList<Integer> path2 = prob23AllInputsUpTheAnte.getPathFast(j, LENGTH_UP + DEPTH_HOLE * letterIndex);
-								
-								//LENGTH_UP + DEPTH_HOLE*letterIndex + slotAcceptingIndex
-								
-								boolean couldDoIt2 = true;
-								for(int k=0; k<path2.size(); k++) {
-									if(this.pos[k] != EMPTY) {
-										couldDoIt2 = false;
-									}
-								}
-								
-								if(couldDoIt2 && 
-										this.getAdmissibleHeuristic(null) == nextNeighbour.getAdmissibleHeuristic(null) + this.getCostOfMove(nextNeighbour)) {
-									
-									//sopl(this.getMap());
-									//sopl(nextNeighbour.getMap());
-									
-									//sopl("forced2");
-									//exit(1);
-									
-									//TODO: did this break it?
-									ret = new ArrayList<AstarNode>();
-									ret.add(nextNeighbour);
-									return ret;
-									//END TODO
-									
-								}
-								
-							}
-							
-							//At this point... make sure it's not impossible???
-							//TODO
-						}
+						//int letterIndex = (int)(letter - 'A');
 						
 						//sopl("next neighbour: " + nextNeighbour.curPos);
 						//sopl("Cost of move: " + this.getCostOfMove(nextNeighbour));
 						//sopl("Dist: " + nextNeighbour.getAdmissibleHeuristic(null));
 						
-					}
+					} 
+					//END ADD UNFORCED MOVE
 					
 					
-				}
+				}//END: Check if landing is free and is feasible:
 			
-			}
-		}
+			}//END go through non-forcing landings 
+		}//END go through all start positions for non-forcing
 		
 		
 		//if(count >= 1000) {
@@ -434,6 +439,54 @@ public class prob23PosbEvenFaster implements AstarNode {
 		return ret;
 	}
 	
+	public static prob23PosbEvenFaster addToMapAndGetNeighbour(prob23PosbEvenFaster initialPos, BigInteger newLocationCode, int pos[], int startIndex, int endIndex) {
+		
+		prob23PosbEvenFaster nextNeighbour;
+		
+		if(map.containsKey(newLocationCode)) {
+			//sopl("Already found");
+			nextNeighbour = map.get(newLocationCode);
+			
+			//exit(1);
+		} else {
+			
+			int newLocation[] = swap(pos, startIndex, endIndex);
+			
+			nextNeighbour = new prob23PosbEvenFaster(newLocationCode, newLocation);
+			map.put(newLocationCode, nextNeighbour);
+			
+			//TESTING
+			/*BigInteger codeCopy = getCodeFromScratch(newLocation);
+			
+			if(codeCopy.equals(newLocationCode) == false) {
+				sopl("Doh!");
+				exit(1);
+			}*/
+			//END TESTING
+			count++;
+			
+			if(count % 1000 == 0) {
+				sopl("Neighbour 1:");
+				sopl("Count: " + count);
+				sopl("Cur:\n" + initialPos.getMap());
+				sopl("Dist: " + initialPos.getAdmissibleHeuristic(null));
+				sopl("to:");
+				sopl("next neighbour:\n" + nextNeighbour.getMap());
+				sopl("Dist: " + nextNeighbour.getAdmissibleHeuristic(null));
+				sopl();
+				sopl("Cost of move: " + initialPos.getCostOfMove(nextNeighbour));
+				sopl();
+			
+				
+				sopl();
+				sopl();
+				
+			}
+			
+		}
+		
+		return nextNeighbour;
+	}
 	
 	public static boolean slotIsAccepting(int letterIndex, int pos[]) {
 		
@@ -448,13 +501,7 @@ public class prob23PosbEvenFaster implements AstarNode {
 		for(int j=0; j<DEPTH_HOLE; j++) {
 			if( pos[LENGTH_UP + DEPTH_HOLE*letterIndex + j] == EMPTY) {
 				
-				if(j == 0) {
-					ret = j;
-					
-				} else if(j>0 && ret == j -1) {
-					ret = j;
-					
-				}
+				ret = j;
 				
 			} else if( pos[LENGTH_UP + DEPTH_HOLE*letterIndex + j] != letterNum) {
 				
@@ -506,6 +553,51 @@ public class prob23PosbEvenFaster implements AstarNode {
 		}
 		
 		return ret;
+	}
+	
+	private int numMoveUntilSlotAcceptingPlusOne[] = new int[4];
+	
+	public int quickGetNumMoveUntilSlotAccepting(int letterIndex) {
+		
+		if(numMoveUntilSlotAcceptingPlusOne[letterIndex] == 0) {
+			
+			int temp = getNumMoveUntilSlotAccepting(letterIndex, this.pos);
+			numMoveUntilSlotAcceptingPlusOne[letterIndex] = temp + 1;
+			return temp;
+			
+		} else {
+			return numMoveUntilSlotAcceptingPlusOne[letterIndex];
+		}
+	}
+	
+	public static int getNumMoveUntilSlotAccepting(int letterIndex, int pos[]) {
+		
+		int letterNum = letterIndex + 1;
+		
+		
+		int firstWrong = -1;
+		
+		
+		
+		for(int j=DEPTH_HOLE - 1; j>=0; j--) {
+			if( pos[LENGTH_UP + DEPTH_HOLE*letterIndex + j] == EMPTY) {
+				
+				if(firstWrong == -1) {
+					return 0;
+				} else {
+
+					return firstWrong - j;
+				}
+				
+			} else if(firstWrong == -1 && pos[LENGTH_UP + DEPTH_HOLE*letterIndex + j] != letterNum ) {
+					firstWrong =  j;
+				
+				
+			}
+		
+		}
+		
+		return firstWrong + 1;
 	}
 	
 	
@@ -597,7 +689,6 @@ public class prob23PosbEvenFaster implements AstarNode {
 	public static long ENERGY_COSTS[] = new long[] {0, 1, 10, 100, 1000};
 	@Override
 	public long getCostOfMove(AstarNode nextPos) {
-		// TODO Auto-generated method stub
 
 
 		int location1 = -1;
@@ -623,14 +714,14 @@ public class prob23PosbEvenFaster implements AstarNode {
 		if(location1 == -1) {
 			return 0;
 		} else {
-			return  ENERGY_COSTS[letterNum] * prob23AllInputsUpTheAnte.pathLengths[location1][location2];
+			return  ENERGY_COSTS[letterNum] * prob23UtilFunctions.pathLengths[location1][location2];
 		}
 		
 	}
 	
 
 	
-	public int[] swap(int start[], int i, int j) {
+	public static int[] swap(int start[], int i, int j) {
 		
 		int swapped[] = new int[start.length];
 		
@@ -669,7 +760,7 @@ public class prob23PosbEvenFaster implements AstarNode {
 		if(location1 == -1) {
 			return 0;
 		} else {
-			return  prob23AllInputsUpTheAnte.pathLengths[location1][location2];
+			return  prob23UtilFunctions.pathLengths[location1][location2];
 		}
 		
 		
@@ -684,7 +775,7 @@ public class prob23PosbEvenFaster implements AstarNode {
 		
 		for(int i=0; i<pos.length; i++) {
 			if(pos[i] == letterNum) {
-				if(prob23AllInputsUpTheAnte.GOAL_INT[i] == letterNum) {
+				if(prob23UtilFunctions.GOAL_INT[i] == letterNum) {
 					sum += 0;
 				}  else {
 					
@@ -692,7 +783,7 @@ public class prob23PosbEvenFaster implements AstarNode {
 						currentTargetGoal--;
 					}
 					
-					sum += prob23AllInputsUpTheAnte.pathLengths[i][currentTargetGoal];
+					sum += prob23UtilFunctions.pathLengths[i][currentTargetGoal];
 					currentTargetGoal--;
 				}
 			}
