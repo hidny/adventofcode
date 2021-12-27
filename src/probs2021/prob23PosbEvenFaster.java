@@ -244,14 +244,6 @@ public class prob23PosbEvenFaster implements AstarNode {
 
 				if(this.pos[j] == EMPTY && possibleLandings[j] == 1) {
 
-					ArrayList<Integer> path = prob23AllInputsUpTheAnte.getPath(i, j);
-					
-					boolean couldDoIt = true;
-					for(int k=0; k<path.size(); k++) {
-						if(this.pos[path.get(k)] != EMPTY) {
-							couldDoIt = false;
-						}
-					}
 					
 					//Shortcut 1:
 					//Don't lift insect up for no reason:
@@ -281,6 +273,18 @@ public class prob23PosbEvenFaster implements AstarNode {
 					}
 					//End shortcut 1
 
+
+					//TODO: Maybe we don't need to check the path in some cases? Oh well!
+					ArrayList<Integer> path = prob23AllInputsUpTheAnte.getPathFast(i, j);
+					
+					boolean couldDoIt = true;
+					for(int k=0; k<path.size(); k++) {
+						if(this.pos[path.get(k)] != EMPTY) {
+							couldDoIt = false;
+						}
+					}
+					//END TODO
+					
 					if(couldDoIt) {
 						
 
@@ -366,7 +370,7 @@ public class prob23PosbEvenFaster implements AstarNode {
 							//int letterIndex = (int)(letter - 'A');
 							
 							if(slotIsAccepting(letterIndex, nextNeighbour.pos)) {
-								ArrayList<Integer> path2 = prob23AllInputsUpTheAnte.getPath(j, LENGTH_UP + DEPTH_HOLE * letterIndex);
+								ArrayList<Integer> path2 = prob23AllInputsUpTheAnte.getPathFast(j, LENGTH_UP + DEPTH_HOLE * letterIndex);
 								
 								//LENGTH_UP + DEPTH_HOLE*letterIndex + slotAcceptingIndex
 								

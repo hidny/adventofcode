@@ -53,7 +53,9 @@ public class prob23AllInputsUpTheAnte {
 		setupNeighbours();
 		
 		pathLengths = new int[GOAL_INT.length][GOAL_INT.length];
-		setupPathLengths();
+		setupPathLengthsAndPaths();
+		
+		
 
 		int start[] = prob23PosbEvenFaster.getIntArray(puzzle);
 
@@ -132,9 +134,12 @@ public class prob23AllInputsUpTheAnte {
 	}
 	
 	
-	public static void setupPathLengths() {
+	public static void setupPathLengthsAndPaths() {
 
 		setupNeighbours();
+		
+		paths = new  ArrayList[pathLengths.length][pathLengths.length];
+		
 		for(int i=0; i<pathLengths.length; i++) {
 			for(int j=0; j<pathLengths.length; j++) {
 				if(i == j) {
@@ -168,12 +173,23 @@ public class prob23AllInputsUpTheAnte {
 	
 	public static boolean explored[];
 	
+	public static ArrayList<Integer>[][]paths;
+	
+	public static ArrayList<Integer> getPathFast(int a, int b) {
+		return paths[a][b];
+	}
+	
 	public static ArrayList<Integer> getPath(int a, int b) {
 		
 		//sopl(a + " to " + b);
 		explored = new boolean[GOAL_INT.length];
 		
-		return getPathContinued(a, b);
+		ArrayList<Integer> temp = getPathContinued(a, b);
+		
+		if(paths[a][b] == null) {
+			paths[a][b] = temp;
+		}
+		return temp;
 	}
 	
 	private static ArrayList<Integer> getPathContinued(int a, int b) {
