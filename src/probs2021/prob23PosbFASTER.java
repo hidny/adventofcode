@@ -46,6 +46,7 @@ public class prob23PosbFASTER implements AstarNode {
 		//String curLocation = "...........CBAABDDC";
 		
 		//My problem:
+		//String puzzle =    "...........CDDBACBABBADDACC";
 		String curLocation = "...........CDDBACBABBADDACC";
 		
 		//Marie:
