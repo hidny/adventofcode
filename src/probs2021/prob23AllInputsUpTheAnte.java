@@ -10,7 +10,7 @@ import number.IsNumber;
 public class prob23AllInputsUpTheAnte {
 
 //Challenge:
-//https://www.reddit.com/r/adventofcode/comments/rmryir/2021_day_23_part_12_solve_for_all_possible_start/
+// https://www.reddit.com/r/adventofcode/comments/rmryir/2021_day_23_part_12_solve_for_all_possible_start/
 //Computer can figure it out in 10 minutes!
 	
 	//TODO: setup main.
