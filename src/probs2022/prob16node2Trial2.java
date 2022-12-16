@@ -44,7 +44,10 @@ public class prob16node2Trial2 {
 	public static int getMaxFlow(ArrayList <prob16node2Trial2> node, int indexStart, int minutesLeft) {
 		boolean opened[] = new boolean[node.size()];
 		
-
+		
+		//Make it slightly faster by not dealing with strings:
+		getConnectionIndexes(node);
+		
 		int numToOpen = getNumToOpen(node);
 		
 		sopl("Num open: " + numToOpen);
@@ -56,7 +59,7 @@ public class prob16node2Trial2 {
 		return answer;
 	}
 	
-	public static int bestSoFar = 1700;
+	public static int bestSoFar = 2000;
 	public static int num = 0;
 	
 	//TODO: reset part 2 with a better estimate for getOptimisticFlow
@@ -113,9 +116,9 @@ public class prob16node2Trial2 {
 		
 		if(mustOpenValve == false) {
 
-			for(int i=0; i<node.get(curIndex).connectionsString.size(); i++) {
+			for(int i=0; i<node.get(curIndex).connectionsIndex.size(); i++) {
 				
-				int tmpIndex = findIndex(node, node.get(curIndex).connectionsString.get(i));
+				int tmpIndex = node.get(curIndex).connectionsIndex.get(i);
 				
 				if(prevIndexes.contains(tmpIndex)) {
 					continue;
@@ -187,9 +190,9 @@ public class prob16node2Trial2 {
 		
 		if(mustOpenValve == false) {
 
-			for(int i=0; i<node.get(elephantIndex).connectionsString.size(); i++) {
+			for(int i=0; i<node.get(elephantIndex).connectionsIndex.size(); i++) {
 				
-				int tmpIndex = findIndex(node, node.get(elephantIndex).connectionsString.get(i));
+				int tmpIndex = node.get(elephantIndex).connectionsIndex.get(i);
 				
 				if(prevIndexesElephant.contains(tmpIndex)) {
 					continue;
@@ -211,6 +214,7 @@ public class prob16node2Trial2 {
 		return bestTrial;
 	}
 	
+	//TODO: Maybe this can be more constrained... 
 	public static int getOptimisticFlow(ArrayList <prob16node2Trial2> node, boolean opened[], int FlowRate, int minutesLeft, int ind1, int ind2) {
 		int index = 0;
 		

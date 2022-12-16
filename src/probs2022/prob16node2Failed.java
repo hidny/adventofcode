@@ -12,7 +12,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob16node2 {
+public class prob16node2Failed {
 	public String label = "";
 	
 	public int flowRate = -1;
@@ -21,7 +21,7 @@ public class prob16node2 {
 	
 	
 
-	public prob16node2(String label, int flowRate, ArrayList<String> connections) {
+	public prob16node2Failed(String label, int flowRate, ArrayList<String> connections) {
 		super();
 		this.label = label;
 		this.flowRate = flowRate;
@@ -35,7 +35,7 @@ public class prob16node2 {
 	//public static int recordCurFlow[][][];
 	public static int recordTotalFlow[][][];
 	
-	public static int getMaxFlow(ArrayList <prob16node2> node, int indexStart) {
+	public static int getMaxFlow(ArrayList <prob16node2Failed> node, int indexStart) {
 		boolean opened[] = new boolean[node.size()];
 		
 
@@ -66,7 +66,7 @@ public class prob16node2 {
 	public static int bestSoFar = 1800;
 	public static int num = 0;
 	
-	public static int getMaxFlow(ArrayList <prob16node2> node, int curIndex, int elephantIndex, int minutesLeft, int totalFlow, boolean opened[], int numLeftToOpen, boolean elephantTurn) {
+	public static int getMaxFlow(ArrayList <prob16node2Failed> node, int curIndex, int elephantIndex, int minutesLeft, int totalFlow, boolean opened[], int numLeftToOpen, boolean elephantTurn) {
 		
 
 		
@@ -190,7 +190,7 @@ public class prob16node2 {
 		return bestTrial;
 	}
 	
-	public static int getOptimisticFlow(ArrayList <prob16node2> node, boolean opened[], int FlowRate, int minutesLeft, int ind1, int ind2) {
+	public static int getOptimisticFlow(ArrayList <prob16node2Failed> node, boolean opened[], int FlowRate, int minutesLeft, int ind1, int ind2) {
 		int index = 0;
 		
 		int ret = FlowRate;
@@ -212,7 +212,7 @@ public class prob16node2 {
 		return ret;
 	}
 	
-	public static int findIndex(ArrayList <prob16node2> node, String label) {
+	public static int findIndex(ArrayList <prob16node2Failed> node, String label) {
 		
 		for(int i=0; i<node.size(); i++) {
 			if(node.get(i).label.equals(label)) {
@@ -224,7 +224,7 @@ public class prob16node2 {
 		return -1;
 	}
 	
-	public static int getNumToOpen(ArrayList <prob16node2> node) {
+	public static int getNumToOpen(ArrayList <prob16node2Failed> node) {
 		int ret = 0;
 		
 		for(int i=0; i<node.size(); i++) {
@@ -235,7 +235,7 @@ public class prob16node2 {
 		return ret;
 	}
 	
-	public static int getPow2(ArrayList <prob16node2> node, int index) {
+	public static int getPow2(ArrayList <prob16node2Failed> node, int index) {
 		int cur = 0;
 		
 		for(int i=0; i<index; i++) {
@@ -248,7 +248,7 @@ public class prob16node2 {
 		return (int)(Math.pow(2, cur));
 	}
 	
-	public static int getMaxFlow(ArrayList <prob16node2> node) {
+	public static int getMaxFlow(ArrayList <prob16node2Failed> node) {
 		int ret = 0;
 		
 		for(int i=0; i<node.size(); i++) {

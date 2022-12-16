@@ -12,7 +12,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob176p2 {
+public class prob16p2 {
 
 	/*
 	 * 
