@@ -12,13 +12,13 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob9b {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2022/prob2022in9.txt"));
+			in = new Scanner(new File("in2022/prob2022in9.txt"));
 			//in = new Scanner(new File("in2022/prob2022in10.txt"));
 			int numTimes = 0;
 			 
@@ -39,6 +39,8 @@ public class prob9 {
 			int LIMIT = 20000;
 			boolean table[][] = new boolean[LIMIT][LIMIT];
 			
+			//boolean draw[][] = new boolean[100][100];
+			//int CENTER = draw.length / 2;
 			
 			//dir: 0 up
 			//1 right
@@ -58,15 +60,14 @@ public class prob9 {
 			
 
 			
-			int currentHI = 0;
-			int currentHJ = 0;
 			
 			
-			int currentTI = 0;
-			int currentTJ = 0;
+			
+			int ropeI[] = new int[10];
+			int ropeJ[] = new int[10];
 			
 
-			taken.add(currentTI + "," + currentTJ);
+			taken.add(ropeI[0] + "," + ropeJ[0]);
 			
 			
 			for(int i=0; i<lines.size(); i++) {
@@ -99,29 +100,34 @@ public class prob9 {
 				
 				for(int k=0; k<amount; k++) {
 					
-					currentHI += iDir;
-					currentHJ += jDir;
+					ropeI[0] += iDir;
+					ropeJ[0] += jDir;
 					
-					
-					if(Math.abs(currentHI - currentTI) > 1
-							|| Math.abs(currentHJ - currentTJ) > 1) {
-						
-						//Move:
-						
-						if(currentHI > currentTI) {
-							currentTI += 1;
-						} else if(currentHI < currentTI) {
-							currentTI -= 1;
+					for(int m=1; m<ropeI.length; m++) {
+						if(Math.abs(ropeI[m-1] - ropeI[m]) > 1
+								|| Math.abs(ropeJ[m-1] - ropeJ[m]) > 1) {
+							
+							//Move:
+							
+							if(ropeI[m-1] > ropeI[m]) {
+								ropeI[m] += 1;
+							} else if(ropeI[m-1] < ropeI[m]) {
+								ropeI[m] -= 1;
+							}
+							
+							if(ropeJ[m-1] > ropeJ[m]) {
+								ropeJ[m] += 1;
+							} else if(ropeJ[m-1] < ropeJ[m]) {
+								ropeJ[m] -= 1;
+							
+							}
+							
+							//2545
+							if(m == ropeI.length - 1) {
+								taken.add(ropeI[m] + "," + ropeJ[m]);
+								//draw[CENTER - ropeI[m]][CENTER - ropeJ[m]] = true;
+							}
 						}
-						
-
-						if(currentHJ > currentTJ) {
-							currentTJ += 1;
-						} else if(currentHJ < currentTJ) {
-							currentTJ -= 1;
-						}
-						
-						taken.add(currentTI + "," + currentTJ);
 					}
 					
 				}
@@ -130,6 +136,17 @@ public class prob9 {
 			
 			
 			sopl("Answer: " + taken.size());
+			
+			/*for(int i=0; i<draw.length; i++) {
+				for(int j=0; j<draw[0].length; j++) {
+					if(draw[i][j]) {
+						sop("#");
+					} else{
+						sop(".");
+					}
+				}
+				sopl();
+			}*/
 			in.close();
 			
 		} catch(Exception e) {

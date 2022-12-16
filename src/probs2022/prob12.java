@@ -8,18 +8,20 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
 
+import aStar.AstarAlgo;
+import aStar.AstarNode;
 import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob12 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2022/prob2022in9.txt"));
-			//in = new Scanner(new File("in2022/prob2022in10.txt"));
+			 in = new Scanner(new File("in2022/prob2022in12.txt"));
+			 //in = new Scanner(new File("in2022/prob2022in13.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -52,84 +54,80 @@ public class prob9 {
 			}
 
 			ArrayList ints = new ArrayList<Integer>();
-			
-			
-			HashSet<String> taken = new HashSet<String>();
-			
-
-			
-			int currentHI = 0;
-			int currentHJ = 0;
-			
-			
-			int currentTI = 0;
-			int currentTJ = 0;
-			
-
-			taken.add(currentTI + "," + currentTJ);
-			
-			
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
 				String token[] = line.split(" ");
 				
-				String dir = token[0];
-				int amount = pint(token[1]);
 				
-				int iDir = 0;
-				int jDir = 0;
+			}
+			
+			int elevation[][] = new int[lines.size()][lines.get(0).length()];
+			
+			int startI = -1;
+			int startJ = -1;
+			int endI = -1;
+			int endJ = -1;
+			
+			for(int i=0; i<lines.size(); i++) {
 				
-				if(dir.equals("U")) {
-					iDir = -1;
+				for(int j=0; j<lines.get(0).length(); j++) {
 					
-				} else if(dir.equals("R")) {
-					jDir = 1;
-					
-				} else if(dir.equals("D")) {
-					iDir = 1;
-					
-				} else if(dir.equals("L")) {
-					jDir = -1;
-					
-				} else{
-					sopl("doh");
-				}
-				
-				for(int k=0; k<amount; k++) {
-					
-					currentHI += iDir;
-					currentHJ += jDir;
-					
-					
-					if(Math.abs(currentHI - currentTI) > 1
-							|| Math.abs(currentHJ - currentTJ) > 1) {
-						
-						//Move:
-						
-						if(currentHI > currentTI) {
-							currentTI += 1;
-						} else if(currentHI < currentTI) {
-							currentTI -= 1;
-						}
-						
-
-						if(currentHJ > currentTJ) {
-							currentTJ += 1;
-						} else if(currentHJ < currentTJ) {
-							currentTJ -= 1;
-						}
-						
-						taken.add(currentTI + "," + currentTJ);
+					if(lines.get(i).charAt(j) == 'S') {
+						elevation[i][j] = 0;
+						startI = i;
+						startJ = j;
+					} else if(lines.get(i).charAt(j) == 'E') {
+						elevation[i][j] = 25;
+						endI = i;
+						endJ = j;
+					} else {
+						elevation[i][j] = (int)(lines.get(i).charAt(j) - 'a');
 					}
-					
 				}
 				
 			}
 			
+			prob12AstarNode map[][] = new prob12AstarNode[elevation.length][elevation[0].length];
 			
-			sopl("Answer: " + taken.size());
+			for(int i=0; i<lines.size(); i++) {
+				for(int j=0; j<lines.get(0).length(); j++) {
+					map[i][j] = new prob12AstarNode(i, j, elevation[i][j]);
+				}
+			}
+			prob12AstarNode.map = map;
+			
+			
+			ArrayList<AstarNode> path = AstarAlgo.astar(map[startI][startJ], map[endI][endJ]);
+
+			
+			int best = (path.size() - 1);
+			
+			sopl("Answer part 1: " + best);
+			
+			
+			//Part 2:
+			for(int i=0; i<lines.size(); i++) {
+				
+				for(int j=0; j<lines.get(0).length(); j++) {
+					
+					if(elevation[i][j] == 0) {
+						ArrayList<AstarNode> path2 = AstarAlgo.astar(map[i][j], map[endI][endJ]);
+						
+						if(path2 != null) {
+							int cur = path2.size() - 1;
+							
+							if(cur < best) {
+								best = cur;
+							}
+						}
+					}
+					
+				}
+			}
+			
+			sopl("Answer part 2: " + best);
 			in.close();
 			
 		} catch(Exception e) {

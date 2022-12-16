@@ -12,14 +12,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob15 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2022/prob2022in9.txt"));
-			//in = new Scanner(new File("in2022/prob2022in10.txt"));
+			in = new Scanner(new File("in2022/prob2022in15.txt"));
+			// in = new Scanner(new File("in2022/prob2022in16.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -53,83 +53,73 @@ public class prob9 {
 
 			ArrayList ints = new ArrayList<Integer>();
 			
-			
-			HashSet<String> taken = new HashSet<String>();
-			
 
+			boolean neverMind[] = new boolean[100000000];
+			boolean taken[] = new boolean[100000000];
+			int MID = taken.length / 2;
 			
-			int currentHI = 0;
-			int currentHJ = 0;
-			
-			
-			int currentTI = 0;
-			int currentTJ = 0;
-			
-
-			taken.add(currentTI + "," + currentTJ);
-			
+			int yLine = 2000000;
+			//int yLine = 11;
 			
 			for(int i=0; i<lines.size(); i++) {
 				
+				sopl();
+				sopl("Line: " + i);
 				
 				line = lines.get(i);
+				sopl(line);
+				
 				String token[] = line.split(" ");
 				
-				String dir = token[0];
-				int amount = pint(token[1]);
+				int x1 = pint(token[2].split("=")[1].split(":")[0].split(",")[0]);
+				int y1 = pint(token[3].split("=")[1].split(":")[0].split(",")[0]);
+				int x2 = pint(token[8].split("=")[1].split(":")[0].split(",")[0]);
+				int y2 = pint(token[9].split("=")[1].split(":")[0].split(",")[0]);
 				
-				int iDir = 0;
-				int jDir = 0;
+				//up:
+				int dist = Math.abs(y1 - yLine);
+				int manhatan = Math.abs(y1 -y2) + Math.abs(x1 - x2);
 				
-				if(dir.equals("U")) {
-					iDir = -1;
-					
-				} else if(dir.equals("R")) {
-					jDir = 1;
-					
-				} else if(dir.equals("D")) {
-					iDir = 1;
-					
-				} else if(dir.equals("L")) {
-					jDir = -1;
-					
-				} else{
-					sopl("doh");
+				sopl("dist" + dist);
+				sopl("man" + manhatan);
+				for(int t=0; t<=manhatan - dist; t++) {
+					taken[MID + x1 + t] = true;
+					taken[MID + x1 - t] = true;
+					//sopl(x1 + t);
+					//sopl(x1 - t);
+					//sopl("---");
 				}
 				
-				for(int k=0; k<amount; k++) {
-					
-					currentHI += iDir;
-					currentHJ += jDir;
-					
-					
-					if(Math.abs(currentHI - currentTI) > 1
-							|| Math.abs(currentHJ - currentTJ) > 1) {
-						
-						//Move:
-						
-						if(currentHI > currentTI) {
-							currentTI += 1;
-						} else if(currentHI < currentTI) {
-							currentTI -= 1;
-						}
-						
-
-						if(currentHJ > currentTJ) {
-							currentTJ += 1;
-						} else if(currentHJ < currentTJ) {
-							currentTJ -= 1;
-						}
-						
-						taken.add(currentTI + "," + currentTJ);
-					}
-					
-				}
 				
+				if(y2 == yLine) {
+					//Evil edge case:
+					neverMind[MID + x2] = true;
+				}
 			}
 			
+			int takenIndex = -1;
+			//3930808
 			
-			sopl("Answer: " + taken.size());
+			sopl();
+			for(int i=0; i<taken.length; i++) {
+				if(neverMind[i] == false && taken[i]) {
+					takenIndex = i;
+					count++;
+				}
+				
+				if(i - MID > -5 && i - MID < 27){
+					if(taken[i]) {
+						sop("#");
+					} else {
+						sop(".");
+					}
+				}
+			}
+			sopl();
+			//wrong: 5809295
+			//wrong: 5139103
+			
+			sopl("Answer: " + count);
 			in.close();
 			
 		} catch(Exception e) {
@@ -137,6 +127,13 @@ public class prob9 {
 		} finally {
 		}
 	}
+	//#############
+	
+	//##############
+	
+	//####B#########
+	//#############
+	
 
 	public static void sop(Object a) {
 		System.out.print(a.toString());

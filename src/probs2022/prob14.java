@@ -12,14 +12,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob14 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2022/prob2022in9.txt"));
-			//in = new Scanner(new File("in2022/prob2022in10.txt"));
+			in = new Scanner(new File("in2022/prob2022in14.txt"));
+			// in = new Scanner(new File("in2022/prob2022in15.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -36,8 +36,9 @@ public class prob9 {
 			ArrayList <String>lines = new ArrayList<String>();
 			
 			
-			int LIMIT = 20000;
+			int LIMIT = 1000;
 			boolean table[][] = new boolean[LIMIT][LIMIT];
+			int MID = LIMIT/2;
 			
 			
 			//dir: 0 up
@@ -52,84 +53,99 @@ public class prob9 {
 			}
 
 			ArrayList ints = new ArrayList<Integer>();
-			
-			
-			HashSet<String> taken = new HashSet<String>();
-			
-
-			
-			int currentHI = 0;
-			int currentHJ = 0;
-			
-			
-			int currentTI = 0;
-			int currentTJ = 0;
-			
-
-			taken.add(currentTI + "," + currentTJ);
-			
-			
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
-				String token[] = line.split(" ");
+				String token[] = line.split(" -> ");
 				
-				String dir = token[0];
-				int amount = pint(token[1]);
+				int highestI = 0;
 				
-				int iDir = 0;
-				int jDir = 0;
-				
-				if(dir.equals("U")) {
-					iDir = -1;
-					
-				} else if(dir.equals("R")) {
-					jDir = 1;
-					
-				} else if(dir.equals("D")) {
-					iDir = 1;
-					
-				} else if(dir.equals("L")) {
-					jDir = -1;
-					
-				} else{
-					sopl("doh");
-				}
-				
-				for(int k=0; k<amount; k++) {
-					
-					currentHI += iDir;
-					currentHJ += jDir;
+				int iprev = -1;
+				int jprev = -1;
+				for(int j=0; j<token.length; j++) {
+					int j2 = pint(token[j].split(",")[0]);
+					int i2 = pint(token[j].split(",")[1]);
 					
 					
-					if(Math.abs(currentHI - currentTI) > 1
-							|| Math.abs(currentHJ - currentTJ) > 1) {
-						
-						//Move:
-						
-						if(currentHI > currentTI) {
-							currentTI += 1;
-						} else if(currentHI < currentTI) {
-							currentTI -= 1;
+					if(j> 0) {
+						if(iprev != i2) {
+							for(int a=Math.min(iprev, i2); a<=Math.max(iprev, i2); a++) {
+								table[a][j2] = true;
+							}
+						} else if(jprev != j2) {
+							for(int a=Math.min(jprev, j2); a<=Math.max(jprev, j2); a++) {
+								table[i2][a] = true;
+							}
+						} else if(iprev != i2 && jprev != j2) {
+							sopl("doh!");
 						}
-						
-
-						if(currentHJ > currentTJ) {
-							currentTJ += 1;
-						} else if(currentHJ < currentTJ) {
-							currentTJ -= 1;
-						}
-						
-						taken.add(currentTI + "," + currentTJ);
 					}
 					
+					iprev = i2;
+					jprev = j2;
+					
 				}
+
+				
+				
 				
 			}
 			
+			/*for(int i=0; i<table.length; i++) {
+				for(int j=0; j<table[0].length; j++) {
+					if(table[i][j]) {
+						sop("#");
+					} else {
+						sop(".");
+					}
+				}
+				sopl();
+			}*/
 			
-			sopl("Answer: " + taken.size());
+			int curi=0;
+			int curj=500;
+			
+			int numSand = 0;
+			
+			while(curi+1<table.length) {
+				//sopl(curi + "," + curj);
+				//if(curj== 501) {
+				//	sopl("what");
+				//}
+				if(table[curi+1][curj] == false) {
+					curi++;
+				} else if(table[curi+1][curj-1] == false) {
+					curi++;
+					curj--;
+				} else if(table[curi+1][curj+1] == false) {
+					curi++;
+					curj++;
+				} else {
+					numSand++;
+					table[curi][curj]=true;
+					//sopl("HERE: " + curi + ", " + curj);
+					curi=0;
+					curj=500;
+					
+					/*sopl();
+					sopl();
+					for(int i=0; i<table.length; i++) {
+						for(int j=0; j<table[0].length; j++) {
+							if(table[i][j]) {
+								sop("#");
+							} else {
+								sop(".");
+							}
+						}
+						sopl();
+					}*/
+				}
+				
+			}
+			sopl(curi + "," + curj);
+			
+			sopl("Answer: " + numSand);
 			in.close();
 			
 		} catch(Exception e) {

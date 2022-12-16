@@ -12,14 +12,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob10bBAD {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2022/prob2022in9.txt"));
-			//in = new Scanner(new File("in2022/prob2022in10.txt"));
+			 in = new Scanner(new File("in2022/prob2022in10.txt"));
+			 //in = new Scanner(new File("in2022/prob2022in11.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -51,85 +51,93 @@ public class prob9 {
 				
 			}
 
+			long strenght = 0;
+			int cycle = 0;
+			int x = 1;
+			
+			boolean screen[][] = new boolean[6][40];
+			
+			
 			ArrayList ints = new ArrayList<Integer>();
-			
-			
-			HashSet<String> taken = new HashSet<String>();
-			
-
-			
-			int currentHI = 0;
-			int currentHJ = 0;
-			
-			
-			int currentTI = 0;
-			int currentTJ = 0;
-			
-
-			taken.add(currentTI + "," + currentTJ);
-			
-			
 			for(int i=0; i<lines.size(); i++) {
 				
+				sopl(lines.get(i));
 				
 				line = lines.get(i);
 				String token[] = line.split(" ");
 				
-				String dir = token[0];
-				int amount = pint(token[1]);
-				
-				int iDir = 0;
-				int jDir = 0;
-				
-				if(dir.equals("U")) {
-					iDir = -1;
-					
-				} else if(dir.equals("R")) {
-					jDir = 1;
-					
-				} else if(dir.equals("D")) {
-					iDir = 1;
-					
-				} else if(dir.equals("L")) {
-					jDir = -1;
-					
-				} else{
-					sopl("doh");
-				}
-				
-				for(int k=0; k<amount; k++) {
-					
-					currentHI += iDir;
-					currentHJ += jDir;
-					
-					
-					if(Math.abs(currentHI - currentTI) > 1
-							|| Math.abs(currentHJ - currentTJ) > 1) {
+				if(token[0].equals("addx")) {
+					int value = pint(token[1]);
+					for(int j=0; j<2; j++) {
+						cycle++;
 						
-						//Move:
-						
-						if(currentHI > currentTI) {
-							currentTI += 1;
-						} else if(currentHI < currentTI) {
-							currentTI -= 1;
+						if(x -1 == cycle%40 || x == cycle%40 || x + 1 == cycle%40) {
+							int temp = cycle % (6*40);
+							if(temp < 0) {
+								temp += 6*40;
+							}
+							sopl("mark: " + temp);
+							screen[temp / 40][temp % 40] = true;
+						} else {
+							int temp = cycle % (6*40);
+							screen[temp / 40][temp % 40] = false;
 						}
 						
-
-						if(currentHJ > currentTJ) {
-							currentTJ += 1;
-						} else if(currentHJ < currentTJ) {
-							currentTJ -= 1;
-						}
-						
-						taken.add(currentTI + "," + currentTJ);
+						/*if(j == 0 && cycle % 40 == 0) {
+							strenght += cycle * x;
+							sopl();
+							sopl(cycle * x);
+							sopl();
+						}*/
 					}
+					x += value;
+					
+					int temp = x % (240);
+					if(temp < 0) {
+						temp += 6*40;
+					}
+					sopl("tmp: " + temp);
+					screen[temp / 40][temp % 40] = true;
+				} else if(token[0].equals("noop")) {
+					cycle++;
 					
 				}
 				
+				if(x -1 == cycle%40 || x == cycle%40 || x + 1 == cycle%40) {
+					int temp = cycle % (240);
+					if(temp < 0) {
+						temp += 6*40;
+					}
+					sopl("cycle: " + cycle);
+					sopl("mark: " + temp);
+					screen[temp / 40][temp % 40] = true;
+				} else {
+					int temp = cycle % (6*40);
+					screen[temp / 40][temp % 40] = false;
+				}
+				/*if(cycle % 40 == 0) {
+					strenght += cycle * x;
+					sopl();
+					sopl(cycle * x);
+					sopl();
+				}*/
+				
+				sopl(cycle + "--");
 			}
 			
-			
-			sopl("Answer: " + taken.size());
+			sopl();
+			for(int i=0; i<screen.length; i++) {
+				for(int j=0; j<screen[0].length; j++) {
+					if(screen[i][j]) {
+						sop("#");
+					} else{
+						sop(".");
+					}
+				}
+				sopl();
+			}
+			//29580
+			sopl("Answer: " + strenght);
 			in.close();
 			
 		} catch(Exception e) {

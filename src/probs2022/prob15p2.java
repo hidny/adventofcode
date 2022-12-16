@@ -2,6 +2,7 @@ package probs2022;
 import java.io.File;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -12,14 +13,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob15p2 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2022/prob2022in9.txt"));
-			//in = new Scanner(new File("in2022/prob2022in10.txt"));
+			in = new Scanner(new File("in2022/prob2022in15.txt"));
+			// in = new Scanner(new File("in2022/prob2022in16.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -53,83 +54,78 @@ public class prob9 {
 
 			ArrayList ints = new ArrayList<Integer>();
 			
-			
-			HashSet<String> taken = new HashSet<String>();
-			
 
 			
-			int currentHI = 0;
-			int currentHJ = 0;
-			
-			
-			int currentTI = 0;
-			int currentTJ = 0;
-			
-
-			taken.add(currentTI + "," + currentTJ);
-			
-			
+			int vars[][] = new int[lines.size()][4];
 			for(int i=0; i<lines.size(); i++) {
-				
 				
 				line = lines.get(i);
 				String token[] = line.split(" ");
-				
-				String dir = token[0];
-				int amount = pint(token[1]);
-				
-				int iDir = 0;
-				int jDir = 0;
-				
-				if(dir.equals("U")) {
-					iDir = -1;
-					
-				} else if(dir.equals("R")) {
-					jDir = 1;
-					
-				} else if(dir.equals("D")) {
-					iDir = 1;
-					
-				} else if(dir.equals("L")) {
-					jDir = -1;
-					
-				} else{
-					sopl("doh");
-				}
-				
-				for(int k=0; k<amount; k++) {
-					
-					currentHI += iDir;
-					currentHJ += jDir;
-					
-					
-					if(Math.abs(currentHI - currentTI) > 1
-							|| Math.abs(currentHJ - currentTJ) > 1) {
-						
-						//Move:
-						
-						if(currentHI > currentTI) {
-							currentTI += 1;
-						} else if(currentHI < currentTI) {
-							currentTI -= 1;
-						}
-						
-
-						if(currentHJ > currentTJ) {
-							currentTJ += 1;
-						} else if(currentHJ < currentTJ) {
-							currentTJ -= 1;
-						}
-						
-						taken.add(currentTI + "," + currentTJ);
-					}
-					
-				}
-				
+				vars[i][0] = pint(token[2].split("=")[1].split(":")[0].split(",")[0]);
+				vars[i][1] = pint(token[3].split("=")[1].split(":")[0].split(",")[0]);
+				vars[i][2] = pint(token[8].split("=")[1].split(":")[0].split(",")[0]);
+				vars[i][3] = pint(token[9].split("=")[1].split(":")[0].split(",")[0]);
 			}
 			
 			
-			sopl("Answer: " + taken.size());
+			for(int y=0; y<=4000000; y++) {
+				
+				//int yLine = 11;
+				
+				int limits[][] = new int[lines.size()][2];
+				
+				for(int i=0; i<lines.size(); i++) {
+					
+					
+					int x1 = vars[i][0];
+					int y1 = vars[i][1];
+					int x2 = vars[i][2];
+					int y2 = vars[i][3];
+					
+					//up:
+					int dist = Math.abs(y1 - y);
+					int manhatan = Math.abs(y1 -y2) + Math.abs(x1 - x2);
+					
+					limits[i][0] = x1 - (manhatan - dist);
+					limits[i][1] = x1 + (manhatan - dist);
+					
+					
+				}
+				
+				
+				for(int x=0; x<=4000000; x++) {
+					
+					boolean keepTrying = true;
+					while(keepTrying) {
+						
+						keepTrying = false;
+						for(int k=0; k<limits.length; k++) {
+							if(x >= limits[k][0] && x <= limits[k][1]) {
+								x = limits[k][1] + 1;
+								keepTrying = true;
+
+							}
+						}
+					}
+					if(x > 4000000 ) {
+						break;
+					}
+					
+					sopl(x + "," + y);
+					sopl("Solution");
+					long answer = 4000000L * x + y;
+					sopl("Answer: " + answer);
+					
+				}
+				
+				if(y % 100000 == 0) {
+					sopl("y = " + y);
+				}
+			}
+			//wrong: 5809295
+			//wrong: 5139103
+			
+			sopl("Answer: " + count);
 			in.close();
 			
 		} catch(Exception e) {
@@ -137,6 +133,13 @@ public class prob9 {
 		} finally {
 		}
 	}
+	//#############
+	
+	//##############
+	
+	//####B#########
+	//#############
+	
 
 	public static void sop(Object a) {
 		System.out.print(a.toString());

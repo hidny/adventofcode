@@ -12,14 +12,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob16 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2022/prob2022in9.txt"));
-			//in = new Scanner(new File("in2022/prob2022in10.txt"));
+			 in = new Scanner(new File("in2022/prob2022in16.txt"));
+			// in = new Scanner(new File("in2022/prob2022in17.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -50,86 +50,33 @@ public class prob9 {
 				lines.add(line);
 				
 			}
+			
+			ArrayList<prob16node> nodes = new ArrayList<prob16node>();
 
 			ArrayList ints = new ArrayList<Integer>();
-			
-			
-			HashSet<String> taken = new HashSet<String>();
-			
-
-			
-			int currentHI = 0;
-			int currentHJ = 0;
-			
-			
-			int currentTI = 0;
-			int currentTJ = 0;
-			
-
-			taken.add(currentTI + "," + currentTJ);
-			
-			
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
 				String token[] = line.split(" ");
 				
-				String dir = token[0];
-				int amount = pint(token[1]);
+				String label = token[1];
 				
-				int iDir = 0;
-				int jDir = 0;
+				int flowRate = pint(token[4].split("=")[1].split(";")[0]);
 				
-				if(dir.equals("U")) {
-					iDir = -1;
-					
-				} else if(dir.equals("R")) {
-					jDir = 1;
-					
-				} else if(dir.equals("D")) {
-					iDir = 1;
-					
-				} else if(dir.equals("L")) {
-					jDir = -1;
-					
-				} else{
-					sopl("doh");
+				ArrayList<String> connections = new ArrayList<String>();
+				
+				for(int j=9; j<token.length; j++) {
+					connections.add(token[j].split(",")[0]);
 				}
 				
-				for(int k=0; k<amount; k++) {
-					
-					currentHI += iDir;
-					currentHJ += jDir;
-					
-					
-					if(Math.abs(currentHI - currentTI) > 1
-							|| Math.abs(currentHJ - currentTJ) > 1) {
-						
-						//Move:
-						
-						if(currentHI > currentTI) {
-							currentTI += 1;
-						} else if(currentHI < currentTI) {
-							currentTI -= 1;
-						}
-						
-
-						if(currentHJ > currentTJ) {
-							currentTJ += 1;
-						} else if(currentHJ < currentTJ) {
-							currentTJ -= 1;
-						}
-						
-						taken.add(currentTI + "," + currentTJ);
-					}
-					
-				}
-				
+				nodes.add(new prob16node(label, flowRate, connections));
 			}
 			
+			int max = prob16node.getMaxFlow(nodes, prob16node.findIndex(nodes, "AA"));
 			
-			sopl("Answer: " + taken.size());
+			
+			sopl("Answer: " + max);
 			in.close();
 			
 		} catch(Exception e) {
