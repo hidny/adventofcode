@@ -73,7 +73,8 @@ public class prob16 {
 				nodes.add(new prob16node(label, flowRate, connections));
 			}
 			
-			int max = prob16node.getMaxFlow(nodes, prob16node.findIndex(nodes, "AA"));
+			int minutesPart1 = 30;
+			int max = prob16node.getMaxFlow(nodes, prob16node.findIndex(nodes, "AA"), minutesPart1);
 			
 			
 			sopl("Answer: " + max);
