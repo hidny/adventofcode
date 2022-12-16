@@ -25,8 +25,8 @@ public class prob176p2 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2022/prob2022in16.txt"));
-			 //in = new Scanner(new File("in2022/prob2022in17.txt"));
+			in = new Scanner(new File("in2022/prob2022in16.txt"));
+			//in = new Scanner(new File("in2022/prob2022in17.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -58,7 +58,7 @@ public class prob176p2 {
 				
 			}
 			
-			ArrayList<prob16node2> nodes = new ArrayList<prob16node2>();
+			ArrayList<prob16node2Trial2> nodes = new ArrayList<prob16node2Trial2>();
 
 			ArrayList ints = new ArrayList<Integer>();
 			for(int i=0; i<lines.size(); i++) {
@@ -77,10 +77,12 @@ public class prob176p2 {
 					connections.add(token[j].split(",")[0]);
 				}
 				
-				nodes.add(new prob16node2(label, flowRate, connections));
+				nodes.add(new prob16node2Trial2(label, flowRate, connections));
 			}
 			
-			int max = prob16node2.getMaxFlow(nodes, prob16node2.findIndex(nodes, "AA"));
+			int numMinutesPart2 = 26;
+			
+			int max = prob16node2Trial2.getMaxFlow(nodes, prob16node2Trial2.findIndex(nodes, "AA"), numMinutesPart2);
 			
 			
 			sopl("Answer: " + max);
