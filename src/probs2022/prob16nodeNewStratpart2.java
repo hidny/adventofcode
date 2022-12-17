@@ -238,7 +238,7 @@ public class prob16nodeNewStratpart2 {
 			}
 		}
 		
-		//Stall out and let elephant finish edge-case
+		//Stall out and let elephant finish edge-case.
 		//This wasn't need in my case, but maybe it is for other puzzle inputs... I don't know.
 		int curTrial = getMaxFlow(node, curIndex, 0, totalFlow, opened, numLeftToOpen, elephantIndex, minutesLeftElephant);
 		if(curTrial > bestTrial) {
@@ -284,7 +284,7 @@ public class prob16nodeNewStratpart2 {
 		}
 		
 		
-		//Stall out and let me finish edge-case
+		//Stall out and let me finish edge-case.
 		//This wasn't need in my case, but maybe it is for other puzzle inputs... I don't know.
 		int curTrial = getMaxFlow(node, curIndex, minutesLeft, totalFlow, opened, numLeftToOpen, elephantIndex, 0);
 		if(curTrial > bestTrial) {
