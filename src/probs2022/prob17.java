@@ -19,8 +19,8 @@ public class prob17 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			// in = new Scanner(new File("in2022/prob2022in17.txt"));
-			in = new Scanner(new File("in2022/prob2022in18.txt"));
+			in = new Scanner(new File("in2022/prob2022in17.txt"));
+			//in = new Scanner(new File("in2022/prob2022in18.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;

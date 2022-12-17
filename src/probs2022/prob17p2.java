@@ -138,6 +138,22 @@ public class prob17p2 {
 					
 					lookbackArray[(int)(rock / lookback)] = array.length - minICoord + extraHeight;
 					
+					//Check what's going on:
+					/*for(int i=minICoord; i<minICoord + 20 && i<array.length; i++) {
+						for(int j=0; j<array[0].length; j++) {
+							if(array[i][j]) {
+								sop("#");
+							} else {
+								sop(".");
+							}
+							
+						}
+						sopl();
+					}
+					sopl();
+					sopl();
+					sopl();*/
+					//END Check
 					
 					if(rock > 6 * lookback) {
 
@@ -160,6 +176,8 @@ Part 2 Answer:
 Answer: 309294943
 
 Quesion: why 345?
+//Answer: the logs didn't help much. I guess it just is?
+ I assumed the factor would be less than 10, but not 345...
 
 							 */
 							int NUM_CHECKS = 10;
