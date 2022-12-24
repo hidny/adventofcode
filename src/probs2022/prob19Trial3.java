@@ -85,7 +85,43 @@ public class prob19Trial3 {
 			
 			//TODO:
 			//in loop:
+
+			//Debug example in prompt:
+			/*
+			first.buildOrder = new ArrayList<Integer>();
+			first.buildOrder.add(1);
+			first.buildOrder.add(1);
+			first.buildOrder.add(1);
+			first.buildOrder.add(2);
+			first.buildOrder.add(1);
+			first.buildOrder.add(2);
+			first.buildOrder.add(3);
+			first.buildOrder.add(3);
+			getGeodeInValidBuildOrder(buildOrdersPrev.get(0).buildOrder, blue.get(0), NUM_MINUTES);
 			
+			sopl("DOH");
+			exit(1);
+			
+			//0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 2, 3
+			*/
+		
+			
+			
+			ArrayList<Integer> buildOrderTest = convertStringToArrayList("0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 2, 3, 3");
+			long num = getGeodeInValidBuildOrder(buildOrderTest, blue.get(5), NUM_MINUTES);
+			
+			//TODO: what happens to this solution when I comment out critical comment?
+			// guess: it becomes invalid, but there should be a valid one to replace it.
+	
+			//Before uncommenting:
+			/*Answer for blueprint 6: 10
+Exit with code 1
+(/
+			
+			sopl("Answer for blueprint 6: " + num);
+			
+			
+			exit(1);
 			
 			//End Debug
 			
@@ -108,35 +144,20 @@ public class prob19Trial3 {
 				
 				buildOrdersPrev.add(first);
 				
-				//Debug example in prompt:
-				/*
-				first.buildOrder = new ArrayList<Integer>();
-				first.buildOrder.add(1);
-				first.buildOrder.add(1);
-				first.buildOrder.add(1);
-				first.buildOrder.add(2);
-				first.buildOrder.add(1);
-				first.buildOrder.add(2);
-				first.buildOrder.add(3);
-				first.buildOrder.add(3);
-				getGeodeInValidBuildOrder(buildOrdersPrev.get(0).buildOrder, blue.get(0), NUM_MINUTES);
-				
-				sopl("DOH");
-				exit(1);
-				*/
 				
 				int maxGeode = 0;
+				ArrayList<Integer> curBestArray = new ArrayList<Integer> ();
 				
-				for(int depth=0; depth<20 && buildOrdersPrev.size() > 0; depth++) {
+				for(int depth=0; buildOrdersPrev.size() > 0; depth++) {
 					
 					sopl();
 					sopl("Depth: " + depth);
 					sopl("Num build orders " + buildOrdersPrev.size());
 					sopl("Current max geode: " + maxGeode);
 					
-					//ArrayList<prob19BuildOrder> buildOrdersAtDepth = new ArrayList<prob19BuildOrder>();
+					ArrayList<prob19BuildOrder> buildOrdersAtDepth = new ArrayList<prob19BuildOrder>();
 
-					HashMap <Integer, ArrayList<prob19BuildOrder>> colliderFinder = new  HashMap <Integer, ArrayList<prob19BuildOrder>>();
+					//HashMap <Integer, ArrayList<prob19BuildOrder>> colliderFinder = new  HashMap <Integer, ArrayList<prob19BuildOrder>>();
 					
 					for(int i=0; i<buildOrdersPrev.size(); i++) {
 						
@@ -152,6 +173,13 @@ public class prob19Trial3 {
 								
 								if(numGeode > maxGeode) {
 									maxGeode = numGeode;
+									
+									curBestArray = new ArrayList<Integer> ();
+									
+									for(int m=0; m<buildOrdersPrev.get(i).buildOrder.size(); m++) {
+										
+										curBestArray.add(buildOrdersPrev.get(i).buildOrder.get(m));
+									}
 								}
 								
 								
@@ -167,8 +195,8 @@ public class prob19Trial3 {
 								newBuild.setupRobotsArray();
 								
 								//TODO: hold on.
-								//buildOrdersAtDepth.add(newBuild);
-								onlyAddIfNoDominatedAndRemoveDominated(newBuild, colliderFinder);
+								buildOrdersAtDepth.add(newBuild);
+								//onlyAddIfNoDominatedAndRemoveDominated(newBuild, colliderFinder);
 								
 							} else {
 								//sopl("Invalid build order!");
@@ -182,16 +210,30 @@ public class prob19Trial3 {
 						
 					}
 					
-					Iterator<ArrayList<prob19BuildOrder>> values = colliderFinder.values().iterator();
+					/*Iterator<ArrayList<prob19BuildOrder>> values = colliderFinder.values().iterator();
 					
 					buildOrdersPrev = new ArrayList<prob19BuildOrder>();
 					
 					while(values.hasNext()) {
 						buildOrdersPrev.addAll(values.next());
 					}
+					*/
+					buildOrdersPrev = buildOrdersAtDepth;
 					
 				} //END DEPTH for loop
 			
+
+				sopl();
+				sopl("END LOOP");
+				sopl("Num build orders " + buildOrdersPrev.size());
+				sopl("Current max geode: " + maxGeode);
+				
+				sopl("Cur best array:");
+				for(int i=0; i<curBestArray.size(); i++) {
+					sop(curBestArray.get(i) + ", ");
+				}
+				sopl();
+				
 				quality += maxGeode * (blueIndex + 1);
 			} //END Bluepring for loop
 
@@ -218,6 +260,19 @@ public class prob19Trial3 {
 			e.printStackTrace();
 		} finally {
 		}
+	}
+	
+
+	public static ArrayList<Integer> convertStringToArrayList(String sequence) {
+		String token[] = sequence.split(",");
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		
+		for(int i=0; i<token.length; i++) {
+			ret.add(pint(token[i].trim()));
+		}
+		
+		return ret;
+		
 	}
 	
 	public static void onlyAddIfNoDominatedAndRemoveDominated(prob19BuildOrder newBuild, HashMap <Integer, ArrayList<prob19BuildOrder>> colliderFinder) {
@@ -316,9 +371,15 @@ public class prob19Trial3 {
 		
 		int min = 1;
 		
+		int resourcesPrevMinute[] = new int[4];
+		
 		NEXT_MIN:
 		for(; min<=numMinutes && (!cutShortForValidity || curPurchaseIndex < buildOrder.size()); min++) {
-			
+
+			for(int j=0; j<resources.length; j++) {
+				resourcesPrevMinute[j] = resources[j];
+				
+			}
 			for(int j=0; j<resources.length; j++) {
 				resources[j] += robotsPrevMinute[j];
 			}
@@ -334,44 +395,84 @@ public class prob19Trial3 {
 				int robotToBuy = buildOrder.get(curPurchaseIndex);
 			
 				if(robotToBuy == 0) {
-					if(resources[0] >= blue.oreOre) {
+					if(resourcesPrevMinute[0] >= blue.oreOre) {
+						//sopl("Buy ore earlier");
+						//could've bought it ealier!
+						return new int[]  {-1};
+						
+					} else if(resources[0] >= blue.oreOre) {
 						//Buy it
 						
 						resources[0] -= blue.oreOre;
+	
+						resourcesPrevMinute[0] -= blue.oreOre;
 						
 					} else {
 						continue NEXT_MIN;
 					}
 				} else if(robotToBuy == 1) {
-					if(resources[0] >= blue.clayOre) {
+
+					if(resourcesPrevMinute[0] >= blue.clayOre) {
+						//sopl("Buy ore earlier 2");
+						//could've bought it ealier!
+						return new int[]  {-1};
+						
+					} else if(resources[0] >= blue.clayOre) {
 						//Buy it
 						
 						resources[0] -= blue.clayOre;
+
+						resourcesPrevMinute[0] -= blue.clayOre;
 						
 						
 					} else {
+
 						continue NEXT_MIN;
 					}
 				} else if(robotToBuy == 2) {
-					if(resources[0] >= blue.obsOre && resources[1] >= blue.obsClay) {
+					
+					/*if(resourcesPrevMinute[0] >= blue.obsOre && resourcesPrevMinute[1] >= blue.obsClay) {
+						//sopl("Buy ore earlier 3");
+						//DOESN:T work for some reason!
+						//could've bought it ealier!
+						return new int[]  {-1};
+						
+					} else */if(resources[0] >= blue.obsOre && resources[1] >= blue.obsClay) {
 						//Buy it
 						
 						resources[0] -= blue.obsOre;
 						resources[1] -= blue.obsClay;
-						
+
+						resourcesPrevMinute[0] -= blue.obsOre;
+						resourcesPrevMinute[1] -= blue.obsClay;
 						
 					} else {
+
 						continue NEXT_MIN;
 					}
 				} else if(robotToBuy == 3) {
-					if(resources[0] >= blue.geodeOre && resources[2] >= blue.geodeObs) {
+					
+					if(resourcesPrevMinute[0] >= blue.geodeOre && resourcesPrevMinute[2] >= blue.geodeObs) {
+						//could've bought it ealier!
+						//This logically shouldn't happen though:
+						//sopl("Buy ore earlier 4");
+						
+						return new int[]  {-1};
+						
+					} else if(resources[0] >= blue.geodeOre && resources[2] >= blue.geodeObs) {
 						//Buy it
 						
 						resources[0] -= blue.geodeOre;
 						resources[2] -= blue.geodeObs;
 						
+
+						resourcesPrevMinute[0] -= blue.geodeOre;
+						resourcesPrevMinute[2] -= blue.geodeObs;
+						
 						
 					} else {
+
+						
 						continue NEXT_MIN;
 					}
 				} else {
@@ -393,8 +494,9 @@ public class prob19Trial3 {
 					sopl("Bought geode at minute " + (min + 1));
 				}
 				*/
-				
 				int ORE_TO_GEODE_TIME = 8;
+				
+				//int ORE_TO_GEODE_TIME = 0;
 				
 				int timeLeft = numMinutes - min;
 				if(lastPurchaseMinute == min && robotToBuy < lastRobotIndex) {
