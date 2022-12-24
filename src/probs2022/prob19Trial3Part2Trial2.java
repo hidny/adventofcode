@@ -24,8 +24,8 @@ public class prob19Trial3Part2Trial2 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2022/prob2022in19.txt"));
-			//in = new Scanner(new File("in2022/prob2022in20.txt"));
+			//in = new Scanner(new File("in2022/prob2022in19.txt"));
+			in = new Scanner(new File("in2022/prob2022in20.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -129,8 +129,8 @@ public class prob19Trial3Part2Trial2 {
 				*/
 				
 				int maxGeode = 0;
-				
-				for(int depth=0; depth<30 && buildOrdersPrev.size() > 0; depth++) {
+				int depth=0;
+				for(; (depth<23 || (depth < 30 && buildOrdersPrev.size() < 1000000)) && buildOrdersPrev.size() > 0; depth++) {
 					
 					sopl();
 					sopl("Depth: " + depth);
@@ -217,6 +217,13 @@ public class prob19Trial3Part2Trial2 {
 					}*/
 					
 				} //END DEPTH for loop
+				
+
+				sopl();
+				sopl("Depth: " + depth);
+				sopl("Num build orders " + buildOrdersPrev.size());
+				sopl();
+				sopl("Current max geode: " + maxGeode);
 			
 				answerPart2 *= maxGeode;
 			} //END Bluepring for loop

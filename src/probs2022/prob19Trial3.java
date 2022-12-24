@@ -394,19 +394,24 @@ public class prob19Trial3 {
 				}
 				*/
 				
+				int ORE_TO_GEODE_TIME = 8;
+				
+				int timeLeft = numMinutes - min;
 				if(lastPurchaseMinute == min && robotToBuy < lastRobotIndex) {
 					//Enforce an arbitrary ordering:
 					return new int[]  {-1};
 
-				} else if(numMinutes - min <=1) {
+				
+				} else if(timeLeft <=1) {
 					//Last minute purchase doesn't count
 					return new int[]  {-1};
 					
-				} else if(robotToBuy != 3 && numMinutes - min <= 2) {
+				} else if(robotToBuy != 3 && timeLeft <= 3) {
 					//Last 2nd minute purchase of non-geode doesn't count
 					return new int[]  {-1};
 					
-				} else if(robotToBuy == 0 && numMinutes - min <= 1 + blue.oreOre) {
+					
+				} else if(robotToBuy == 0 && numMinutes - min <= 1 + blue.oreOre + ORE_TO_GEODE_TIME) {
 					//Don't buy a ore robot if it's just going to pay for itself.
 					return new int[]  {-1};
 					
@@ -420,6 +425,29 @@ public class prob19Trial3 {
 				
 				break;
 			
+			}
+			
+			if(numMinutes - min >= 1 + blue.oreOre && curPurchaseIndex == buildOrder.size()) {
+				//Just buy ore at the end.
+				while(true) {
+					int robotToBuy = 0;
+					
+					if(robotToBuy == 0) {
+						if(resources[0] >= blue.oreOre) {
+							//Buy it
+							
+							resources[0] -= blue.oreOre;
+							
+						} else {
+							continue NEXT_MIN;
+						}
+					}
+
+					robots[robotToBuy]++;
+					
+					
+				}
+				
 			}
 			//end loop.
 		}
