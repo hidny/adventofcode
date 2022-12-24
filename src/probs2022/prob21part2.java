@@ -12,7 +12,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob21 {
+public class prob21part2 {
 
 	
 	public static void main(String[] args) {
@@ -56,6 +56,7 @@ public class prob21 {
 			ArrayList <prob21Node> nodes = new ArrayList <prob21Node>();
 			
 			
+			prob21Node human = new prob21Node();
 			ArrayList ints = new ArrayList<Integer>();
 			for(int i=0; i<lines.size(); i++) {
 				
@@ -67,10 +68,16 @@ public class prob21 {
 				prob21Node current = new prob21Node();
 
 				current.label = token[0].split(":")[0];
-				
-				if(token.length == 2) {
+				if(current.label.equals("humn")) {
+					current.isLeaf = true;
+					current.num = 0;
+					//Do something!
+					human = current;
+					
+				} else if(token.length == 2) {
 					current.isLeaf = true;
 					current.num = pint(token[1]);
+					
 				} else {
 					current.isLeaf = false;
 					current.labels[0] = token[1];
@@ -88,7 +95,75 @@ public class prob21 {
 			
 			long answer = prob21Node.getCalc(root);
 			
-			sopl("Answer: " + answer);
+			long prevDiff = -1;
+			long diff = -1;
+			
+			//human.num = 2147483647999L;
+			//long lhs = prob21Node.getCalc(root.leaves[0]);
+			//long rhs = prob21Node.getCalc(root.leaves[1]);
+			
+			//sopl(lhs);
+			//sopl(rhs);
+			//exit(1);
+			
+			long lhs = -2;
+			long rhs = -1;
+			
+			long maxI = 1000;
+			while(lhs != rhs) {
+				human.num = maxI;
+				
+				lhs = prob21Node.getCalc(root.leaves[0]);
+				rhs = prob21Node.getCalc(root.leaves[1]);
+				
+
+				//I knew lhs > rhs because of a previous run, oh well!
+				if(lhs > rhs) {
+					maxI *=2;
+				
+				} else {
+					break;
+				}
+				
+				sopl(lhs);
+				sopl(maxI);
+				sopl("??");
+			}
+
+			sopl(lhs);
+			sopl(rhs);
+			sopl(maxI);
+			sopl("??");
+			sopl("---");
+			long minI =0;
+			long currentI = maxI /2;
+			//exit(1);
+			
+			Scanner ind = new Scanner(System.in);
+			while(lhs != rhs) {
+				human.num = currentI;
+				
+				lhs = prob21Node.getCalc(root.leaves[0]);
+				rhs = prob21Node.getCalc(root.leaves[1]);
+				
+				if(lhs < rhs) {
+					maxI = currentI;
+					currentI = (maxI + minI) / 2;
+				
+				} else if(rhs < lhs) {
+					minI = currentI;
+					currentI = (maxI + minI) / 2;
+					
+				}
+				sopl(minI);
+				sopl(currentI);
+				sopl(maxI);
+				sopl("what");
+				//ind.next();
+			}
+			
+			sopl("Answer: " + currentI);
+			
 			in.close();
 			
 		} catch(Exception e) {

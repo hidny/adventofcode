@@ -8,18 +8,20 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
 
+import aStar.AstarAlgo;
+import aStar.AstarNode;
 import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob21 {
+public class prob24b {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			 in = new Scanner(new File("in2022/prob2022in21.txt"));
-			 //in = new Scanner(new File("in2022/prob2022in22.txt"));
+			in = new Scanner(new File("in2022/prob2022in24.txt"));
+			//in = new Scanner(new File("in2022/prob2022in25.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -49,13 +51,8 @@ public class prob21 {
 				line = in.nextLine();
 				lines.add(line);
 				
-				
-				
 			}
 
-			ArrayList <prob21Node> nodes = new ArrayList <prob21Node>();
-			
-			
 			ArrayList ints = new ArrayList<Integer>();
 			for(int i=0; i<lines.size(); i++) {
 				
@@ -64,31 +61,63 @@ public class prob21 {
 				String token[] = line.split(" ");
 				
 				
-				prob21Node current = new prob21Node();
-
-				current.label = token[0].split(":")[0];
-				
-				if(token.length == 2) {
-					current.isLeaf = true;
-					current.num = pint(token[1]);
-				} else {
-					current.isLeaf = false;
-					current.labels[0] = token[1];
-					current.labels[1] = token[3];
-					current.operation = token[2].charAt(0);
-					
-				}
-				
-				sopl("add");
-				nodes.add(current);
 			}
 			
-			int rootIndex = prob21Node.getRoot(nodes);
-			prob21Node root = nodes.get(rootIndex);
+			//Initialize: (should be in prob24node, but whatever!
+			prob24node.lines = lines;
 			
-			long answer = prob21Node.getCalc(root);
+			for(int i=0; i<20; i++) {
+				sopl("Drawing blizzard map for Minute " + i);
+				prob24node.blizzMapArray.add(prob24node.createBlizzMap(i));
+			}
 			
-			sopl("Answer: " + answer);
+			prob24node start = new prob24node(0, 1, 0);
+			prob24node.goali = lines.size() - 1;
+			prob24node.goalj = lines.get(0).length() - 2;
+			
+			//prob24node.goali = 2;
+			//prob24node.goalj = 1;
+			
+			//1000 minutes??
+			prob24node.spots = new prob24node[1000][lines.size()][lines.get(0).length()];
+			//End init
+			
+			
+			ArrayList <AstarNode> path = AstarAlgo.astar(start, null);
+			
+			sopl("Path:");
+
+			for(int i=0; i<path.size(); i++) {
+				sopl("minute " + i + ": (" + ((prob24node)path.get(i)).i + ", " + ((prob24node)path.get(i)).j + ")" );
+			}
+			
+			
+
+			int minutesDoneSoFar = (path.size() - 1);
+			
+			sopl("Answer part1: " + minutesDoneSoFar);
+			
+			//Reinit for going back:
+			start = new prob24node(lines.size() - 1, lines.get(0).length() - 2, minutesDoneSoFar);
+			prob24node.goali = 0;
+			prob24node.goalj = 1;
+			
+			ArrayList <AstarNode> path2 = AstarAlgo.astar(start, null);
+			
+			minutesDoneSoFar = (path2.size() - 1) + (path.size() - 1);
+			
+			//Init a third time for going from start to finish again:
+			start = new prob24node(0, 1, minutesDoneSoFar);
+			prob24node.goali = lines.size() - 1;
+			prob24node.goalj = lines.get(0).length() - 2;
+			
+			ArrayList <AstarNode> path3 = AstarAlgo.astar(start, null);
+			
+			minutesDoneSoFar = (path3.size() - 1) + (path2.size() - 1) + (path.size() - 1);
+			
+			
+			sopl("Answer part 2: " + minutesDoneSoFar);
+			
 			in.close();
 			
 		} catch(Exception e) {
