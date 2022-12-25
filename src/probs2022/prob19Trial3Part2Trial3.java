@@ -15,7 +15,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob19Trial3 {
+public class prob19Trial3Part2Trial3 {
 
 	public static String robotTypes[] = new String[] {"Ore" ,"Clay", "Obsidian", "Geode"};
 
@@ -24,8 +24,8 @@ public class prob19Trial3 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2022/prob2022in19.txt"));
-			//in = new Scanner(new File("in2022/prob2022in20.txt"));
+			//in = new Scanner(new File("in2022/prob2022in19.txt"));
+			in = new Scanner(new File("in2022/prob2022in20.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -158,9 +158,9 @@ public class prob19Trial3 {
 					}
 					sopl();
 					
-					ArrayList<prob19BuildOrder> buildOrdersAtDepth = new ArrayList<prob19BuildOrder>();
+					//ArrayList<prob19BuildOrder> buildOrdersAtDepth = new ArrayList<prob19BuildOrder>();
 
-					//HashMap <Integer, ArrayList<prob19BuildOrder>> colliderFinder = new  HashMap <Integer, ArrayList<prob19BuildOrder>>();
+					HashMap <Integer, ArrayList<prob19BuildOrder>> colliderFinder = new  HashMap <Integer, ArrayList<prob19BuildOrder>>();
 					
 					for(int i=0; i<buildOrdersPrev.size(); i++) {
 						
@@ -198,8 +198,8 @@ public class prob19Trial3 {
 								newBuild.setupRobotsArray();
 								
 								//TODO: hold on.
-								buildOrdersAtDepth.add(newBuild);
-								//onlyAddIfNoDominatedAndRemoveDominated(newBuild, colliderFinder);
+								//buildOrdersAtDepth.add(newBuild);
+								onlyAddIfNoDominatedAndRemoveDominated(newBuild, colliderFinder);
 								
 							} else {
 								//sopl("Invalid build order!");
@@ -213,15 +213,15 @@ public class prob19Trial3 {
 						
 					}
 					
-					/*Iterator<ArrayList<prob19BuildOrder>> values = colliderFinder.values().iterator();
+					Iterator<ArrayList<prob19BuildOrder>> values = colliderFinder.values().iterator();
 					
 					buildOrdersPrev = new ArrayList<prob19BuildOrder>();
 					
 					while(values.hasNext()) {
 						buildOrdersPrev.addAll(values.next());
 					}
-					*/
-					buildOrdersPrev = buildOrdersAtDepth;
+					
+					//buildOrdersPrev = buildOrdersAtDepth;
 					
 				} //END DEPTH for loop
 			
@@ -447,7 +447,7 @@ public class prob19Trial3 {
 					curPurchaseIndex++;
 					
 					//It could prob be 5, but whatever!
-					int ORE_TO_GEODE_TIME = 5;
+					int ORE_TO_GEODE_TIME = 3;
 					
 					
 					int timeLeft = numMinutes - min;

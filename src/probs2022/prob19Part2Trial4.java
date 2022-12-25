@@ -15,11 +15,11 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob19Trial3 {
+public class prob19Part2Trial4 {
 
 	public static String robotTypes[] = new String[] {"Ore" ,"Clay", "Obsidian", "Geode"};
 
-	public static int NUM_MINUTES = 24;
+	public static int NUM_MINUTES_PART2 = 32;
 	
 	public static void main(String[] args) {
 		Scanner in;
@@ -59,9 +59,7 @@ public class prob19Trial3 {
 
 			ArrayList<prob19Blue> blue = new ArrayList<prob19Blue>();
 			
-			ArrayList ints = new ArrayList<Integer>();
 			for(int i=0; i<lines.size(); i++) {
-				
 				
 				line = lines.get(i);
 				String token[] = line.split(" ");
@@ -78,54 +76,13 @@ public class prob19Trial3 {
 				blue.add(cur);
 			}
 			
-			//IDEA: pseudo BREADTH FIRST SEARCH
 			
 			
-			//TODO: For now, just handle 1st blueprint
 			
-			//TODO:
-			//in loop:
+			int NUM_BLUEPRINTS_PART_2 = 3;
+			int answerPart2 = 1;
 
-			//Debug example in prompt:
-			/*
-			first.buildOrder = new ArrayList<Integer>();
-			first.buildOrder.add(1);
-			first.buildOrder.add(1);
-			first.buildOrder.add(1);
-			first.buildOrder.add(2);
-			first.buildOrder.add(1);
-			first.buildOrder.add(2);
-			first.buildOrder.add(3);
-			first.buildOrder.add(3);
-			getGeodeInValidBuildOrder(buildOrdersPrev.get(0).buildOrder, blue.get(0), NUM_MINUTES);
-			
-			sopl("DOH");
-			exit(1);
-			
-			//0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 2, 3
-			*/
-		
-			
-			/*
-			ArrayList<Integer> buildOrderTest = convertStringToArrayList("0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 3, 2, 3, 3, 3");
-			
-			long num = getGeodeInValidBuildOrder(buildOrderTest, blue.get(5), NUM_MINUTES);
-			
-			//TODO: what happens to this solution when I comment out critical comment?
-			// guess: it becomes invalid, but there should be a valid one to replace it.
-	
-			
-			sopl("Answer for blueprint 6: " + num);
-			
-			exit(1);
-			*/
-			
-			//End Debug
-			
-			
-			int quality = 0;
-
-			for(int blueIndex = 0; blueIndex<blue.size(); blueIndex++) {
+			for(int blueIndex = 0; blueIndex<NUM_BLUEPRINTS_PART_2; blueIndex++) {
 
 				sopl();
 				sopl();
@@ -143,6 +100,7 @@ public class prob19Trial3 {
 				
 				
 				int maxGeode = 0;
+				int maxNumGeodeRobots = 0;
 				ArrayList<Integer> curBestArray = new ArrayList<Integer> ();
 				
 				for(int depth=0; buildOrdersPrev.size() > 0; depth++) {
@@ -158,9 +116,9 @@ public class prob19Trial3 {
 					}
 					sopl();
 					
-					ArrayList<prob19BuildOrder> buildOrdersAtDepth = new ArrayList<prob19BuildOrder>();
+					//ArrayList<prob19BuildOrder> buildOrdersAtDepth = new ArrayList<prob19BuildOrder>();
 
-					//HashMap <Integer, ArrayList<prob19BuildOrder>> colliderFinder = new  HashMap <Integer, ArrayList<prob19BuildOrder>>();
+					HashMap <Integer, ArrayList<prob19BuildOrder>> colliderFinder = new  HashMap <Integer, ArrayList<prob19BuildOrder>>();
 					
 					for(int i=0; i<buildOrdersPrev.size(); i++) {
 						
@@ -170,8 +128,8 @@ public class prob19Trial3 {
 							//Setup unsafe:
 							buildOrdersPrev.get(i).buildOrder.add(j);
 							
-							if(couldAddRobotToBuildOrder(buildOrdersPrev.get(i).buildOrder, blue.get(blueIndex), NUM_MINUTES)) {
-								int numGeode = getGeodeInValidBuildOrder(buildOrdersPrev.get(i).buildOrder, blue.get(blueIndex), NUM_MINUTES);
+							if(couldAddRobotToBuildOrder(buildOrdersPrev.get(i).buildOrder, blue.get(blueIndex), NUM_MINUTES_PART2)) {
+								int numGeode = getGeodeInValidBuildOrder(buildOrdersPrev.get(i).buildOrder, blue.get(blueIndex), NUM_MINUTES_PART2);
 
 								
 								if(numGeode > maxGeode) {
@@ -194,12 +152,48 @@ public class prob19Trial3 {
 								
 								newBuild.buildOrder = buildArray;
 								
-								newBuild.resources = getResourcesInValidBuildOrder(buildOrdersPrev.get(i).buildOrder, blue.get(blueIndex), NUM_MINUTES, false);
+								int ret[][] = getResourcesInValidBuildOrder(buildOrdersPrev.get(i).buildOrder, blue.get(blueIndex), NUM_MINUTES_PART2, false);
+								
+
+								newBuild.resources = ret[0];
+								
+								
 								newBuild.setupRobotsArray();
+								int curNumGeodoRobots = newBuild.robots[3];
+								
+								boolean stillCouldAdd = true;
+								if(curNumGeodoRobots > maxNumGeodeRobots) {
+									maxNumGeodeRobots = curNumGeodoRobots;
+								} else if(curNumGeodoRobots < maxNumGeodeRobots) {
+									//sopl("???");
+									
+									int minAfterEndOfBuild = ret[1][0];
+									
+									int minutesLeft = NUM_MINUTES_PART2 - minAfterEndOfBuild;
+									
+									/*if(minutesLeft <= 1) {
+										stillCouldAdd = false;
+									
+									}*/
+									if(minutesLeft <= maxNumGeodeRobots -curNumGeodoRobots) {
+										stillCouldAdd = false;
+										
+									}
+									//TODO: Very suspicious, but I want this star:
+									if(maxNumGeodeRobots -curNumGeodoRobots >= 5) {
+										stillCouldAdd = false;
+										
+									}
+									
+								}
 								
 								//TODO: hold on.
-								buildOrdersAtDepth.add(newBuild);
-								//onlyAddIfNoDominatedAndRemoveDominated(newBuild, colliderFinder);
+								//buildOrdersAtDepth.add(newBuild);
+								if(stillCouldAdd) {
+									onlyAddIfNoDominatedAndRemoveDominated(newBuild, colliderFinder);
+								} else {
+									//sopl("DENIED");
+								}
 								
 							} else {
 								//sopl("Invalid build order!");
@@ -213,15 +207,15 @@ public class prob19Trial3 {
 						
 					}
 					
-					/*Iterator<ArrayList<prob19BuildOrder>> values = colliderFinder.values().iterator();
+					Iterator<ArrayList<prob19BuildOrder>> values = colliderFinder.values().iterator();
 					
 					buildOrdersPrev = new ArrayList<prob19BuildOrder>();
 					
 					while(values.hasNext()) {
 						buildOrdersPrev.addAll(values.next());
 					}
-					*/
-					buildOrdersPrev = buildOrdersAtDepth;
+					
+					//buildOrdersPrev = buildOrdersAtDepth;
 					
 				} //END DEPTH for loop
 			
@@ -237,7 +231,8 @@ public class prob19Trial3 {
 				}
 				sopl();
 				
-				quality += maxGeode * (blueIndex + 1);
+
+				answerPart2 *= maxGeode;
 			} //END Bluepring for loop
 
 			//For each possible countinuation of build order
@@ -256,7 +251,7 @@ public class prob19Trial3 {
 			
 			//once build length 20, we probably have an answer.
 			
-			sopl("Answer: " + quality);
+			sopl("Answer: " + answerPart2);
 			in.close();
 			
 		} catch(Exception e) {
@@ -345,7 +340,7 @@ public class prob19Trial3 {
 	
 	public static boolean couldAddRobotToBuildOrder(ArrayList<Integer> buildOrder, prob19Blue blue, int numMinutes) {
 		
-		if( getResourcesInValidBuildOrder(buildOrder, blue, numMinutes, true)[0] == -1) {
+		if( getResourcesInValidBuildOrder(buildOrder, blue, numMinutes, true)[0][0] == -1) {
 			return false;
 		} else {
 			return true;
@@ -353,10 +348,10 @@ public class prob19Trial3 {
 	}
 
 	public static int getGeodeInValidBuildOrder(ArrayList<Integer> buildOrder, prob19Blue blue, int numMinutes) {
-		return getResourcesInValidBuildOrder(buildOrder, blue, numMinutes, false)[3];
+		return getResourcesInValidBuildOrder(buildOrder, blue, numMinutes, false)[0][3];
 	}
 
-	public static int[] getResourcesInValidBuildOrder(ArrayList<Integer> buildOrder, prob19Blue blue, int numMinutes, boolean cutShortForValidity) {
+	public static int[][] getResourcesInValidBuildOrder(ArrayList<Integer> buildOrder, prob19Blue blue, int numMinutes, boolean cutShortForValidity) {
 		
 		int resources[] = new int[4];
 		
@@ -370,6 +365,8 @@ public class prob19Trial3 {
 		robotsPrevMinute[0] = 1;
 		
 		int min = 1;
+		
+		int minuteAfterBuildOrderDone = -1;
 		
 		for(; min<=numMinutes && (!cutShortForValidity || curPurchaseIndex < buildOrder.size()); min++) {
 
@@ -453,28 +450,39 @@ public class prob19Trial3 {
 					int timeLeft = numMinutes - min;
 					if(timeLeft <=1) {
 						//Last minute purchase doesn't count
-						return new int[]  {-1};
+						return new int[][]  {{-1}};
 						
 					} else if(robotToBuy != 3 && timeLeft <= 3) {
 						//Last 2nd minute purchase of non-geode doesn't count
-						return new int[]  {-1};
+						return new int[][]  {{-1}};
 						
 						
 					} else if(robotToBuy == 0 && numMinutes - min <= 1 + blue.oreOre + ORE_TO_GEODE_TIME) {
 						//Don't buy a ore robot if it's just going to pay for itself.
-						return new int[]  {-1};
+						return new int[][]  {{-1}};
 						
 					}
 					
 				}
 				
+			} else {
+				if(minuteAfterBuildOrderDone == -1) {
+					minuteAfterBuildOrderDone = min;
+				}
 			}
 		}
 		
+		if(minuteAfterBuildOrderDone == -1) {
+			minuteAfterBuildOrderDone = min;
+		}
+		
 		if(curPurchaseIndex == buildOrder.size()) {
-			return resources;
+			int ret[][] = new int[2][];
+			ret[0] = resources;
+			ret[1] = new int[] {minuteAfterBuildOrderDone};
+			return ret;
 		} else {
-			return new int[]  {-1};
+			return new int[][]  {{-1}};
 		}
 	}
 
@@ -518,3 +526,45 @@ public class prob19Trial3 {
 	}
 
 }
+
+//IDEA: pseudo BREADTH FIRST SEARCH
+
+
+//TODO: For now, just handle 1st blueprint
+
+//TODO:
+//in loop:
+
+//Debug example in prompt:
+/*
+first.buildOrder = new ArrayList<Integer>();
+first.buildOrder.add(1);
+first.buildOrder.add(1);
+first.buildOrder.add(1);
+first.buildOrder.add(2);
+first.buildOrder.add(1);
+first.buildOrder.add(2);
+first.buildOrder.add(3);
+first.buildOrder.add(3);
+getGeodeInValidBuildOrder(buildOrdersPrev.get(0).buildOrder, blue.get(0), NUM_MINUTES);
+
+sopl("DOH");
+exit(1);
+
+//0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 2, 3
+*/
+
+
+/*
+ArrayList<Integer> buildOrderTest = convertStringToArrayList("0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 3, 2, 3, 3, 3");
+
+long num = getGeodeInValidBuildOrder(buildOrderTest, blue.get(5), NUM_MINUTES);
+
+//TODO: what happens to this solution when I comment out critical comment?
+// guess: it becomes invalid, but there should be a valid one to replace it.
+
+
+sopl("Answer for blueprint 6: " + num);
+
+exit(1);
+*/
