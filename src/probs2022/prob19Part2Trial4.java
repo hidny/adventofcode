@@ -100,7 +100,6 @@ public class prob19Part2Trial4 {
 				
 				
 				int maxGeode = 0;
-				int maxNumGeodeRobots = 0;
 				ArrayList<Integer> curBestArray = new ArrayList<Integer> ();
 				
 				for(int depth=0; buildOrdersPrev.size() > 0; depth++) {
@@ -155,7 +154,6 @@ public class prob19Part2Trial4 {
 									
 									//Create new max:
 									maxGeode = numGeode;
-									maxNumGeodeRobots = newBuild.robots[3];
 									curBestArray = new ArrayList<Integer> ();
 									
 									for(int m=0; m<buildOrdersPrev.get(i).buildOrder.size(); m++) {
