@@ -116,7 +116,6 @@ public class prob19Part2Trial4 {
 					}
 					sopl();
 					
-					//ArrayList<prob19BuildOrder> buildOrdersAtDepth = new ArrayList<prob19BuildOrder>();
 
 					HashMap <Integer, ArrayList<prob19BuildOrder>> colliderFinder = new  HashMap <Integer, ArrayList<prob19BuildOrder>>();
 					
@@ -165,20 +164,16 @@ public class prob19Part2Trial4 {
 								if(curNumGeodoRobots > maxNumGeodeRobots) {
 									maxNumGeodeRobots = curNumGeodoRobots;
 								} else if(curNumGeodoRobots < maxNumGeodeRobots) {
-									//sopl("???");
 									
 									int minAfterEndOfBuild = ret[1][0];
 									
 									int minutesLeft = NUM_MINUTES_PART2 - minAfterEndOfBuild;
 									
-									/*if(minutesLeft <= 1) {
-										stillCouldAdd = false;
-									
-									}*/
 									if(minutesLeft <= maxNumGeodeRobots -curNumGeodoRobots) {
 										stillCouldAdd = false;
 										
 									}
+
 									//TODO: Very suspicious, but I want this star:
 									if(maxNumGeodeRobots -curNumGeodoRobots >= 5) {
 										stillCouldAdd = false;
@@ -187,8 +182,6 @@ public class prob19Part2Trial4 {
 									
 								}
 								
-								//TODO: hold on.
-								//buildOrdersAtDepth.add(newBuild);
 								if(stillCouldAdd) {
 									onlyAddIfNoDominatedAndRemoveDominated(newBuild, colliderFinder);
 								} else {
@@ -526,45 +519,3 @@ public class prob19Part2Trial4 {
 	}
 
 }
-
-//IDEA: pseudo BREADTH FIRST SEARCH
-
-
-//TODO: For now, just handle 1st blueprint
-
-//TODO:
-//in loop:
-
-//Debug example in prompt:
-/*
-first.buildOrder = new ArrayList<Integer>();
-first.buildOrder.add(1);
-first.buildOrder.add(1);
-first.buildOrder.add(1);
-first.buildOrder.add(2);
-first.buildOrder.add(1);
-first.buildOrder.add(2);
-first.buildOrder.add(3);
-first.buildOrder.add(3);
-getGeodeInValidBuildOrder(buildOrdersPrev.get(0).buildOrder, blue.get(0), NUM_MINUTES);
-
-sopl("DOH");
-exit(1);
-
-//0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 2, 3
-*/
-
-
-/*
-ArrayList<Integer> buildOrderTest = convertStringToArrayList("0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 3, 2, 3, 3, 3");
-
-long num = getGeodeInValidBuildOrder(buildOrderTest, blue.get(5), NUM_MINUTES);
-
-//TODO: what happens to this solution when I comment out critical comment?
-// guess: it becomes invalid, but there should be a valid one to replace it.
-
-
-sopl("Answer for blueprint 6: " + num);
-
-exit(1);
-*/

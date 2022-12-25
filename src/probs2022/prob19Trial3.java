@@ -78,50 +78,6 @@ public class prob19Trial3 {
 				blue.add(cur);
 			}
 			
-			//IDEA: pseudo BREADTH FIRST SEARCH
-			
-			
-			//TODO: For now, just handle 1st blueprint
-			
-			//TODO:
-			//in loop:
-
-			//Debug example in prompt:
-			/*
-			first.buildOrder = new ArrayList<Integer>();
-			first.buildOrder.add(1);
-			first.buildOrder.add(1);
-			first.buildOrder.add(1);
-			first.buildOrder.add(2);
-			first.buildOrder.add(1);
-			first.buildOrder.add(2);
-			first.buildOrder.add(3);
-			first.buildOrder.add(3);
-			getGeodeInValidBuildOrder(buildOrdersPrev.get(0).buildOrder, blue.get(0), NUM_MINUTES);
-			
-			sopl("DOH");
-			exit(1);
-			
-			//0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 2, 3
-			*/
-		
-			
-			/*
-			ArrayList<Integer> buildOrderTest = convertStringToArrayList("0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 3, 2, 3, 3, 3");
-			
-			long num = getGeodeInValidBuildOrder(buildOrderTest, blue.get(5), NUM_MINUTES);
-			
-			//TODO: what happens to this solution when I comment out critical comment?
-			// guess: it becomes invalid, but there should be a valid one to replace it.
-	
-			
-			sopl("Answer for blueprint 6: " + num);
-			
-			exit(1);
-			*/
-			
-			//End Debug
-			
 			
 			int quality = 0;
 
@@ -160,7 +116,6 @@ public class prob19Trial3 {
 					
 					ArrayList<prob19BuildOrder> buildOrdersAtDepth = new ArrayList<prob19BuildOrder>();
 
-					//HashMap <Integer, ArrayList<prob19BuildOrder>> colliderFinder = new  HashMap <Integer, ArrayList<prob19BuildOrder>>();
 					
 					for(int i=0; i<buildOrdersPrev.size(); i++) {
 						
@@ -197,9 +152,7 @@ public class prob19Trial3 {
 								newBuild.resources = getResourcesInValidBuildOrder(buildOrdersPrev.get(i).buildOrder, blue.get(blueIndex), NUM_MINUTES, false);
 								newBuild.setupRobotsArray();
 								
-								//TODO: hold on.
 								buildOrdersAtDepth.add(newBuild);
-								//onlyAddIfNoDominatedAndRemoveDominated(newBuild, colliderFinder);
 								
 							} else {
 								//sopl("Invalid build order!");
@@ -213,14 +166,7 @@ public class prob19Trial3 {
 						
 					}
 					
-					/*Iterator<ArrayList<prob19BuildOrder>> values = colliderFinder.values().iterator();
 					
-					buildOrdersPrev = new ArrayList<prob19BuildOrder>();
-					
-					while(values.hasNext()) {
-						buildOrdersPrev.addAll(values.next());
-					}
-					*/
 					buildOrdersPrev = buildOrdersAtDepth;
 					
 				} //END DEPTH for loop
