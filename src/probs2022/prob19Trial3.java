@@ -24,8 +24,8 @@ public class prob19Trial3 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2022/prob2022in19.txt"));
-			// in = new Scanner(new File("in2022/prob2022in20.txt"));
+			// in = new Scanner(new File("in2022/prob2022in19.txt"));
+			in = new Scanner(new File("in2022/prob2022in20.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -106,22 +106,19 @@ public class prob19Trial3 {
 			*/
 		
 			
+			/*
+			ArrayList<Integer> buildOrderTest = convertStringToArrayList("0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 2, 3, 2, 3, 3, 3");
 			
-			ArrayList<Integer> buildOrderTest = convertStringToArrayList("0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 2, 3, 3");
 			long num = getGeodeInValidBuildOrder(buildOrderTest, blue.get(5), NUM_MINUTES);
 			
 			//TODO: what happens to this solution when I comment out critical comment?
 			// guess: it becomes invalid, but there should be a valid one to replace it.
 	
-			//Before uncommenting:
-			/*Answer for blueprint 6: 10
-Exit with code 1
-(/
 			
 			sopl("Answer for blueprint 6: " + num);
 			
-			
 			exit(1);
+			*/
 			
 			//End Debug
 			
@@ -154,6 +151,12 @@ Exit with code 1
 					sopl("Depth: " + depth);
 					sopl("Num build orders " + buildOrdersPrev.size());
 					sopl("Current max geode: " + maxGeode);
+
+					sopl("Cur best array:");
+					for(int i=0; i<curBestArray.size(); i++) {
+						sop(curBestArray.get(i) + ", ");
+					}
+					sopl();
 					
 					ArrayList<prob19BuildOrder> buildOrdersAtDepth = new ArrayList<prob19BuildOrder>();
 
@@ -359,9 +362,6 @@ Exit with code 1
 		
 		int curPurchaseIndex = 0;
 		
-		int lastPurchaseMinute = -1;
-		int lastRobotIndex = -1;
-		
 		
 		int robots[] = new int[4];
 		int robotsPrevMinute[] = new int[4];
@@ -371,15 +371,8 @@ Exit with code 1
 		
 		int min = 1;
 		
-		int resourcesPrevMinute[] = new int[4];
-		
-		NEXT_MIN:
 		for(; min<=numMinutes && (!cutShortForValidity || curPurchaseIndex < buildOrder.size()); min++) {
 
-			for(int j=0; j<resources.length; j++) {
-				resourcesPrevMinute[j] = resources[j];
-				
-			}
 			for(int j=0; j<resources.length; j++) {
 				resources[j] += robotsPrevMinute[j];
 			}
@@ -390,195 +383,92 @@ Exit with code 1
 			
 			//loop to buy robots
 			
-			while(curPurchaseIndex < buildOrder.size()) {
+			boolean purchasedSomething = false;
+			
+			if(curPurchaseIndex < buildOrder.size()) {
 
+				
 				int robotToBuy = buildOrder.get(curPurchaseIndex);
 			
 				if(robotToBuy == 0) {
-					if(resourcesPrevMinute[0] >= blue.oreOre) {
-						//sopl("Buy ore earlier");
-						//could've bought it ealier!
-						return new int[]  {-1};
-						
-					} else if(resources[0] >= blue.oreOre) {
+					if(resources[0] >= blue.oreOre) {
 						//Buy it
 						
 						resources[0] -= blue.oreOre;
 	
-						resourcesPrevMinute[0] -= blue.oreOre;
 						
-					} else {
-						continue NEXT_MIN;
+						purchasedSomething = true;
+						
 					}
 				} else if(robotToBuy == 1) {
 
-					if(resourcesPrevMinute[0] >= blue.clayOre) {
-						//sopl("Buy ore earlier 2");
-						//could've bought it ealier!
-						return new int[]  {-1};
-						
-					} else if(resources[0] >= blue.clayOre) {
+					if(resources[0] >= blue.clayOre) {
 						//Buy it
 						
 						resources[0] -= blue.clayOre;
 
-						resourcesPrevMinute[0] -= blue.clayOre;
+						purchasedSomething = true;
 						
 						
-					} else {
-
-						continue NEXT_MIN;
 					}
 				} else if(robotToBuy == 2) {
 					
-					/*if(resourcesPrevMinute[0] >= blue.obsOre && resourcesPrevMinute[1] >= blue.obsClay) {
-						//sopl("Buy ore earlier 3");
-						//DOESN:T work for some reason!
-						//could've bought it ealier!
-						return new int[]  {-1};
-						
-					} else */if(resources[0] >= blue.obsOre && resources[1] >= blue.obsClay) {
+					if(resources[0] >= blue.obsOre && resources[1] >= blue.obsClay) {
 						//Buy it
 						
 						resources[0] -= blue.obsOre;
 						resources[1] -= blue.obsClay;
 
-						resourcesPrevMinute[0] -= blue.obsOre;
-						resourcesPrevMinute[1] -= blue.obsClay;
+						purchasedSomething = true;
 						
-					} else {
-
-						continue NEXT_MIN;
 					}
 				} else if(robotToBuy == 3) {
 					
-					if(resourcesPrevMinute[0] >= blue.geodeOre && resourcesPrevMinute[2] >= blue.geodeObs) {
-						//could've bought it ealier!
-						//This logically shouldn't happen though:
-						//sopl("Buy ore earlier 4");
-						
-						return new int[]  {-1};
-						
-					} else if(resources[0] >= blue.geodeOre && resources[2] >= blue.geodeObs) {
+					if(resources[0] >= blue.geodeOre && resources[2] >= blue.geodeObs) {
 						//Buy it
 						
 						resources[0] -= blue.geodeOre;
 						resources[2] -= blue.geodeObs;
 						
 
-						resourcesPrevMinute[0] -= blue.geodeOre;
-						resourcesPrevMinute[2] -= blue.geodeObs;
-						
-						
-					} else {
 
+						purchasedSomething = true;
 						
-						continue NEXT_MIN;
 					}
 				} else {
 					sopl("OOPS!");
 					exit(1);
 				}
 				
-				//Note:
-				//At this point, the purchase happened!
-
-				robots[robotToBuy]++;
-				/*if(robotToBuy == 0) {
-					sopl("Bought ore at minute " + (min + 1));
-				} else if(robotToBuy == 1) {
-					sopl("Bought clay at minute " + (min + 1));
-				} else if(robotToBuy == 2) {
-					sopl("Bought obs at minute " + (min + 1));
-				} else if(robotToBuy == 3) {
-					sopl("Bought geode at minute " + (min + 1));
-				}
-				*/
-				int ORE_TO_GEODE_TIME = 8;
-				
-				//int ORE_TO_GEODE_TIME = 0;
-				
-				int timeLeft = numMinutes - min;
-				if(lastPurchaseMinute == min && robotToBuy < lastRobotIndex) {
-					//Enforce an arbitrary ordering:
-					return new int[]  {-1};
-
-				
-				} else if(timeLeft <=1) {
-					//Last minute purchase doesn't count
-					return new int[]  {-1};
+				if(purchasedSomething) {
 					
-				} else if(robotToBuy != 3 && timeLeft <= 3) {
-					//Last 2nd minute purchase of non-geode doesn't count
-					return new int[]  {-1};
-					
-					
-				} else if(robotToBuy == 0 && numMinutes - min <= 1 + blue.oreOre + ORE_TO_GEODE_TIME) {
-					//Don't buy a ore robot if it's just going to pay for itself.
-					return new int[]  {-1};
-					
-				}
-					
-				lastPurchaseMinute = min;
-				lastRobotIndex = robotToBuy;
-				
-				curPurchaseIndex++;
-				
-				
-				break;
-			
-			}
-			
-			if(numMinutes - min >= 1 + blue.oreOre && curPurchaseIndex == buildOrder.size()) {
-				//Just buy ore at the end.
-				while(true) {
-					int robotToBuy = 0;
-					
-					if(robotToBuy == 0) {
-						if(resources[0] >= blue.oreOre) {
-							//Buy it
-							
-							resources[0] -= blue.oreOre;
-							
-						} else {
-							continue NEXT_MIN;
-						}
-					}
-
+					//At this point, the purchase happened!
 					robots[robotToBuy]++;
+					curPurchaseIndex++;
 					
+					//It could prob be 5, but whatever!
+					int ORE_TO_GEODE_TIME = 3;
+					
+					
+					int timeLeft = numMinutes - min;
+					if(timeLeft <=1) {
+						//Last minute purchase doesn't count
+						return new int[]  {-1};
+						
+					} else if(robotToBuy != 3 && timeLeft <= 3) {
+						//Last 2nd minute purchase of non-geode doesn't count
+						return new int[]  {-1};
+						
+						
+					} else if(robotToBuy == 0 && numMinutes - min <= 1 + blue.oreOre + ORE_TO_GEODE_TIME) {
+						//Don't buy a ore robot if it's just going to pay for itself.
+						return new int[]  {-1};
+						
+					}
 					
 				}
 				
 			}
-			//end loop.
-		}
-		
-		if(min < numMinutes || curPurchaseIndex < buildOrder.size()) {
-			//sopl("It was cut short!");
-			//Maybe it was invalid too
-		} else {
-			//Debug:
-			/*
-			sopl("build:");
-			for(int i=0; i<buildOrder.size(); i++) {
-				sopl(buildOrder.get(i));
-			}
-			
-			sopl("Result in resources:");
-			for(int i=0; i<resources.length; i++) {
-				sopl(resources[i]);
-			}
-			sopl("Result in robots:");
-			for(int i=0; i<robots.length; i++) {
-				sopl(robots[i]);
-			}
-			
-				sopl();
-				sopl();
-				sopl();
-				sopl();
-			*/
 		}
 		
 		if(curPurchaseIndex == buildOrder.size()) {
