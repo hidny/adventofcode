@@ -131,16 +131,6 @@ public class prob19Part2Trial4 {
 								int numGeode = getGeodeInValidBuildOrder(buildOrdersPrev.get(i).buildOrder, blue.get(blueIndex), NUM_MINUTES_PART2);
 
 								
-								if(numGeode > maxGeode) {
-									maxGeode = numGeode;
-									
-									curBestArray = new ArrayList<Integer> ();
-									
-									for(int m=0; m<buildOrdersPrev.get(i).buildOrder.size(); m++) {
-										
-										curBestArray.add(buildOrdersPrev.get(i).buildOrder.get(m));
-									}
-								}
 								
 								
 								prob19BuildOrder newBuild = new prob19BuildOrder();
@@ -155,29 +145,38 @@ public class prob19Part2Trial4 {
 								
 
 								newBuild.resources = ret[0];
-								
-								
+
 								newBuild.setupRobotsArray();
+
 								int curNumGeodoRobots = newBuild.robots[3];
 								
+								if(numGeode > maxGeode) {
+									maxGeode = numGeode;
+									maxNumGeodeRobots = newBuild.robots[3];
+									curBestArray = new ArrayList<Integer> ();
+									
+									for(int m=0; m<buildOrdersPrev.get(i).buildOrder.size(); m++) {
+										
+										curBestArray.add(buildOrdersPrev.get(i).buildOrder.get(m));
+									}
+								}
+								
+								
+								
 								boolean stillCouldAdd = true;
-								if(curNumGeodoRobots > maxNumGeodeRobots) {
-									maxNumGeodeRobots = curNumGeodoRobots;
-								} else if(curNumGeodoRobots < maxNumGeodeRobots) {
+								if(curNumGeodoRobots < maxNumGeodeRobots) {
 									
 									int minAfterEndOfBuild = ret[1][0];
 									
 									int minutesLeft = NUM_MINUTES_PART2 - minAfterEndOfBuild;
 									
-									if(minutesLeft <= maxNumGeodeRobots -curNumGeodoRobots) {
-										stillCouldAdd = false;
-										
-									}
+									int diffGeode = maxGeode - numGeode;
+									
+									//The amount of new geodes we could hope for is a function of the triangle numbers:
+									int numNewGeodePossible = Math.max((minutesLeft)*(minutesLeft-1) /2, 0);
 
-									//TODO: Very suspicious, but I want this star:
-									if(maxNumGeodeRobots -curNumGeodoRobots >= 5) {
+									if(diffGeode > numNewGeodePossible && stillCouldAdd == true) {
 										stillCouldAdd = false;
-										
 									}
 									
 								}
@@ -519,3 +518,24 @@ public class prob19Part2Trial4 {
 	}
 
 }
+
+
+//FROM OTHER SOLUTION (used after I got the star)
+/*  private boolean canWeBeatTheRecord(int minute, Situation situation) {
+	    int remainingMinutes = maxMinutes + 1 - minute; // +1 as we start at minute 1
+
+	    int currentNumberOfGeodeRobots = situation.robots().getNumberOfRobots(GEODE);
+
+	    int maximumAdditionalGeodeFromExistingRobots = currentNumberOfGeodeRobots * remainingMinutes;
+	    int maximumAdditionalGeodeFromNewRobots = remainingMinutes * (remainingMinutes - 1) / 2;
+
+	    int currentAmountOfGeode = situation.resources().get(GEODE);
+
+	    int reachableGeode =
+	        currentAmountOfGeode
+	            + maximumAdditionalGeodeFromExistingRobots
+	            + maximumAdditionalGeodeFromNewRobots;
+
+	    return reachableGeode > largestNumberOfGeodes;
+	  }
+  */
