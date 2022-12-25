@@ -147,10 +147,13 @@ public class prob19Part2Trial4 {
 								newBuild.resources = ret[0];
 
 								newBuild.setupRobotsArray();
+								
 
-								int curNumGeodoRobots = newBuild.robots[3];
+								boolean stillCouldGoOverMax = true;
 								
 								if(numGeode > maxGeode) {
+									
+									//Create new max:
 									maxGeode = numGeode;
 									maxNumGeodeRobots = newBuild.robots[3];
 									curBestArray = new ArrayList<Integer> ();
@@ -159,13 +162,10 @@ public class prob19Part2Trial4 {
 										
 										curBestArray.add(buildOrdersPrev.get(i).buildOrder.get(m));
 									}
-								}
 								
+								} else {
 								
-								
-								boolean stillCouldAdd = true;
-								if(curNumGeodoRobots < maxNumGeodeRobots) {
-									
+									//Check if we could go over the max:
 									int minAfterEndOfBuild = ret[1][0];
 									
 									int minutesLeft = NUM_MINUTES_PART2 - minAfterEndOfBuild;
@@ -174,14 +174,14 @@ public class prob19Part2Trial4 {
 									
 									//The amount of new geodes we could hope for is a function of the triangle numbers:
 									int numNewGeodePossible = Math.max((minutesLeft)*(minutesLeft-1) /2, 0);
-
-									if(diffGeode > numNewGeodePossible && stillCouldAdd == true) {
-										stillCouldAdd = false;
+	
+									if(diffGeode >= numNewGeodePossible && stillCouldGoOverMax == true) {
+										stillCouldGoOverMax = false;
 									}
-									
+									//End check if we could catch up to the max
 								}
 								
-								if(stillCouldAdd) {
+								if(stillCouldGoOverMax) {
 									onlyAddIfNoDominatedAndRemoveDominated(newBuild, colliderFinder);
 								} else {
 									//sopl("DENIED");
