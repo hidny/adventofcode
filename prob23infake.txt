@@ -1,3 +1,0 @@
-cpy a c
-inc d
-tgl c
