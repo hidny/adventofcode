@@ -14,7 +14,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob8 {
+public class prob8b {
 
 	//day1 part 1
 	//2:38.01
@@ -22,8 +22,8 @@ public class prob8 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2023/prob2023in8.txt"));
 			//in = new Scanner(new File("in2023/prob2023in0.txt"));
+			in = new Scanner(new File("in2023/prob2023in8.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -65,6 +65,9 @@ public class prob8 {
 			
 			HashMap<String, prob8obj> map = new HashMap<String, prob8obj>();
 			
+			ArrayList<String> current = new ArrayList<String>();
+			
+			
 			for(int i=1; i<lines.size(); i++) {
 				
 				
@@ -79,12 +82,26 @@ public class prob8 {
 					
 					map.put(tokens[0], new prob8obj(objLeft, objRight));
 					
+					if(tokens[0].endsWith("A")) {
+						current.add(tokens[0]);
+					}
 				}
 				
 				
 			}
 			
-			String current = "AAA";
+			sopl("Starts");
+			for(int j=0; j<current.size(); j++) {
+				sopl(current.get(j));
+			}
+			
+			sopl("Num targets:");
+			sopl(current.size());
+			
+			int startGood[] = new int[current.size()];
+			
+			boolean foundGood[][] = new boolean[current.size()][10000];
+			int numFoundGood[] = new int[current.size()];
 			
 			cur = 0;
 			OUT:
@@ -92,18 +109,65 @@ public class prob8 {
 				for(int i=0; i<dir.length(); i++) {
 				
 					if(dir.charAt(i) == 'L') {
-						current = map.get(current).left;
+						for(int j=0; j<current.size(); j++) {
+							current.set(j, map.get(current.get(j)).left);
+						}
 					} else {
-						current = map.get(current).right;
+						for(int j=0; j<current.size(); j++) {
+							current.set(j, map.get(current.get(j)).right);
+						}
 					}
 					cur++;
 					
-					if(current.equals("ZZZ")) {
+					sopl(current.get(2));
+					
+					boolean good = true;
+					for(int j=0; j<current.size(); j++) {
+						if( ! current.get(j).endsWith("Z")) {
+							good = false;
+							
+						} else {
+							numFoundGood[j]++;
+							if(numFoundGood[j] == 1) {
+								startGood[j] = cur;
+							} else {
+								
+								if(cur % startGood[j] != 0 ) {
+									sopl("oops!");
+									exit(1);
+									
+								}
+							}
+							sopl("j = " + j + " is good at index " + cur + " with multiple: " + (cur/startGood[j]) + "  = " + current.get(j));
+							
+							
+							
+							boolean donish = true;
+							for(int k=0; k<numFoundGood.length; k++) {
+								if(numFoundGood[k] <= current.size()) {
+									donish = false;
+									break;
+								}
+							}
+							
+							if(donish) {
+								sopl("sort of done at " + cur);
+								exit(1);
+							}
+						}
+					}
+					
+					if(good) {
 						break OUT;
 					}
 				}
 			}
 
+			//99388474231889741815823
+			
+			//11188774513823
+			
+			//LCM
 			
 
 			sopl("Answer: " + cur);
