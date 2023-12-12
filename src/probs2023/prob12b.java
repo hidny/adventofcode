@@ -2,16 +2,9 @@ package probs2023;
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Scanner;
-import java.util.Stack;
 
 import number.IsNumber;
-import utils.Mapping;
-import utils.Sort;
 
 public class prob12b {
 
@@ -21,29 +14,22 @@ public class prob12b {
 	//TODO: debug: 
 	//??.????#?#?..?#.?
 	
+	//7025
+	//423891
+	//89497110
+	//29761784350
+	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
 			in = new Scanner(new File("in2023/prob2023in12.txt"));
 			//in = new Scanner(new File("in2023/prob2023in0.txt"));
-			int numTimes = 0;
-			 
-			int count = 0;
-			boolean part2 = false;
+
 			String line = "";
 
-			LinkedList queue = new LinkedList();
-			Stack stack = new Stack();
-			HashSet set = new HashSet();
-			
-			
-			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
 			ArrayList <String>lines = new ArrayList<String>();
 			
-			
-			int LIMIT = 20000;
-			boolean table[][] = new boolean[LIMIT][LIMIT];
 			
 			
 			//dir: 0 up
@@ -57,25 +43,18 @@ public class prob12b {
 				
 			}
 
-			int most = 0;
-			int most2 = 0;
-			int most3 = 0;
 			long cur = 0;
-			ArrayList ints = new ArrayList<Integer>();
+			
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
 				
 				
-				
-				String puzzle = line.split(" ")[0];
-				String tokens[] = line.split(" ")[1].split(",");
-				
 				String puzzle2 = "";
 				String tokens2 = "";
 				
-				for(int j=0; j<4; j++) {
+				for(int j=0; j<5; j++) {
 					puzzle2 += line.split(" ")[0] + "?";
 					tokens2 += line.split(" ")[1] + ",";
 				}
@@ -195,6 +174,11 @@ public class prob12b {
 	public static boolean memoizationFound[][];
 	public static long memoizationOutput[][];
 	
+
+	public static boolean memoizationUsed2[][][][] = null;
+	public static long memoization2[][][][] = null;
+	
+	
 	public static long getNumSolutionInSequence(int sequence[], int maxSequence[], boolean curSequenceMustExist[], ArrayList<String> maxIslands) {
 		
 		memoizationFound = new boolean[sequence.length][maxSequence.length];
@@ -203,6 +187,19 @@ public class prob12b {
 			for(int j=0; j<memoizationFound[0].length; j++) {
 				memoizationFound[i][j] = false;
 				memoizationOutput[i][j] = 0L;
+			}
+		}
+		memoizationUsed2 = new boolean[36][35][35][150];
+		memoization2 = new long[36][35][35][150];
+		
+		for(int i=0; i<memoizationUsed2.length; i++) {
+			for(int j=0; j<memoizationUsed2[0].length; j++) {
+				for(int k=0; k<memoizationUsed2[0][0].length; k++) {
+					for(int m=0; m<memoizationUsed2[0][0][0].length; m++) {
+						memoizationUsed2[i][j][k][m] = false;
+						memoization2[i][j][k][m] = 0L;
+					}
+				}
 			}
 		}
 		
@@ -264,7 +261,7 @@ public class prob12b {
 				
 				//sopl("debug");
 			}
-			for(int numToPutIn = 1; numToPutIn <= maxSequence[index2] ; numToPutIn++) {
+			for(int numToPutIn = 1; index1 + numToPutIn <= sequence.length ; numToPutIn++) {
 				
 				//TODO: find num ways to put small seq into bigger one...
 				// if # then it's forced...
@@ -285,22 +282,42 @@ public class prob12b {
 		
 	}
 	
+
+	
+	
 	public static long numWaysPutSmallIntoBig(int numtoPut, int sequence[], int maxSequence[], int index1, int index2, String island) {
 		return numWaysPutSmallIntoBig(numtoPut, sequence, maxSequence, index1, index2, island, 0);
 	}
+	
 	public static long numWaysPutSmallIntoBig(int numtoPut, int sequence[], int maxSequence[], int index1, int index2, String island, int curIndex) {
 		
+		if(memoizationUsed2[numtoPut][index1][index2][curIndex]) {
+			return memoization2[numtoPut][index1][index2][curIndex];
+		}
+
 		if(numtoPut == 0) {
 			for(int i=curIndex; i<island.length(); i++) {
 				if(island.charAt(i) == '#') {
+					
+
+					memoizationUsed2[numtoPut][index1][index2][curIndex] = true;
+					memoization2[numtoPut][index1][index2][curIndex] = 0L;
+					
 					return 0L;
 				}
 			}
+			
+
+			memoizationUsed2[numtoPut][index1][index2][curIndex] = true;
+			memoization2[numtoPut][index1][index2][curIndex] = 1L;
 			
 			return 1L;
 		}
 		
 		if(index1 >= sequence.length) {
+
+			memoizationUsed2[numtoPut][index1][index2][curIndex] = true;
+			memoization2[numtoPut][index1][index2][curIndex] = 0L;
 			return 0L;
 		}
 		
@@ -317,7 +334,9 @@ public class prob12b {
 			}
 			
 		}
-		
+
+		memoizationUsed2[numtoPut][index1][index2][curIndex] = true;
+		memoization2[numtoPut][index1][index2][curIndex] = ret;
 		return ret;
 	}
 	
