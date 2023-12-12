@@ -6,18 +6,14 @@ import java.util.Scanner;
 
 import number.IsNumber;
 
-public class prob12b {
+public class prob12bClean {
 
-	//day1 part 1
-	//2:38.01
-	
-	//TODO: debug: 
-	//??.????#?#?..?#.?
-	
 	//7025
 	//423891
 	//89497110
 	//29761784350
+	
+	public static final int NUM_DUPLICATES = 5;
 	
 	public static void main(String[] args) {
 		Scanner in;
@@ -26,16 +22,7 @@ public class prob12b {
 			//in = new Scanner(new File("in2023/prob2023in0.txt"));
 
 			String line = "";
-
-			
 			ArrayList <String>lines = new ArrayList<String>();
-			
-			
-			
-			//dir: 0 up
-			//1 right
-			//2 down
-			//3 left
 			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
@@ -47,14 +34,13 @@ public class prob12b {
 			
 			for(int i=0; i<lines.size(); i++) {
 				
-				
 				line = lines.get(i);
 				
 				
 				String puzzle2 = "";
 				String tokens2 = "";
 				
-				for(int j=0; j<5; j++) {
+				for(int j=0; j<NUM_DUPLICATES; j++) {
 					puzzle2 += line.split(" ")[0] + "?";
 					tokens2 += line.split(" ")[1] + ",";
 				}
@@ -75,11 +61,9 @@ public class prob12b {
 				
 				cur += tmp;
 				
-				//exit(1);
 			}
 
-
-			sopl("Answer: " + cur);
+			sopl("Answer for part 2: " + cur);
 			in.close();
 			
 		} catch(Exception e) {
@@ -91,19 +75,16 @@ public class prob12b {
 	
 	public static long getNumSolution(String line, int sequence[]) {
 		
-		int curSequence[] = new int[10 * sequence.length];
+		ArrayList<Integer> curSequence = new ArrayList<Integer>();
 		
 		int curNumRow = 0;
 		boolean lastWasOn = false;
-		int indexToUse = 0;
 		
-		ArrayList<String> maxIslands = new ArrayList<String>();
+		ArrayList<String> hashQuestionIslands = new ArrayList<String>();
 		
 
-		boolean curSequenceMustExist[] = new boolean[10 * sequence.length];
-		for(int i=0; i<curSequenceMustExist.length; i++) {
-			curSequenceMustExist[i] = false;
-		}
+		ArrayList<Boolean> curSequenceMustExist = new ArrayList<Boolean>();
+		boolean curIndexMustExist = false;
 		
 		for(int j=0; j<line.length(); j++) {
 			
@@ -113,7 +94,7 @@ public class prob12b {
 					curNumRow = 1;
 					
 					if(line.charAt(j) == '#') {
-						curSequenceMustExist[indexToUse] = true;
+						curIndexMustExist = true;
 					}
 
 				} else if(line.charAt(j) == '.') {
@@ -126,47 +107,45 @@ public class prob12b {
 					curNumRow++;
 
 					if(line.charAt(j) == '#') {
-						curSequenceMustExist[indexToUse] = true;
+						curIndexMustExist = true;
 					}
 					
 				} else if(line.charAt(j) == '.') {
 					
-					if(indexToUse < curSequence.length) {
-						
 
-						maxIslands.add(line.substring(j-curNumRow, j));
-						curSequence[indexToUse] = curNumRow;
-						lastWasOn = false;
-						curNumRow = 0;
-						
-						
-						indexToUse++;
-						
-						
-					}
-	
+					hashQuestionIslands.add(line.substring(j-curNumRow, j));
+					
+					curSequence.add(curNumRow);
+					
+					curSequenceMustExist.add(curIndexMustExist);
+					
+					lastWasOn = false;
+					curNumRow = 0;
+					curIndexMustExist = false;
+					
 				}
 			}
 		}
 		
 		if(curNumRow > 0 ) {
 			
-			maxIslands.add(line.substring(line.length()-curNumRow, line.length()));
+			hashQuestionIslands.add(line.substring(line.length()-curNumRow, line.length()));
+
+			curSequence.add(curNumRow);
+			curSequenceMustExist.add(curIndexMustExist);
 			
-			curSequence[indexToUse] = curNumRow;
-			indexToUse++;
 		}
 		
 		
-		//Could decompose:
+		int minSequence[] = new int[curSequence.size()];
+		boolean curminSequenceMustExistArray[] = new boolean[curSequenceMustExist.size()];
 		
-		int newCurSequence[] = new int[indexToUse];
-		
-		for(int i=0; i<newCurSequence.length; i++) {
-			newCurSequence[i] = curSequence[i];
+		for(int i=0; i<minSequence.length; i++) {
+			minSequence[i] = curSequence.get(i);
+			curminSequenceMustExistArray[i] = curSequenceMustExist.get(i);
 		}
 		
-		return getNumSolutionInSequence(sequence, newCurSequence, curSequenceMustExist, maxIslands);
+		return getNumSolutionInSequence(sequence, minSequence, curminSequenceMustExistArray, hashQuestionIslands);
 		
 		
 	}
@@ -179,18 +158,26 @@ public class prob12b {
 	public static long memoization2[][][][] = null;
 	
 	
-	public static long getNumSolutionInSequence(int sequence[], int maxSequence[], boolean curSequenceMustExist[], ArrayList<String> maxIslands) {
+	public static final int LIMIT_NUM_TO_PUT = 36;
+	public static final int LIMIT_INDEX_1 = 35;
+	public static final int LIMIT_INDEX_2 = 35;
+	public static final int LIMIT_CUR_INDEX = 150;
+	
+	
+	public static long getNumSolutionInSequence(int sequence[], int minSequence[], boolean curSequenceMustExist[], ArrayList<String> hashQuestionIslands) {
 		
-		memoizationFound = new boolean[sequence.length][maxSequence.length];
-		memoizationOutput = new long[sequence.length][maxSequence.length];
+		memoizationFound = new boolean[sequence.length + 1][minSequence.length + 1];
+		memoizationOutput = new long[sequence.length + 1][minSequence.length + 1];
 		for(int i=0; i<memoizationFound.length; i++) {
 			for(int j=0; j<memoizationFound[0].length; j++) {
 				memoizationFound[i][j] = false;
 				memoizationOutput[i][j] = 0L;
 			}
 		}
-		memoizationUsed2 = new boolean[36][35][35][150];
-		memoization2 = new long[36][35][35][150];
+		
+		
+		memoizationUsed2 = new boolean[LIMIT_NUM_TO_PUT][LIMIT_INDEX_1][LIMIT_INDEX_2][LIMIT_CUR_INDEX];
+		memoization2 = new long[LIMIT_NUM_TO_PUT][LIMIT_INDEX_1][LIMIT_INDEX_2][LIMIT_CUR_INDEX];
 		
 		for(int i=0; i<memoizationUsed2.length; i++) {
 			for(int j=0; j<memoizationUsed2[0].length; j++) {
@@ -203,75 +190,69 @@ public class prob12b {
 			}
 		}
 		
-		return getNumSolutionInSequence(sequence, maxSequence, 0, 0, curSequenceMustExist, maxIslands);
+		return getNumSolutionInSequence(sequence, minSequence, 0, 0, curSequenceMustExist, hashQuestionIslands);
 		
 	}
 	
-	public static long getNumSolutionInSequence(int sequence[], int maxSequence[], int index1, int index2, boolean curSequenceMustExist[], ArrayList<String> maxIslands) {
+	public static long getNumSolutionInSequence(int sequence[], int minSequence[], int index1, int index2, boolean curSequenceMustExist[], ArrayList<String> hashQuestionIslands) {
 		
-		if(index1<sequence.length && index2<maxSequence.length && memoizationFound[index1][index2]) {
+		if(index1<sequence.length && index2<minSequence.length && memoizationFound[index1][index2]) {
 			return memoizationOutput[index1][index2];
 		}
 		
-		if(index1<sequence.length && index2<maxSequence.length) {
+		//Set up memoization:
+		if(index1<=sequence.length && index2<=minSequence.length) {
 			memoizationFound[index1][index2] = true;
 			memoizationOutput[index1][index2] = 0L;
 		}
-		/*if(index1 == 2 && index2 == 1) {
-			sopl("debug2");
-		}*/
 		
+		//Handle base cases:
 		if(index1 >= sequence.length) {
 			
-			for(int i=index2; i<maxSequence.length; i++) {
+			for(int i=index2; i<minSequence.length; i++) {
 				
 				if(curSequenceMustExist[i]) {
-
+					memoizationOutput[index1][index2] = 0L;
 					return 0L;
 				}
 			}
+			memoizationOutput[index1][index2] = 1L;
 			return 1L;
 		}
 		
-		if(index1 < sequence.length && index2 >= maxSequence.length) {
+		if(index1 < sequence.length && index2 >= minSequence.length) {
+			memoizationOutput[index1][index2] = 0L;
 			return 0L;
 		}
 		
-		if(index2 >= maxSequence.length) {
+		if(index2 >= minSequence.length) {
+			memoizationOutput[index1][index2] = 0L;
 			return 0L;
 		}
-
+		//End handle base cases
+		
+		//Recursive case:
 		long ret = 0L;
 		
-		if(curSequenceMustExist[index2] == false && getNumSolutionInSequence(sequence, maxSequence, index1, index2 + 1, curSequenceMustExist, maxIslands) > 0L) {
-			ret += getNumSolutionInSequence(sequence, maxSequence, index1, index2 + 1, curSequenceMustExist, maxIslands);
+		if(curSequenceMustExist[index2] == false && getNumSolutionInSequence(sequence, minSequence, index1, index2 + 1, curSequenceMustExist, hashQuestionIslands) > 0L) {
+			ret += getNumSolutionInSequence(sequence, minSequence, index1, index2 + 1, curSequenceMustExist, hashQuestionIslands);
 		}
 		
-		if(sequence[index1] == maxSequence[index2]) {
+		if(sequence[index1] == minSequence[index2]) {
 			
-			ret += getNumSolutionInSequence(sequence, maxSequence, index1 + 1, index2 + 1, curSequenceMustExist, maxIslands);
+			ret += getNumSolutionInSequence(sequence, minSequence, index1 + 1, index2 + 1, curSequenceMustExist, hashQuestionIslands);
 		
-		} else if(sequence[index1] > maxSequence[index2]) {
+		} else if(sequence[index1] > minSequence[index2]) {
 	
 			ret += 0L;
 
-		} else if(sequence[index1] < maxSequence[index2]) {
+		} else if(sequence[index1] < minSequence[index2]) {
 			
-			if(index1==0 || maxIslands.get(index2).equals("?#?#?##??")) {
-				
-				//sopl("debug");
-			}
 			for(int numToPutIn = 1; index1 + numToPutIn <= sequence.length ; numToPutIn++) {
 				
-				//TODO: find num ways to put small seq into bigger one...
-				// if # then it's forced...
+				long numWays1st = numWaysPutSmallIntoBig(numToPutIn, sequence, minSequence, index1, index2, hashQuestionIslands.get(index2));
 				
-				long numWays1st = numWaysPutSmallIntoBig(numToPutIn, sequence, maxSequence, index1, index2, maxIslands.get(index2));
-				
-				//sopl("In numWays " + numToPutIn + ": " + index1 + "," + index2 +": " + numWays1st);
-				//sopl("ret: " + ret);
-				//sopl();
-				ret += numWays1st * getNumSolutionInSequence(sequence, maxSequence, index1 + numToPutIn, index2 + 1, curSequenceMustExist, maxIslands);
+				ret += numWays1st * getNumSolutionInSequence(sequence, minSequence, index1 + numToPutIn, index2 + 1, curSequenceMustExist, hashQuestionIslands);
 			}
 			
 		}
@@ -283,19 +264,19 @@ public class prob12b {
 	}
 	
 	
-	public static long numWaysPutSmallIntoBig(int numtoPut, int sequence[], int maxSequence[], int index1, int index2, String island) {
-		return numWaysPutSmallIntoBig(numtoPut, sequence, maxSequence, index1, index2, island, 0);
+	public static long numWaysPutSmallIntoBig(int numtoPut, int sequence[], int minSequence[], int index1, int index2, String hashQuestionIsland) {
+		return numWaysPutSmallIntoBig(numtoPut, sequence, minSequence, index1, index2, hashQuestionIsland, 0);
 	}
 	
-	public static long numWaysPutSmallIntoBig(int numtoPut, int sequence[], int maxSequence[], int index1, int index2, String island, int curIndex) {
+	public static long numWaysPutSmallIntoBig(int numtoPut, int sequence[], int minSequence[], int index1, int index2, String hashQuestionIsland, int curIndex) {
 		
 		if(memoizationUsed2[numtoPut][index1][index2][curIndex]) {
 			return memoization2[numtoPut][index1][index2][curIndex];
 		}
 
 		if(numtoPut == 0) {
-			for(int i=curIndex; i<island.length(); i++) {
-				if(island.charAt(i) == '#') {
+			for(int i=curIndex; i<hashQuestionIsland.length(); i++) {
+				if(hashQuestionIsland.charAt(i) == '#') {
 					
 
 					memoizationUsed2[numtoPut][index1][index2][curIndex] = true;
@@ -320,14 +301,14 @@ public class prob12b {
 		}
 		
 		long ret = 0L;
-		for(int j=curIndex; j<=maxSequence[index2] - sequence[index1]; j++) {
+		for(int j=curIndex; j<=minSequence[index2] - sequence[index1]; j++) {
 			
-			if(j + sequence[index1] >= maxSequence[index2] ||
-					island.charAt(j + sequence[index1]) != '#') {
-				ret += numWaysPutSmallIntoBig(numtoPut - 1, sequence,  maxSequence, index1 + 1, index2, island, j + sequence[index1] + 1);
+			if(j + sequence[index1] >= minSequence[index2] ||
+					hashQuestionIsland.charAt(j + sequence[index1]) != '#') {
+				ret += numWaysPutSmallIntoBig(numtoPut - 1, sequence,  minSequence, index1 + 1, index2, hashQuestionIsland, j + sequence[index1] + 1);
 			}
 			
-			if(island.charAt(j) == '#') {
+			if(hashQuestionIsland.charAt(j) == '#') {
 				break;
 			}
 			
