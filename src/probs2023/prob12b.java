@@ -75,7 +75,7 @@ public class prob12b {
 				String puzzle2 = "";
 				String tokens2 = "";
 				
-				for(int j=0; j<1; j++) {
+				for(int j=0; j<4; j++) {
 					puzzle2 += line.split(" ")[0] + "?";
 					tokens2 += line.split(" ")[1] + ",";
 				}
@@ -90,12 +90,13 @@ public class prob12b {
 					sequence[j] = pint(tokens3[j]);
 				}
 				
-				sopl();
-				sopl(puzzle2);
+				sop(puzzle2 + " and " + tokens2);
 				long tmp = getNumSolution(puzzle2, sequence);
-				sopl(puzzle2 + " and " + tokens2 + ": " + tmp);
+				sopl(": " + tmp);
 				
 				cur += tmp;
+				
+				//exit(1);
 			}
 
 
@@ -227,7 +228,7 @@ public class prob12b {
 			
 			for(int i=index2; i<maxSequence.length; i++) {
 				
-				if(curSequenceMustExist[index2]) {
+				if(curSequenceMustExist[i]) {
 
 					return 0L;
 				}
@@ -242,28 +243,26 @@ public class prob12b {
 		if(index2 >= maxSequence.length) {
 			return 0L;
 		}
+
+		long ret = 0L;
 		
 		if(curSequenceMustExist[index2] == false && getNumSolutionInSequence(sequence, maxSequence, index1, index2 + 1, curSequenceMustExist, maxIslands) > 0L) {
-
-			memoizationOutput[index1][index2] = getNumSolutionInSequence(sequence, maxSequence, index1, index2 + 1, curSequenceMustExist, maxIslands);
-			return memoizationOutput[index1][index2];
+			ret += getNumSolutionInSequence(sequence, maxSequence, index1, index2 + 1, curSequenceMustExist, maxIslands);
 		}
 		
 		if(sequence[index1] == maxSequence[index2]) {
-			memoizationOutput[index1][index2] = getNumSolutionInSequence(sequence, maxSequence, index1 + 1, index2 + 1, curSequenceMustExist, maxIslands);
-			return memoizationOutput[index1][index2];
+			
+			ret += getNumSolutionInSequence(sequence, maxSequence, index1 + 1, index2 + 1, curSequenceMustExist, maxIslands);
 		
 		} else if(sequence[index1] > maxSequence[index2]) {
 	
-			memoizationOutput[index1][index2] = 0L;
-			return memoizationOutput[index1][index2];
+			ret += 0L;
 
 		} else if(sequence[index1] < maxSequence[index2]) {
 			
-			long ret = 0L;
-			if(maxIslands.get(index2).equals("?#?#?##??")) {
+			if(index1==0 || maxIslands.get(index2).equals("?#?#?##??")) {
 				
-				sopl("debug");
+				//sopl("debug");
 			}
 			for(int numToPutIn = 1; numToPutIn <= maxSequence[index2] ; numToPutIn++) {
 				
@@ -272,15 +271,16 @@ public class prob12b {
 				
 				long numWays1st = numWaysPutSmallIntoBig(numToPutIn, sequence, maxSequence, index1, index2, maxIslands.get(index2));
 				
-				//sopl(numWays1st);
+				//sopl("In numWays " + numToPutIn + ": " + index1 + "," + index2 +": " + numWays1st);
+				//sopl("ret: " + ret);
+				//sopl();
 				ret += numWays1st * getNumSolutionInSequence(sequence, maxSequence, index1 + numToPutIn, index2 + 1, curSequenceMustExist, maxIslands);
 			}
-
-			memoizationOutput[index1][index2] = ret;
-			return memoizationOutput[index1][index2];
+			
 		}
-		exit(1);
-		memoizationOutput[index1][index2] = 0L;
+		
+		memoizationOutput[index1][index2] = ret;
+		//sopl(index1 + "," + index2 +": " + memoizationOutput[index1][index2]);
 		return memoizationOutput[index1][index2];
 		
 	}
