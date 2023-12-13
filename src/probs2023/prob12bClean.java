@@ -59,6 +59,7 @@ public class prob12bClean {
 				long tmp = getNumSolution(puzzle2, sequence);
 				sopl(": " + tmp);
 				
+				//Takes just over 30 seconds
 				cur += tmp;
 				
 			}
