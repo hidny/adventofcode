@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob15 {
 
 	//day1 part 1
 	//2:38.01
@@ -21,8 +21,8 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2023/prob2023in3.txt"));
-			//in = new Scanner(new File("in2023/prob2023in4.txt"));
+			in = new Scanner(new File("in2023/prob2023in15.txt"));
+			//in = new Scanner(new File("in2023/prob2023in0.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -33,6 +33,8 @@ public class prob0 {
 			Stack stack = new Stack();
 			HashSet set = new HashSet();
 			
+			
+			prob15obj objs[][] = new prob15obj[256][100];
 			
 			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
@@ -54,19 +56,36 @@ public class prob0 {
 				
 			}
 
-			int most = 0;
-			int most2 = 0;
-			int most3 = 0;
 			long cur = 0L;
+			
 			ArrayList ints = new ArrayList<Integer>();
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
 				
-				cur += pint(line);
+				
+				//cur += pint(line);
 			}
 
+			String tokens[] = lines.get(0).split(",");
+			
+			
+			long curHash = 0;
+			for(int i=0; i<tokens.length; i++) {
+				curHash = 0;
+				
+				//517336
+				for(int j=0; j<tokens[i].length(); j++) {
+					curHash = (17*(curHash + (int)(tokens[i].charAt(j)))) % 256;
+					
+					sopl(i +": " +curHash);
+				}
+				
+				sopl(curHash);
+				
+				cur+= curHash;
+			}
 
 			sopl("Answer: " + cur);
 			in.close();

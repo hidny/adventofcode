@@ -13,7 +13,10 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+import aStar.AstarAlgo;
+import aStar.AstarNode;
+
+public class prob17b {
 
 	//day1 part 1
 	//2:38.01
@@ -21,8 +24,8 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2023/prob2023in3.txt"));
-			//in = new Scanner(new File("in2023/prob2023in4.txt"));
+			in = new Scanner(new File("in2023/prob2023in17.txt"));
+			//in = new Scanner(new File("in2023/prob2023in0.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -40,7 +43,6 @@ public class prob0 {
 			
 			
 			int LIMIT = 20000;
-			boolean table[][] = new boolean[LIMIT][LIMIT];
 			
 			
 			//dir: 0 up
@@ -64,10 +66,63 @@ public class prob0 {
 				
 				line = lines.get(i);
 				
-				cur += pint(line);
+				sopl(line);
+			}
+			
+			int table[][] = new int[lines.size()][lines.get(0).length()];
+			prob17Node2 map[][][][] = new prob17Node2[table.length][table[0].length][4][12];
+			
+			int goali = map.length -1;
+			int goalj = map[0].length -1;
+			sopl(goalj);
+			
+			for(int i=0; i<table.length; i++) {
+				for(int j=0; j<table[0].length; j++) {
+					table[i][j] = (int)(lines.get(i).charAt(j) - '0');
+					
+					for(int m=0; m<map[i][j].length; m++) {
+						for(int n=0; n<map[i][j][m].length; n++) {
+							map[i][j][m][n] = new prob17Node2();
+							
+							map[i][j][m][n].curi = i;
+							map[i][j][m][n].curj = j;
+		
+							map[i][j][m][n].goali = goali;
+							map[i][j][m][n].goalj = goalj;
+							
+
+							map[i][j][m][n].curDir = m;
+							map[i][j][m][n].curInRow = n;
+						}
+					}
+					
+				}
+			}
+			
+			prob17Node2.map = map;
+			prob17Node2.heat = table;
+			
+			//TODO: AAAH! Turns out I had to start it going south! I forgot about that. I should've noted it down.
+			ArrayList<AstarNode> ret = AstarAlgo.astar(map[0][0][2][0], null);
+			
+			
+			cur = 0;
+			for(int i=0; i<ret.size() - 1; i++) {
+				cur += ret.get(i).getCostOfMove(ret.get(i + 1));
 			}
 
+			for(int i=0; i<ret.size() - 1; i++) {
+				sopl(((prob17Node2)ret.get(i)).curi + "," + ((prob17Node2)ret.get(i)).curj +  "," + ((prob17Node2)ret.get(i)).curDir +  "," + ((prob17Node2)ret.get(i)).curInRow);
+			}
 
+			sopl(goali);
+			sopl(goalj);
+			sopl(((prob17Node2)ret.get(ret.size() - 1)).curj);
+			
+			//1345
+			
+			//1316 (too low) or 1365 (too high)
+			
 			sopl("Answer: " + cur);
 			in.close();
 			

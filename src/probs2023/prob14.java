@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob14 {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +21,7 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2023/prob2023in3.txt"));
+			in = new Scanner(new File("in2023/prob2023in14.txt"));
 			//in = new Scanner(new File("in2023/prob2023in4.txt"));
 			int numTimes = 0;
 			 
@@ -40,7 +40,6 @@ public class prob0 {
 			
 			
 			int LIMIT = 20000;
-			boolean table[][] = new boolean[LIMIT][LIMIT];
 			
 			
 			//dir: 0 up
@@ -57,14 +56,59 @@ public class prob0 {
 			int most = 0;
 			int most2 = 0;
 			int most3 = 0;
-			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
+			}
+			
+			int table[][] = new int[lines.size()][lines.get(0).length()];
+			
+			for(int i=0; i<lines.size(); i++) {
+				for(int j=0; j<lines.get(0).length(); j++) {
+
+					if(lines.get(i).charAt(j) == '.') {
+						table[i][j] = 0;
+					} else if(lines.get(i).charAt(j) == '#') {
+						table[i][j] = 1;
+					} else if(lines.get(i).charAt(j) == 'O') {
+						table[i][j] = 2;
+					}
+				}
+			}
+			
+			long cur = 0L;
+			
+			//table.length - i;
+			
+			for(int j=0; j<table[0].length; j++) {
 				
-				cur += pint(line);
+				int startI = 0;
+				int numRounded = 0;
+				
+				for(int i=0; i<table.length; i++) {
+					
+					if(table[i][j] == 0) {
+					} else if(table[i][j] == 1) {
+						
+						for(int k=0; k<numRounded; k++) {
+							cur += (table.length - startI - k);
+						}
+						
+						numRounded = 0;
+						startI = i + 1;
+						
+					} else if(table[i][j] == 2) {
+						numRounded++;
+					}
+				}
+				
+				for(int k=0; k<numRounded; k++) {
+					cur += (table.length - startI - k);
+				}
+				
+				//TODO: act as if 1
 			}
 
 
