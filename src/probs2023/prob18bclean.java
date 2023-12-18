@@ -16,7 +16,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob18b {
+public class prob18bclean {
 
 	//day1 part 1
 	//2:38.01
@@ -26,22 +26,11 @@ public class prob18b {
 		try {
 			in = new Scanner(new File("in2023/prob2023in18.txt"));
 			//in = new Scanner(new File("in2023/prob2023in0.txt"));
-			int numTimes = 0;
-			 
-			int count = 0;
-			boolean part2 = false;
-			String line = "";
 
-			Stack stack = new Stack();
-			HashSet set = new HashSet();
-			
-			
-			
+			String line;
+			long cur;
 			
 			ArrayList <String>lines = new ArrayList<String>();
-			
-			
-			int LIMIT = 1000;
 			
 			
 			//dir: 0 up
@@ -54,16 +43,9 @@ public class prob18b {
 				lines.add(line);
 				
 			}
-
-			int most = 0;
-			int most2 = 0;
-			int most3 = 0;
-			long cur = 0L;
-			ArrayList ints = new ArrayList<Integer>();
 			
-
-			int curi = LIMIT/2;
-			int curj = LIMIT/2;
+			int curi = 0;
+			int curj = 0;
 			
 			int maxj= curi;
 			int maxi= curj;
@@ -76,10 +58,11 @@ public class prob18b {
 			
 			Hashtable<String, Integer> table = new Hashtable<String, Integer>();
 			
+			int NUM_OVER_SHOOT_FOR_HISTORY = 2;
 			char dir = '3';
 			char olddir='2';
 			char olddir2;
-			for(int i=0; i<lines.size() + 2; i++) {
+			for(int i=0; i<lines.size() + NUM_OVER_SHOOT_FOR_HISTORY; i++) {
 				
 				line = lines.get(i % lines.size());
 				sopl(line);
@@ -92,18 +75,17 @@ public class prob18b {
 				dir = token[2].charAt(token[2].length() - 2);
 				
 				if(olddir == dir) {
+					//Check that we don't go the same direction twice in a row.
 					exit(1);
 				}
 				
 				String amountHex = token[2].substring(2,7);
 				
-				
-				int amount =hexToInt(amountHex);
+				int amount = hexToInt(amountHex);
 
 				oldi = curi;
 				oldj = curj;
 				
-				//sopl(curi + "," + curj);
 				sopl(dir + " " + amount);
 				
 				if(dir == 'U'  || dir == '3') {
@@ -135,7 +117,7 @@ public class prob18b {
 					maxj =curj;
 				}
 				
-				if(i >= 2) {
+				if(i >= NUM_OVER_SHOOT_FOR_HISTORY) {
 
 					if(olddir2 == dir) {
 						table.put(oldi + "," + oldj + "," + curi + "," + curj+"," + 0, 1);
@@ -148,34 +130,16 @@ public class prob18b {
 			}
 			
 			
-			sopl("hello");
-			sopl((maxi - mini + 1));
-			sopl((maxj - minj + 1));
+			sopl("(length i, length j) = (" + (maxi - mini + 1) + ", " + (maxj - minj + 1) + ")");
 			
-			sopl("min i: " + mini);
-			
-			HashSet<Long> distinctNums = new HashSet<Long>();
-			HashMap<Long, Integer> instances = new HashMap<Long, Integer>();
 			
 			cur = 0L;
 			for(int i=mini-100; i<=maxi+200; ) {
 				
-				if(i %10000 == 0) {
-					sopl(i);
-				}
 				long borders[] = getJSortedBorders(i, table, false);
 				
-				//TODO: handle horizonatal weirdness here:
-				//long extraBorders[] = getJSortedExtraBorders();
 				if(borders.length % 2 != 0) {
-					sopl("Doh!");
-					 getJSortedBorders(i, table, true);
-					sopl("i: " + i);
-					sopl("hello:");
-					for(int i2=0; i2<borders.length; i2++) {
-						sopl(borders[i2]);
-					}
-					sopl("---");
+					sopl("ERROR: borders array should be even!");
 					
 					exit(1);
 				}
@@ -187,6 +151,7 @@ public class prob18b {
 					usedHoriBorder[j] = false;
 				}
 				
+				//Get nextI where something semi-interesting happens:
 				int nextI = getNextI(i, table);
 				
 				for(int i2=0; i2<borders.length; i2+=2) {
@@ -199,9 +164,10 @@ public class prob18b {
 						if(horiBorder[0][j2] == borders[i2 + 1]) {
 							cur += horiBorder[1][j2] - horiBorder[0][j2];
 							
-							sopl("add3 for i = " + i + ": " + (horiBorder[1][j2] - horiBorder[0][j2]));
-							
 							if(usedHoriBorder[j2]) {
+								//Hack to compensate for the edge-case where the hori-border gets counted twice where
+								// it should only be counted once.
+								// Also, subtract one extra because in the edge-case, both ends of the horizontal border are accounted for:
 								cur -= (horiBorder[1][j2] - horiBorder[0][j2] + 1);
 							}
 							
@@ -210,48 +176,25 @@ public class prob18b {
 						
 						if(horiBorder[1][j2] == borders[i2]) {
 							cur += horiBorder[1][j2] - horiBorder[0][j2];
-							sopl("add4 for i = " + i + ": " + (horiBorder[1][j2] - horiBorder[0][j2]));
 							
-
 							if(usedHoriBorder[j2]) {
+								//Hack to compensate for the edge-case where the hori-border gets counted twice where
+								// it should only be counted once.
+								// Also, subtract one extra because in the edge-case, both ends of the horizontal border are accounted for:
 								cur -= (horiBorder[1][j2] - horiBorder[0][j2] + 1);
 							}
 							usedHoriBorder[j2] = true;
 						}
 					}
 					
-					
-					
-					long key = borders[i2+1] - borders[i2] + 1;
-					distinctNums.add(key);
-					
-					if(instances.containsKey(key)) {
-						
-						int num = instances.get(key) + 1;
-						instances.remove(key);
-						instances.put(key, num);
-						
-					} else {
-						instances.put(key, 1);
-					}
 				}
 				
 
-				//Hack:
-				
+				// Increment i to the next point where something interesting happens:
 				i = nextI;
 			}
 			
 			
-			
-			Iterator it = distinctNums.iterator();
-			
-			sopl("Distinct numbers:");
-			while(it.hasNext()) {
-				long tmp = (long)it.next();
-				sopl(tmp + ": " + instances.get(tmp));
-				
-			}
 			
 			sopl("Done");
 			
@@ -301,7 +244,6 @@ public class prob18b {
 			curNextI = i + 1;
 		}
 		
-		sopl(curNextI + " vs " + i);
 		
 		return curNextI;
 	}
@@ -313,9 +255,7 @@ public class prob18b {
 		
 		ArrayList<Integer> borders = new ArrayList<Integer>();
 		
-		if(verbose) {
-			sopl("getJSorted");
-		}
+	
 		while(it.hasNext()) {
 			String tmp = it.next();
 			String tokens[] = tmp.split(",");
@@ -330,33 +270,6 @@ public class prob18b {
 						borders.add(pint(tokens[3]));
 					}
 					
-					//if(pint(tokens[0]) != i) {
-					//	borders.add(pint(tokens[3]));
-					//}
-
-					//borders.add(pint(tokens[3]));
-					if(verbose) {
-						sopl(tmp);
-						if(pint(tokens[0]) != i || pint(tokens[4]) == 1) {
-							sopl("adding: " + tokens[1]);
-						}
-						sopl();
-					}
-				}
-			} else {
-				
-				if(pint(tokens[0]) == i) {
-				
-					//borders.add(pint(tokens[1]));
-					//borders.add(pint(tokens[3]));
-					
-					//952407302304
-					if(verbose) {
-						sopl(tmp);
-						sopl("adding 2: " + tokens[1]);
-						sopl("adding 2: " + tokens[3]);
-						sopl();
-					}
 				}
 			}
 		}
@@ -379,40 +292,6 @@ public class prob18b {
 			}
 		}
 		
-		//Remove dups and hope
-		
-		/*int numDups = 0;
-		for(int i2=1; i2<ret.length; i2++) {
-			if(ret[i2] == ret[i2 - 1]) {
-				numDups++;
-				if(verbose) {
-					sopl("dup: " + ret[i2]);
-				}
-			}
-		}
-		
-		int ret2[] = new int[borders.size() - numDups];
-		
-		int curIndex = 0;
-		for(int i2=0; i2<ret.length; i2++) {
-			if(i2>0 && ret[i2] == ret[i2 - 1]) {
-				//pass
-			} else {
-				ret2[curIndex] = ret[i2];
-				curIndex++;
-			}
-		}
-		
-		if(curIndex != ret2.length) {
-			exit(1);
-		}
-		
-		//sopl("hello:");
-		//for(int i2=0; i2<ret2.length; i2++) {
-		//	sopl(ret2[i2]);
-		//}
-		//sopl("---");
-		*/
 		return ret;
 	}
 	
@@ -422,10 +301,6 @@ public class prob18b {
 		Iterator<String> it = set.iterator();
 		
 		ArrayList<Integer> borders = new ArrayList<Integer>();
-		
-		if(verbose) {
-			sopl("getJSorted");
-		}
 		
 		
 		ArrayList<Integer> lhs = new ArrayList<Integer>();
@@ -442,29 +317,19 @@ public class prob18b {
 				lhs.add(Math.min(pint(tokens[1]), pint(tokens[3])));
 				rhs.add(Math.max(pint(tokens[1]), pint(tokens[3])));
 				
-				
-				//952407302304
-				if(verbose) {
-					sopl(tmp);
-					sopl("adding 2: " + lhs.get(lhs.size() - 1));
-					sopl("adding 2: " + lhs.get(rhs.size() - 1));
-					sopl();
-				}
 			}
 
 		}
 		
-		
 		long ret[][] = new long[2][lhs.size()];
 		
-		
 		for(int j=0; j<ret[0].length; j++) {
-			
 			ret[0][j] = lhs.get(j);
 			ret[1][j] = rhs.get(j);
 		}
 		return ret;
 	}
+
 	public static int hexToInt(String hex) {
 		int ret = 0;
 		for(int i=0; i<hex.length(); i++) {
