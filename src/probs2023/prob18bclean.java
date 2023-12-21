@@ -18,6 +18,8 @@ import utils.Sort;
 
 public class prob18bclean {
 
+	//TODO: Redo day 18 with the triangle formula...
+	// See: https://www.reddit.com/r/adventofcode/comments/18l2tap/2023_day_18_the_elves_and_the_shoemaker/
 	//day1 part 1
 	//2:38.01
 	
@@ -380,3 +382,51 @@ public class prob18bclean {
 	}
 
 }
+
+/*Reddit:
+Boojum
+OP
+
+ * Here's a little animation showing the working of the shoelace formula applied to Part 2.
+
+The key to the shoelace formula is that you trace along the polygon and for each edge (x1,y1) to (x2,y2) you accumulate half of the determinant of the 2x2 matrix formed from the those two vectors. In other words, you add (x1*y2 - x2*y1)/2 to your area total.
+
+This works because geometrically the determinant computes double the area of the triangle between (0,0), (x1,y1), and (x2,y2). (Really it's computing the area of the parallelogram between (0,0), (x1,y1), (x2,y2), and (x1+x2,y1+y2).)
+
+But note that the area that you get from the determinant is signed! Here I add a green triangle for where the signed area is positive and red when it's negative (you'll see that the running total sometimes decreases.) Geometrically, the sign of the area corresponds to which way the triangle winds. Here, that means that green is clockwise and red is counterclockwise.
+
+Because of inclusion and exclusion, everything ends up accounted for correctly when you total up the signed area. Each of the red (negative area) triangles eventually gets covered by a green triangle a little further out, which cancels the negative area and then some.
+
+That only gotcha is needing to augment the shoelace formula with Pick's theorem, since the shoelace formula only computes the interior area, while the puzzle includes the tiles along the border.
+
+This was made with a small Python visualization framework that I wrote during last year's Advent of Code. See here for details. Full source for this visualization is in the link below.
+
+Source
+
+
+14
+
+
+Reply
+Share
+
+
+User avatar
+level 2
+echols021
+·
+7 hr. ago
+This is an awesome visualization!
+
+Rather than ending with Pick's theorem, I ended with shoelace_area + (perimeter / 2) + 1. My thinking was to add padding with width 0.5 to the full perimeter of the polygon.
+
+For the straight portions of the perimeter, the area of the padding is just distance * 0.5, which in total comes out to perimeter / 2.
+
+For corners:
+
+Each convex corner contributes an extra little square with area 0.25
+
+Each concave corner has an overlap between the padding from the two straight portions of the perimeter, so you have to subtract an area of 0.25
+
+Since the shape is a closed loop, there are 4 more convex corners than concave, so it all cancels out down to 0.25 * 4, meaning the corners' padding in total contributes an extra area of 1
+*/

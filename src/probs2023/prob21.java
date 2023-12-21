@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob21 {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +21,7 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2023/prob2023in19.txt"));
+			in = new Scanner(new File("in2023/prob2023in21.txt"));
 			//in = new Scanner(new File("in2023/prob2023in0.txt"));
 			int numTimes = 0;
 			 
@@ -40,7 +40,6 @@ public class prob0 {
 			
 			
 			int LIMIT = 20000;
-			boolean table342[][] = new boolean[LIMIT][LIMIT];
 			
 			
 			//dir: 0 up
@@ -65,8 +64,36 @@ public class prob0 {
 				line = lines.get(i);
 				
 			}
+			boolean table[][] = new boolean[lines.size()][lines.get(0).length()];
+			boolean soFar[][] = new boolean[lines.size()][lines.get(0).length()];
+			
+			int startI = -1;
+			int startJ = -1;
+			
+			for(int i=0; i<table.length; i++) {
+				for(int j=0; j<table[0].length; j++) {
+					
+					soFar[i][j] = false;
+					
+					if(lines.get(i).charAt(j) == '#') {
+						table[i][j] = true;
+					} else if(lines.get(i).charAt(j) == 'S') {
+						
+						startI = i;
+						startJ = j;
+					} else {
+						table[i][j] = false;
+					}
+					
+				}
+			}
 
-
+			soFar[startI][startJ] = true;
+			
+			//4223
+			cur = getAnswer(table, soFar, 0, 64);
+			
+			
 			sopl("Answer: " + cur);
 			in.close();
 			
@@ -76,6 +103,54 @@ public class prob0 {
 		}
 	}
 
+	
+	public static long getAnswer(boolean table[][], boolean soFar[][], int depth, int maxDepth) {
+		
+		
+		for(int d=0; d<maxDepth; d++) {
+			
+			boolean newList[][] = new boolean[table.length][table[0].length];
+			
+			for(int i=0; i<table.length; i++) {
+				for(int j=0; j<table[0].length; j++) {
+					
+					if(soFar[i][j]) {
+						for(int i2=Math.max(0, i-1); i2<=i+1 && i2<table.length; i2++) {
+							for(int j2=Math.max(0, j-1); j2<=j+1 && j2 <table[0].length; j2++) {
+								
+								if((i2 != i && j2 != j) || (i2 == i && j2 == j)) {
+									continue;
+								}
+								
+								if(table[i2][j2] == false) {
+									newList[i2][j2] = true;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			soFar = newList;
+		}
+		
+		long ret = 0L;
+		for(int i=0; i<table.length; i++) {
+			for(int j=0; j<table[0].length; j++) {
+				if(soFar[i][j]) {
+					ret++;
+					sop("O");
+				} else if(table[i][j]) {
+					sop("#");
+				} else {
+					sop(".");
+				}
+			}
+			sopl();
+		}
+		return ret;
+	}
+	
 	public static void sop(Object a) {
 		System.out.print(a.toString());
 	}
