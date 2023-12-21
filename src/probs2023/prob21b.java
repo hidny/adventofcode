@@ -167,7 +167,7 @@ public class prob21b {
 			
 			//TODO: it is prob quadratic...: (quadratic periodical)
 			//It is quadratic:
-			//The period is 131 and goal step (26501365) mod 31 == 65,
+			//The period is 131 and goal step (26501365) mod 131 == 65,
 			// so focus on 65 mod 131:
 			
 			// based on a website with lots of ads:(not recommendded: https://www.analyzemath.com/parabola/three_points_para_calc.html )
