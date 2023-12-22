@@ -14,7 +14,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob21b {
+public class prob21btestdatasanity {
 
 	//day1 part 1
 	//2:38.01
@@ -125,7 +125,7 @@ public class prob21b {
 		maxDepth = 1000;
 		for(int d=0; d<maxDepth; d++) {
 			
-			if(d % 131 == 65) {
+			if(d % 11 == 6) {
 				sopl("Depth " + d + " size: " + soFar2.size());
 			}
 			
@@ -189,9 +189,9 @@ public class prob21b {
 			//sopl("cur: " + cur);
 			prevAnswers[d] = cur;
 			
-			if((d+1) % 131 == 65) {
+			if((d+1) % 11 == 6) {
 				found:
-				for(int d2=d-1; d2> 5 + d /2; d2--) {
+				for(int d2=d-1; d2> 10 + d /2; d2--) {
 					if((prevAnswers[d] -  prevAnswers[d2]) - (prevAnswers[d2] -  prevAnswers[d - 2*(d-d2)]) == 
 							(prevAnswers[d - 1] -  prevAnswers[d2 - 1]) - (prevAnswers[d2 - 1] -  prevAnswers[d - 2*(d-d2) - 1])) {
 						
