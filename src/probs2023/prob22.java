@@ -106,7 +106,7 @@ public class prob22 {
 			int curCantDisintegrate;
 			for(int i=0; i<bricks.size(); i++) {
 				
-				curZlanding = bricks.get(i).zLanding;
+				curZlanding = 0;
 				curCantDisintegrate = -1;
 				
 				//sopl("Minz: " + bricks.get(i).minZ);

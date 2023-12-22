@@ -60,7 +60,7 @@ public class prob22b {
 			int most3 = 0;
 			long cur = 0L;
 
-			ArrayList<prob22objb> bricks = new ArrayList<prob22objb>();
+			ArrayList<prob22obj> bricks = new ArrayList<prob22obj>();
 			
 			for(int i=0; i<lines.size(); i++) {
 				
@@ -72,7 +72,7 @@ public class prob22b {
 				String co1[] = tokens[0].split(",");
 				String co2[] = tokens[1].split(",");
 				
-				prob22objb tmp= new prob22objb();
+				prob22obj tmp= new prob22obj();
 				
 				tmp.x1 = pint(co1[0]);
 				tmp.y1 = pint(co1[1]);
@@ -90,7 +90,7 @@ public class prob22b {
 				bricks.add(tmp);
 			}
 			
-			bricks = prob22objb.sort(bricks);
+			bricks = prob22obj.sort(bricks);
 			
 
 			for(int i=0; i<bricks.size(); i++) {
@@ -115,7 +115,7 @@ public class prob22b {
 		}
 	}
 
-	public static long getNumDistingrate(ArrayList<prob22objb> bricks, int ignoreIndex) {
+	public static long getNumDistingrate(ArrayList<prob22obj> bricks, int ignoreIndex) {
 		int curZlanding;
 		
 		int count2 = 0;
@@ -140,7 +140,7 @@ public class prob22b {
 			
 			for(int j=0; j<i; j++) {
 				
-				if(prob22objb.intersects(bricks.get(i), bricks.get(j))) {
+				if(prob22obj.intersects(bricks.get(i), bricks.get(j))) {
 					
 					
 					//if(bricks.get(j).z1 == 6 &&bricks.get(i).z1 == 8 ) {
