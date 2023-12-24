@@ -26,6 +26,8 @@ public class ChineseRemainderTheoremSolver {
 			bigMod *= equations.get(i).getMod();
 		}
 		
+		System.out.println("big mod: " + bigMod);
+		
 		long answer = 0;
 		
 		long ithTerm;
@@ -37,14 +39,21 @@ public class ChineseRemainderTheoremSolver {
 					ithTerm *= equations.get(j).getMod();
 				}
 			}
+			System.out.println("ithTerm1: " + ithTerm);
 			
 			//Really slow mod inverse function:
 			for(int j=0; j<equations.get(i).getMod(); j++) {
 				if( (j* ithTerm) % equations.get(i).getMod() == equations.get(i).getNum()) {
+					
+					System.out.println(j);
+					
+					System.out.println((j * ithTerm) + " vs " + equations.get(i).getNum());
+					
 					ithTerm = j* ithTerm;
 					break;
 				}
 			}
+			System.out.println("term to use: " + ithTerm);
 			
 			answer += ithTerm;
 		}
