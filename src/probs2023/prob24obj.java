@@ -52,15 +52,22 @@ public class prob24obj {
 		
 		boolean origLesserIndexIsI = true;
 		
-		if(a.start[indexDim] <= b.start[indexDim]) {
+		
+		//TODO: refine this!
+		if(a.start[indexDim] < b.start[indexDim]) {
 			origLesserIndexIsI = true;
+		
+		} else if(a.start[indexDim] ==  b.start[indexDim]) {
+			if(a.vel[indexDim] < b.vel[indexDim]) {
+				origLesserIndexIsI = true;
+			}
 		} else {
 			origLesserIndexIsI = false;
 		}
 	
 		if(origLesserIndexIsI) {
 			
-			if(a.vel[indexDim] <= b.vel[indexDim]) {
+			if(a.vel[indexDim] < b.vel[indexDim]) {
 				return null;
 			} else {
 				
@@ -77,7 +84,7 @@ public class prob24obj {
 			
 		} else {
 			
-			if(a.vel[indexDim] >= b.vel[indexDim]) {
+			if(a.vel[indexDim] > b.vel[indexDim]) {
 				return null;
 			} else {
 				

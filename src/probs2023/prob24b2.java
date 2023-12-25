@@ -24,8 +24,8 @@ public class prob24b2 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			//in = new Scanner(new File("in2023/prob2023in24.txt"));
-			in = new Scanner(new File("in2023/prob2023in0.txt"));
+			in = new Scanner(new File("in2023/prob2023in24.txt"));
+			//in = new Scanner(new File("in2023/prob2023in0.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -86,48 +86,6 @@ public class prob24b2 {
 				trajs.add(tmp);
 			}
 			
-			prob24obj potentialSolution = new prob24obj();
-			potentialSolution.start[0] = 0;
-			potentialSolution.start[1] = 0;
-			potentialSolution.start[2] = 0;
-			
-
-			potentialSolution.vel[0] = 1;
-			potentialSolution.vel[1] = 1;
-			potentialSolution.vel[2] = 1;
-			
-			if(! isSolution(potentialSolution, trajs)) {
-				sopl("First proposal no good. (GOOD!)");
-			} else {
-				sopl("Error in first proposal.");
-			}
-			potentialSolution.start[0] = 24;
-			potentialSolution.start[1] = 13;
-			potentialSolution.start[2] = 10;
-			
-
-			potentialSolution.vel[0] = -3;
-			potentialSolution.vel[1] = 1;
-			potentialSolution.vel[2] = 2;
-			
-			if(isSolution(potentialSolution, trajs)) {
-				sopl("Second proposal good. (GOOD!)");
-			} else {
-				sopl("Error in second proposal.");
-			}
-
-			
-			sopl("Test get proposed throw:");
-			
-			prob24obj proposedSolutionTest = getProposedThrow(trajs.get(0), 5, trajs.get(3), 6);
-			
-			if(isSolution(proposedSolutionTest, trajs)) {
-				sopl("third proposal good. (GOOD!)");
-			} else {
-				sopl("Error in second proposal.");
-			}
-			
-			
 			//TODO: get transitions for X, Y, Z
 			
 			ArrayList <prob24bTransition> transitionX = new ArrayList <prob24bTransition>();
@@ -158,7 +116,8 @@ public class prob24b2 {
 			transitionX = sortByTime(transitionX);
 			transitionY = sortByTime(transitionY);
 			transitionZ = sortByTime(transitionZ);
-			
+
+			sopl("hello4");
 			//TODO: put in sanity check function:
 			sopl();
 			sopl("X Transitions:");
@@ -204,6 +163,52 @@ public class prob24b2 {
 		}
 	}
 	
+	public static void sanityTestTestProb(ArrayList <prob24obj> trajs) {
+
+		
+		
+		prob24obj potentialSolution = new prob24obj();
+		potentialSolution.start[0] = 0;
+		potentialSolution.start[1] = 0;
+		potentialSolution.start[2] = 0;
+		
+
+		potentialSolution.vel[0] = 1;
+		potentialSolution.vel[1] = 1;
+		potentialSolution.vel[2] = 1;
+		
+		if(! isSolution(potentialSolution, trajs)) {
+			sopl("First proposal no good. (GOOD!)");
+		} else {
+			sopl("Error in first proposal.");
+		}
+		potentialSolution.start[0] = 24;
+		potentialSolution.start[1] = 13;
+		potentialSolution.start[2] = 10;
+		
+
+		potentialSolution.vel[0] = -3;
+		potentialSolution.vel[1] = 1;
+		potentialSolution.vel[2] = 2;
+		
+		if(isSolution(potentialSolution, trajs)) {
+			sopl("Second proposal good. (GOOD!)");
+		} else {
+			sopl("Error in second proposal.");
+		}
+
+		
+		sopl("Test get proposed throw:");
+		
+		prob24obj proposedSolutionTest = getProposedThrow(trajs.get(0), 5, trajs.get(3), 6);
+		
+		if(isSolution(proposedSolutionTest, trajs)) {
+			sopl("third proposal good. (GOOD!)");
+		} else {
+			sopl("Error in second proposal.");
+		}
+	}
+	
 	
 	public static void getViableFirstHitLocationAndTimes(ArrayList <prob24obj> trajs,
 			ArrayList <prob24bTransition> transitionX,
@@ -239,23 +244,40 @@ public class prob24b2 {
 		double currentTime = 0.0;
 		
 		int minMaxIndexes1[] = new int[3];
-		int minMaxIndexes2[] = new int[3];
+		//int minMaxIndexes2[] = new int[3];
 		
 		for(int i=0; i<minMaxIndexes1.length; i++) {
 			
 			if(isVelocityPositivePerDim[i]) {
 
 				minMaxIndexes1[i] = getMinStartIndexForDim(trajs, i);
-				minMaxIndexes2[i] = getMinStartIndexForDim(trajs, i, minMaxIndexes1[i]);
+				//minMaxIndexes2[i] = getMinStartIndexForDim(trajs, i, minMaxIndexes1[i]);
 			} else {
 
 				minMaxIndexes1[i] = getMaxStartIndexForDim(trajs, i);
-				minMaxIndexes2[i] = getMaxStartIndexForDim(trajs, i, minMaxIndexes1[i]);
+				//minMaxIndexes2[i] = getMaxStartIndexForDim(trajs, i, minMaxIndexes1[i]);
 			}
 		}
 		
 		//TODO: they better not overtake at time 0.0
 		
+		boolean currentlyViableCandidate = false;
+		
+		
+		//Check at the very start:
+		/*if(theresAnObjectThatCouldBeFirstHit(minMaxIndexes1)) {
+			
+			currentlyViableCandidate = true;
+			sopl("At time " + currentTime + ", obj index " + minMaxIndexes1[0] + " became a viable candidate");
+		}*/
+		
+		//Debug:
+		for(int i=0; i<3; i++) {
+			sopl(currentTime + ": " + minMaxIndexes1[i]);
+		}
+		sopl();
+		
+			
 		for(int ix=0, iy = 0, iz = 0; ix < transitionX.size() || iy < transitionX.size() || iz < transitionX.size(); ) {
 			
 			prob24bTransition proposalNextX = null;
@@ -271,7 +293,7 @@ public class prob24b2 {
 			}
 			
 			if(iz < transitionZ.size()) {
-				proposalNextZ = transitionZ.get(ix);
+				proposalNextZ = transitionZ.get(iz);
 			}
 			
 			int nextDimTransition = 0;
@@ -288,9 +310,11 @@ public class prob24b2 {
 				
 				if(curShortestTime < -0.5) {
 					nextDimTransition = 1;
+					curShortestTime = proposalNextY.trasitionTime;
+					
 				} else if(proposalNextY.trasitionTime < curShortestTime) {
 					nextDimTransition = 1;
-					
+					curShortestTime = proposalNextY.trasitionTime;
 				}
 				
 			}
@@ -299,11 +323,16 @@ public class prob24b2 {
 				
 				if(curShortestTime < -0.5) {
 					nextDimTransition = 2;
+					curShortestTime = proposalNextZ.trasitionTime;
+					
 				} else if(proposalNextZ.trasitionTime < curShortestTime) {
 					nextDimTransition = 2;
+					curShortestTime = proposalNextZ.trasitionTime;
 					
 				}
 			}
+			
+			boolean somethingHappened = false;
 			
 			currentTime = curShortestTime;
 			prob24bTransition proposal;
@@ -316,23 +345,19 @@ public class prob24b2 {
 				if(isVelocityPositivePerDim[0]) {
 					
 					//TODO: copy/paste code this 5 times:
-					if(proposal.origLesserIndex == minMaxIndexes2[0]) {
-						minMaxIndexes2[0] = proposal.newLesserIndex;
-						
-					} else if(proposal.origLesserIndex == minMaxIndexes1[0]) {
-						
-						if(proposal.newLesserIndex != minMaxIndexes2[0]) {
-							sopl("Warning: I'm confused! 0");
-							exit(1);
-						}
-
+					if(proposal.origLesserIndex == minMaxIndexes1[0]) {
 						minMaxIndexes1[0] = proposal.newLesserIndex;
-						minMaxIndexes2[0] = proposal.origLesserIndex;
+						somethingHappened = true;
 						
 					}
 					//END TODO
 					
 				} else {
+					if(proposal.newLesserIndex == minMaxIndexes1[0]) {
+						minMaxIndexes1[0] = proposal.origLesserIndex;
+						somethingHappened = true;
+						
+					}
 					
 				}
 				
@@ -340,10 +365,45 @@ public class prob24b2 {
 			} else if(nextDimTransition == 1) {
 				proposal = proposalNextY;
 				
+				if(isVelocityPositivePerDim[1]) {
+					
+					if(proposal.origLesserIndex == minMaxIndexes1[1]) {
+						minMaxIndexes1[1] = proposal.newLesserIndex;
+						somethingHappened = true;
+						
+					}
+					
+				} else {
+					
+					if(proposal.newLesserIndex == minMaxIndexes1[1]) {
+						minMaxIndexes1[1] = proposal.origLesserIndex;
+						somethingHappened = true;
+						
+					}
+					
+				}
+				
 				
 				iy++;
 			} else if(nextDimTransition == 2) {
 				proposal = proposalNextZ;
+
+				if(isVelocityPositivePerDim[2]) {
+					
+					if(proposal.origLesserIndex == minMaxIndexes1[2]) {
+						minMaxIndexes1[2] = proposal.newLesserIndex;
+						somethingHappened = true;
+						
+					}
+					
+				} else {
+					if(proposal.newLesserIndex == minMaxIndexes1[2]) {
+						minMaxIndexes1[2] = proposal.origLesserIndex;
+						somethingHappened = true;
+						
+					}
+					
+				}
 				
 				
 				iz++;
@@ -351,12 +411,24 @@ public class prob24b2 {
 			//TODO: not done
 			//TODO: Later: reduce copy/paste code
 			
-			if(theresAnObjectThatCouldBeFirstHit(minMaxIndexes1)) {
+			if((currentTime == 0 || somethingHappened) 
+					&& theresAnObjectThatCouldBeFirstHit(minMaxIndexes1)) {
 				
-				sopl("At time " + currentTime + ", obj index " + minMaxIndexes1[0] + " became a visable candidate");
+				currentlyViableCandidate = true;
+				sopl("At time " + currentTime + ", obj index " + minMaxIndexes1[0] + " became a viable candidate");
+			} else if( ! theresAnObjectThatCouldBeFirstHit(minMaxIndexes1) && currentlyViableCandidate){
+				currentlyViableCandidate = false;
+
+				sopl("At time " + currentTime + ", obj stopped becoming a viable candidate.");
+				
 			}
 			
-			
+			/*if(somethingHappened) {
+				for(int i=0; i<3; i++) {
+					sopl(currentTime + ": " + minMaxIndexes1[i]);
+				}
+				sopl();
+			}*/
 		}
 		
 		
@@ -364,7 +436,7 @@ public class prob24b2 {
 	
 	public static boolean theresAnObjectThatCouldBeFirstHit(int minMaxIndexes1[]) {
 		
-		return minMaxIndexes1[0] == minMaxIndexes1[1] && minMaxIndexes1[0] == minMaxIndexes1[1];
+		return minMaxIndexes1[0] == minMaxIndexes1[1] && minMaxIndexes1[0] == minMaxIndexes1[2];
 		
 	}
 	
@@ -386,6 +458,14 @@ public class prob24b2 {
 				
 				ret = i;
 				
+			} else if(ret != -1 && trajs.get(i).start[dimIndex] == currentSmallest) {
+				
+				if(trajs.get(i).vel[dimIndex] < trajs.get(ret).vel[dimIndex]) {
+					
+					currentSmallest = trajs.get(i).start[dimIndex];
+					
+					ret = i;
+				}
 			}
 		}
 		
@@ -410,6 +490,13 @@ public class prob24b2 {
 				
 				ret = i;
 				
+			} else if(ret != -1 && trajs.get(i).start[dimIndex] == currentBiggest) {
+				
+				if(trajs.get(i).vel[dimIndex] > trajs.get(ret).vel[dimIndex]) {
+					currentBiggest = trajs.get(i).start[dimIndex];
+					
+					ret = i;
+				}
 			}
 		}
 		
@@ -419,6 +506,9 @@ public class prob24b2 {
 	public static ArrayList <prob24bTransition> sortByTime(ArrayList<prob24bTransition> transitions) {
 		
 		for(int i=0; i<transitions.size(); i++) {
+			if(i % 1000 == 0) {
+				sopl(i);
+			}
 			for(int j=i+1; j<transitions.size(); j++) {
 				
 				if(transitions.get(i).trasitionTime > transitions.get(j).trasitionTime) {
