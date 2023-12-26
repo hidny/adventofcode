@@ -24,8 +24,8 @@ public class prob24b2 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			//in = new Scanner(new File("in2023/prob2023in24.txt"));
-			in = new Scanner(new File("in2023/prob2023in0.txt"));
+			in = new Scanner(new File("in2023/prob2023in24.txt"));
+			//in = new Scanner(new File("in2023/prob2023in0.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -233,16 +233,17 @@ public class prob24b2 {
 		
 		int MAX_VEL = 1000;
 		
-		boolean usefulXMaxes[] = getVelocitiesThatActuallyExist(trajs, 0, MAX_VEL);
-		boolean usefulYMaxes[] = getVelocitiesThatActuallyExist(trajs, 1, MAX_VEL);
-		boolean usefulZMaxes[] = getVelocitiesThatActuallyExist(trajs, 2, MAX_VEL);
 		
 		
 		for(int i=0; i<(int)Math.pow(2, 3); i++) {
 			
 			sopl();
 			sopl("Direction index attempt: " + i);
-			
+
+			boolean usefulXMaxes[] = getVelocitiesThatActuallyExistInSameDir(trajs, 0, MAX_VEL, i);
+			boolean usefulYMaxes[] = getVelocitiesThatActuallyExistInSameDir(trajs, 1, MAX_VEL, i);
+			boolean usefulZMaxes[] = getVelocitiesThatActuallyExistInSameDir(trajs, 2, MAX_VEL, i);
+
 			for(int xVelMax = MAX_VEL; xVelMax >= 1; xVelMax--) {
 				
 				if(!usefulXMaxes[xVelMax]) {
@@ -280,9 +281,11 @@ public class prob24b2 {
 		}
 	}
 	
-	public static boolean[] getVelocitiesThatActuallyExist(ArrayList <prob24obj> trajs, int indexDim, int MAX_VEL) {
+	public static boolean[] getVelocitiesThatActuallyExistInSameDir(ArrayList <prob24obj> trajs, int indexDim, int MAX_VEL, int dirIndex) {
 		
 		boolean ret[] = new boolean[MAX_VEL + 1];
+		boolean isVelocityPositivePerDim[] = { (dirIndex & 4) != 0,  (dirIndex & 2) != 0, (dirIndex & 1) != 0};
+
 
 		for(int i=0; i<ret.length; i++) {
 			
@@ -296,7 +299,11 @@ public class prob24b2 {
 		
 		for(int i=0; i<trajs.size(); i++) {
 			
-			ret[(int)Math.abs(trajs.get(i).vel[indexDim])] = true;
+			if( (trajs.get(i).vel[indexDim] >=0 && isVelocityPositivePerDim[indexDim])
+					|| (trajs.get(i).vel[indexDim] < 0 && ! isVelocityPositivePerDim[indexDim])
+					){
+				ret[(int)Math.abs(trajs.get(i).vel[indexDim])] = true;
+			}
 		}
 		
 		return ret;
@@ -349,19 +356,21 @@ public class prob24b2 {
 		*/
 		double currentTime = 0.0;
 		
-		int minMaxIndexes1[] = new int[3];
+		int minMaxIndexes[] = new int[3];
 		//int minMaxIndexes2[] = new int[3];
 		
-		for(int i=0; i<minMaxIndexes1.length; i++) {
+		for(int i=0; i<minMaxIndexes.length; i++) {
 			
 			if(isVelocityPositivePerDim[i]) {
 
-				minMaxIndexes1[i] = getMinStartIndexForDim(trajs, i, maxVelPerDim, isVelocityPositivePerDim);
-				//minMaxIndexes2[i] = getMinStartIndexForDim(trajs, i, minMaxIndexes1[i]);
+				minMaxIndexes[i] = getMinStartIndexForDim(trajs, i, maxVelPerDim, isVelocityPositivePerDim);
 			} else {
 
-				minMaxIndexes1[i] = getMaxStartIndexForDim(trajs, i, maxVelPerDim, isVelocityPositivePerDim);
-				//minMaxIndexes2[i] = getMaxStartIndexForDim(trajs, i, minMaxIndexes1[i]);
+				minMaxIndexes[i] = getMaxStartIndexForDim(trajs, i, maxVelPerDim, isVelocityPositivePerDim);
+			}
+			
+			if(minMaxIndexes[1] == -1) {
+				return;
 			}
 		}
 		
@@ -378,29 +387,30 @@ public class prob24b2 {
 		}*/
 		
 		//Debug:
-		sopl("dirIndex = " + dirIndex);
+		
+		/*sopl("dirIndex = " + dirIndex);
 		for(int i=0; i<3; i++) {
-			sopl(currentTime + ": " + minMaxIndexes1[i]);
+			sopl(currentTime + ": " + minMaxIndexes[i]);
 		}
 		sopl();
-		
+		*/
 			
-		for(int ix=0, iy = 0, iz = 0; ix < transitionXToUse[minMaxIndexes1[0]].size() || iy < transitionYToUse[minMaxIndexes1[1]].size() || iz < transitionZToUse[minMaxIndexes1[2]].size(); ) {
+		for(int ix=0, iy = 0, iz = 0; ix < transitionXToUse[minMaxIndexes[0]].size() || iy < transitionYToUse[minMaxIndexes[1]].size() || iz < transitionZToUse[minMaxIndexes[2]].size(); ) {
 			
 			prob24bTransition proposalNextX = null;
 			prob24bTransition proposalNextY = null;
 			prob24bTransition proposalNextZ = null;
 			
-			if(ix < transitionXToUse[minMaxIndexes1[0]].size()) {
-				proposalNextX = transitionXToUse[minMaxIndexes1[0]].get(ix);
+			if(ix < transitionXToUse[minMaxIndexes[0]].size()) {
+				proposalNextX = transitionXToUse[minMaxIndexes[0]].get(ix);
 			}
 
-			if(iy < transitionYToUse[minMaxIndexes1[1]].size()) {
-				proposalNextY = transitionYToUse[minMaxIndexes1[1]].get(iy);
+			if(iy < transitionYToUse[minMaxIndexes[1]].size()) {
+				proposalNextY = transitionYToUse[minMaxIndexes[1]].get(iy);
 			}
 			
-			if(iz < transitionZToUse[minMaxIndexes1[2]].size()) {
-				proposalNextZ = transitionZToUse[minMaxIndexes1[2]].get(iz);
+			if(iz < transitionZToUse[minMaxIndexes[2]].size()) {
+				proposalNextZ = transitionZToUse[minMaxIndexes[2]].get(iz);
 			}
 			
 			int nextDimTransition = 0;
@@ -456,16 +466,16 @@ public class prob24b2 {
 				} else if(isVelocityPositivePerDim[0]) {
 					
 					//TODO: copy/paste code this 5 times:
-					if(proposal.origLesserIndex == minMaxIndexes1[0]) {
-						minMaxIndexes1[0] = proposal.newLesserIndex;
+					if(proposal.origLesserIndex == minMaxIndexes[0]) {
+						minMaxIndexes[0] = proposal.newLesserIndex;
 						somethingHappened = true;
 						
 					}
 					//END TODO
 					
 				} else {
-					if(proposal.newLesserIndex == minMaxIndexes1[0]) {
-						minMaxIndexes1[0] = proposal.origLesserIndex;
+					if(proposal.newLesserIndex == minMaxIndexes[0]) {
+						minMaxIndexes[0] = proposal.origLesserIndex;
 						somethingHappened = true;
 						
 					}
@@ -480,16 +490,16 @@ public class prob24b2 {
 
 				} else if(isVelocityPositivePerDim[1]) {
 					
-					if(proposal.origLesserIndex == minMaxIndexes1[1]) {
-						minMaxIndexes1[1] = proposal.newLesserIndex;
+					if(proposal.origLesserIndex == minMaxIndexes[1]) {
+						minMaxIndexes[1] = proposal.newLesserIndex;
 						somethingHappened = true;
 						
 					}
 					
 				} else {
 					
-					if(proposal.newLesserIndex == minMaxIndexes1[1]) {
-						minMaxIndexes1[1] = proposal.origLesserIndex;
+					if(proposal.newLesserIndex == minMaxIndexes[1]) {
+						minMaxIndexes[1] = proposal.origLesserIndex;
 						somethingHappened = true;
 						
 					}
@@ -505,15 +515,15 @@ public class prob24b2 {
 
 				} else if(isVelocityPositivePerDim[2]) {
 					
-					if(proposal.origLesserIndex == minMaxIndexes1[2]) {
-						minMaxIndexes1[2] = proposal.newLesserIndex;
+					if(proposal.origLesserIndex == minMaxIndexes[2]) {
+						minMaxIndexes[2] = proposal.newLesserIndex;
 						somethingHappened = true;
 						
 					}
 					
 				} else {
-					if(proposal.newLesserIndex == minMaxIndexes1[2]) {
-						minMaxIndexes1[2] = proposal.origLesserIndex;
+					if(proposal.newLesserIndex == minMaxIndexes[2]) {
+						minMaxIndexes[2] = proposal.origLesserIndex;
 						somethingHappened = true;
 						
 					}
@@ -533,20 +543,21 @@ public class prob24b2 {
 			//TODO: Later: reduce copy/paste code
 			
 			if((currentTime == 0 || somethingHappened) 
-					&& theresAnObjectThatCouldBeFirstHit(minMaxIndexes1)) {
+					&& theresAnObjectThatCouldBeFirstHit(minMaxIndexes)) {
 				
 				currentlyViableCandidate = true;
-				sopl("At time " + currentTime + ", obj index " + minMaxIndexes1[0] + " became a viable candidate");
+				sopl("At time " + currentTime + ", obj index " + minMaxIndexes[0] + " became a viable candidate");
 				sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
 				sopl("Max vel: " + maxVelPerDim[0] + ", " + maxVelPerDim[1] + ", " + maxVelPerDim[2]);
 				sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
 				
-			} else if( ! theresAnObjectThatCouldBeFirstHit(minMaxIndexes1) && currentlyViableCandidate){
+			} else if( ! theresAnObjectThatCouldBeFirstHit(minMaxIndexes) && currentlyViableCandidate){
 				currentlyViableCandidate = false;
 
 				sopl("At time " + currentTime + ", obj stopped becoming a viable candidate.");
 				sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
-				
+				sopl("----------------");
+				sopl();
 				
 			}
 			
@@ -663,9 +674,7 @@ public class prob24b2 {
 	public static ArrayList <prob24bTransition> sortByTime(ArrayList<prob24bTransition> transitions) {
 		
 		for(int i=0; i<transitions.size(); i++) {
-			if(i % 1000 == 0) {
-				sopl(i);
-			}
+			
 			for(int j=i+1; j<transitions.size(); j++) {
 				
 				if(transitions.get(i).trasitionTime > transitions.get(j).trasitionTime) {
