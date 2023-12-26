@@ -24,8 +24,8 @@ public class prob24b2 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2023/prob2023in24.txt"));
-			//in = new Scanner(new File("in2023/prob2023in0.txt"));
+			//in = new Scanner(new File("in2023/prob2023in24.txt"));
+			in = new Scanner(new File("in2023/prob2023in0.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -62,6 +62,7 @@ public class prob24b2 {
 			int most3 = 0;
 			long cur = 0L;
 			
+			long biggestVel = 0L;
 			ArrayList <prob24obj> trajs = new ArrayList <prob24obj>();
 			ArrayList ints = new ArrayList<Integer>();
 			for(int i=0; i<lines.size(); i++) {
@@ -81,17 +82,39 @@ public class prob24b2 {
 				}
 				for(int j=0; j<token2.length; j++) {
 					tmp.vel[j] = plong(token2[j].trim());
+					
+					if(tmp.vel[j] > biggestVel) { 
+						biggestVel = tmp.vel[j];
+					}
 				}
 				
 				trajs.add(tmp);
 			}
 			
+			sopl(biggestVel);
+			//exit(1);
+			
 			//TODO: get transitions for X, Y, Z
 			
-			ArrayList <prob24bTransition> transitionX = new ArrayList <prob24bTransition>();
-			ArrayList <prob24bTransition> transitionY = new ArrayList <prob24bTransition>();
-			ArrayList <prob24bTransition> transitionZ = new ArrayList <prob24bTransition>();
+			ArrayList <prob24bTransition> transitionXNextSmaller[] = new ArrayList[trajs.size()];
+			ArrayList <prob24bTransition> transitionYNextSmaller[] = new ArrayList[trajs.size()];
+			ArrayList <prob24bTransition> transitionZNextSmaller[] = new ArrayList[trajs.size()];
+
 			
+			ArrayList <prob24bTransition> transitionXNextBigger[] = new ArrayList[trajs.size()];
+			ArrayList <prob24bTransition> transitionYNextBigger[] = new ArrayList[trajs.size()];
+			ArrayList <prob24bTransition> transitionZNextBigger[] = new ArrayList[trajs.size()];
+			
+
+			for(int i=0; i<trajs.size(); i++) {
+					transitionXNextSmaller[i] = new ArrayList<prob24bTransition>();
+					transitionYNextSmaller[i] = new ArrayList<prob24bTransition>();
+					transitionZNextSmaller[i] = new ArrayList<prob24bTransition>();
+
+					transitionXNextBigger[i] = new ArrayList<prob24bTransition>();
+					transitionYNextBigger[i] = new ArrayList<prob24bTransition>();
+					transitionZNextBigger[i] = new ArrayList<prob24bTransition>();
+			}
 
 			for(int i=0; i<trajs.size(); i++) {
 				for(int j=i+1; j<trajs.size(); j++) {
@@ -101,47 +124,32 @@ public class prob24b2 {
 					prob24bTransition potentialNewZ = prob24obj.getTranstionForTwoTrajectories(trajs, i, j, 2);
 					
 					if(potentialNewX != null) {
-						transitionX.add(potentialNewX);
+						transitionXNextSmaller[potentialNewX.origLesserIndex].add(potentialNewX);
+						transitionXNextBigger[potentialNewX.newLesserIndex].add(potentialNewX);
 					}
 					if(potentialNewY != null) {
-						transitionY.add(potentialNewY);
+						transitionYNextSmaller[potentialNewY.origLesserIndex].add(potentialNewY);
+						transitionYNextBigger[potentialNewY.newLesserIndex].add(potentialNewY);
 					}
 					if(potentialNewZ != null) {
-						transitionZ.add(potentialNewZ);
+						transitionZNextSmaller[potentialNewZ.origLesserIndex].add(potentialNewZ);
+						transitionZNextBigger[potentialNewZ.newLesserIndex].add(potentialNewZ);
 					}
 				}
 			}
 			
+			for(int i=0; i<trajs.size(); i++) {
+				transitionXNextSmaller[i] = (ArrayList <prob24bTransition>)sortByTime((transitionXNextSmaller[i]));
+				transitionXNextBigger[i] = (ArrayList <prob24bTransition>)sortByTime((transitionXNextBigger[i]));
+
+				transitionYNextSmaller[i] = (ArrayList <prob24bTransition>)sortByTime((transitionYNextSmaller[i]));
+				transitionYNextBigger[i] = (ArrayList <prob24bTransition>)sortByTime((transitionYNextBigger[i]));
+
+				transitionZNextSmaller[i] = (ArrayList <prob24bTransition>)sortByTime((transitionZNextSmaller[i]));
+				transitionZNextBigger[i] = (ArrayList <prob24bTransition>)sortByTime((transitionZNextBigger[i]));
+			}
 			//TODO: sort the transitions by time:
-			transitionX = sortByTime(transitionX);
-			transitionY = sortByTime(transitionY);
-			transitionZ = sortByTime(transitionZ);
 
-			sopl("hello4");
-			//TODO: put in sanity check function:
-			sopl();
-			sopl("X Transitions:");
-			for(int i=0; i<transitionX.size(); i++) {
-				prob24bTransition tmp =  transitionX.get(i);
-				sopl("Index " + tmp.origLesserIndex + " overtakes " + tmp.newLesserIndex + " at time " + tmp.trasitionTime);
-			}
-			
-
-			sopl();
-			sopl("Y Transitions:");
-			for(int i=0; i<transitionY.size(); i++) {
-				prob24bTransition tmp =  transitionY.get(i);
-				sopl("Index " + tmp.origLesserIndex + " overtakes " + tmp.newLesserIndex + " at time " + tmp.trasitionTime);
-			}
-			
-
-			sopl();
-			sopl("Z Transitions:");
-			for(int i=0; i<transitionZ.size(); i++) {
-				prob24bTransition tmp =  transitionZ.get(i);
-				sopl("Index " + tmp.origLesserIndex + " overtakes " + tmp.newLesserIndex + " at time " + tmp.trasitionTime);
-			}
-			
 			
 			//END TODO: put in sanity check function
 			
@@ -149,9 +157,13 @@ public class prob24b2 {
 			
 			sopl();
 			getViableFirstHitLocationAndTimes(trajs,
-					transitionX,
-					transitionY,
-					transitionZ);
+					transitionXNextSmaller,
+					transitionXNextBigger,
+					transitionYNextSmaller,
+					transitionYNextBigger,
+					transitionZNextSmaller,
+					transitionZNextBigger
+				);
 			
 			
 			sopl("Answer: " + cur);
@@ -211,36 +223,130 @@ public class prob24b2 {
 	
 	
 	public static void getViableFirstHitLocationAndTimes(ArrayList <prob24obj> trajs,
-			ArrayList <prob24bTransition> transitionX,
-			ArrayList <prob24bTransition> transitionY,
-			ArrayList <prob24bTransition> transitionZ) {
+			ArrayList <prob24bTransition> transitionXNextSmaller[],
+			ArrayList <prob24bTransition> transitionXNextBigger[],
+			ArrayList <prob24bTransition> transitionYNextSmaller[],
+			ArrayList <prob24bTransition> transitionYNextBigger[],
+			ArrayList <prob24bTransition> transitionZNextSmaller[],
+			ArrayList <prob24bTransition> transitionZNextBigger[]) {
+		
+		
+		int MAX_VEL = 1000;
+		
+		boolean usefulXMaxes[] = getVelocitiesThatActuallyExist(trajs, 0, MAX_VEL);
+		boolean usefulYMaxes[] = getVelocitiesThatActuallyExist(trajs, 1, MAX_VEL);
+		boolean usefulZMaxes[] = getVelocitiesThatActuallyExist(trajs, 2, MAX_VEL);
+		
 		
 		for(int i=0; i<(int)Math.pow(2, 3); i++) {
-			getViableFirstHitLocationAndTimes(trajs,
-					transitionX,
-					transitionY,
-					transitionZ,
-					i);
+			
+			sopl();
+			sopl("Direction index attempt: " + i);
+			
+			for(int xVelMax = MAX_VEL; xVelMax >= 1; xVelMax--) {
+				
+				if(!usefulXMaxes[xVelMax]) {
+					continue;
+				}
+				sopl(xVelMax);
+				
+				for(int yVelMax = MAX_VEL; yVelMax >= 1; yVelMax--) {
+					
+
+					if(!usefulYMaxes[yVelMax]) {
+						continue;
+					}
+					
+					for(int zVelMax = MAX_VEL; zVelMax >= 1; zVelMax--) {
+						
+
+						if(!usefulZMaxes[zVelMax]) {
+							continue;
+						}
+						
+						getViableFirstHitLocationAndTimes(trajs,
+								transitionXNextSmaller,
+								transitionXNextBigger,
+								transitionYNextSmaller,
+								transitionYNextBigger,
+								transitionZNextSmaller,
+								transitionZNextBigger,
+								i,
+								new int[] {xVelMax, yVelMax, zVelMax});
+					}
+				}
+			}
+			
 		}
 	}
 	
+	public static boolean[] getVelocitiesThatActuallyExist(ArrayList <prob24obj> trajs, int indexDim, int MAX_VEL) {
+		
+		boolean ret[] = new boolean[MAX_VEL + 1];
+
+		for(int i=0; i<ret.length; i++) {
+			
+			if(i == MAX_VEL) {
+				ret[i]= true;
+			} else {
+				ret[i] = false;
+			}
+			
+		}
+		
+		for(int i=0; i<trajs.size(); i++) {
+			
+			ret[(int)Math.abs(trajs.get(i).vel[indexDim])] = true;
+		}
+		
+		return ret;
+	}
+	
 	public static void getViableFirstHitLocationAndTimes(ArrayList <prob24obj> trajs,
-			ArrayList <prob24bTransition> transitionX,
-			ArrayList <prob24bTransition> transitionY,
-			ArrayList <prob24bTransition> transitionZ,
-			int dirIndex) {
+			ArrayList <prob24bTransition> transitionXNextSmaller[],
+			ArrayList <prob24bTransition> transitionXNextBigger[],
+			ArrayList <prob24bTransition> transitionYNextSmaller[],
+			ArrayList <prob24bTransition> transitionYNextBigger[],
+			ArrayList <prob24bTransition> transitionZNextSmaller[],
+			ArrayList <prob24bTransition> transitionZNextBigger[],
+			int dirIndex,
+			int maxVelPerDim[]) {
 		
 		boolean isVelocityPositivePerDim[] = { (dirIndex & 4) != 0,  (dirIndex & 2) != 0, (dirIndex & 1) != 0};
 
-		sopl();
+		ArrayList <prob24bTransition> transitionXToUse[];
+		ArrayList <prob24bTransition> transitionYToUse[];
+		ArrayList <prob24bTransition> transitionZToUse[];
+		
+		if(isVelocityPositivePerDim[0]) {
+			transitionXToUse = transitionXNextSmaller;
+		} else {
+			transitionXToUse = transitionXNextBigger;
+		}
+
+		if(isVelocityPositivePerDim[1]) {
+			transitionYToUse = transitionYNextSmaller;
+		} else {
+			transitionYToUse = transitionYNextBigger;
+		}
+		
+		if(isVelocityPositivePerDim[2]) {
+			transitionZToUse = transitionZNextSmaller;
+		} else {
+			transitionZToUse = transitionZNextBigger;
+		}
+		
+		/*sopl();
 		sopl();
 		sopl("Attempting following velocity type:");
 		sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
 		
+
 		if(! isVelocityPositivePerDim[0] && isVelocityPositivePerDim[1] && isVelocityPositivePerDim[2]) {
 			//This one should have an example solution
 			sopl("This iteration includes the example solution");
 		}
+		*/
 		double currentTime = 0.0;
 		
 		int minMaxIndexes1[] = new int[3];
@@ -250,11 +356,11 @@ public class prob24b2 {
 			
 			if(isVelocityPositivePerDim[i]) {
 
-				minMaxIndexes1[i] = getMinStartIndexForDim(trajs, i);
+				minMaxIndexes1[i] = getMinStartIndexForDim(trajs, i, maxVelPerDim, isVelocityPositivePerDim);
 				//minMaxIndexes2[i] = getMinStartIndexForDim(trajs, i, minMaxIndexes1[i]);
 			} else {
 
-				minMaxIndexes1[i] = getMaxStartIndexForDim(trajs, i);
+				minMaxIndexes1[i] = getMaxStartIndexForDim(trajs, i, maxVelPerDim, isVelocityPositivePerDim);
 				//minMaxIndexes2[i] = getMaxStartIndexForDim(trajs, i, minMaxIndexes1[i]);
 			}
 		}
@@ -272,28 +378,29 @@ public class prob24b2 {
 		}*/
 		
 		//Debug:
+		sopl("dirIndex = " + dirIndex);
 		for(int i=0; i<3; i++) {
 			sopl(currentTime + ": " + minMaxIndexes1[i]);
 		}
 		sopl();
 		
 			
-		for(int ix=0, iy = 0, iz = 0; ix < transitionX.size() || iy < transitionX.size() || iz < transitionX.size(); ) {
+		for(int ix=0, iy = 0, iz = 0; ix < transitionXToUse[minMaxIndexes1[0]].size() || iy < transitionYToUse[minMaxIndexes1[1]].size() || iz < transitionZToUse[minMaxIndexes1[2]].size(); ) {
 			
 			prob24bTransition proposalNextX = null;
 			prob24bTransition proposalNextY = null;
 			prob24bTransition proposalNextZ = null;
 			
-			if(ix < transitionX.size()) {
-				proposalNextX = transitionX.get(ix);
+			if(ix < transitionXToUse[minMaxIndexes1[0]].size()) {
+				proposalNextX = transitionXToUse[minMaxIndexes1[0]].get(ix);
 			}
 
-			if(iy < transitionY.size()) {
-				proposalNextY = transitionY.get(iy);
+			if(iy < transitionYToUse[minMaxIndexes1[1]].size()) {
+				proposalNextY = transitionYToUse[minMaxIndexes1[1]].get(iy);
 			}
 			
-			if(iz < transitionZ.size()) {
-				proposalNextZ = transitionZ.get(iz);
+			if(iz < transitionZToUse[minMaxIndexes1[2]].size()) {
+				proposalNextZ = transitionZToUse[minMaxIndexes1[2]].get(iz);
 			}
 			
 			int nextDimTransition = 0;
@@ -342,7 +449,11 @@ public class prob24b2 {
 			if(nextDimTransition == 0) {
 				proposal = proposalNextX;
 				
-				if(isVelocityPositivePerDim[0]) {
+				if(proposalTooFast(trajs, proposal, maxVelPerDim, isVelocityPositivePerDim)) {
+					
+					//pass
+		
+				} else if(isVelocityPositivePerDim[0]) {
 					
 					//TODO: copy/paste code this 5 times:
 					if(proposal.origLesserIndex == minMaxIndexes1[0]) {
@@ -364,8 +475,10 @@ public class prob24b2 {
 				ix++;
 			} else if(nextDimTransition == 1) {
 				proposal = proposalNextY;
-				
-				if(isVelocityPositivePerDim[1]) {
+				if(proposalTooFast(trajs, proposal, maxVelPerDim, isVelocityPositivePerDim)) {
+					//pass
+
+				} else if(isVelocityPositivePerDim[1]) {
 					
 					if(proposal.origLesserIndex == minMaxIndexes1[1]) {
 						minMaxIndexes1[1] = proposal.newLesserIndex;
@@ -387,8 +500,10 @@ public class prob24b2 {
 				iy++;
 			} else if(nextDimTransition == 2) {
 				proposal = proposalNextZ;
+				if(proposalTooFast(trajs, proposal, maxVelPerDim, isVelocityPositivePerDim)) {
+					//pass
 
-				if(isVelocityPositivePerDim[2]) {
+				} else if(isVelocityPositivePerDim[2]) {
 					
 					if(proposal.origLesserIndex == minMaxIndexes1[2]) {
 						minMaxIndexes1[2] = proposal.newLesserIndex;
@@ -408,6 +523,12 @@ public class prob24b2 {
 				
 				iz++;
 			}
+			
+			if(somethingHappened) {
+				ix = 0;
+				iy = 0;
+				iz = 0;
+			}
 			//TODO: not done
 			//TODO: Later: reduce copy/paste code
 			
@@ -416,19 +537,19 @@ public class prob24b2 {
 				
 				currentlyViableCandidate = true;
 				sopl("At time " + currentTime + ", obj index " + minMaxIndexes1[0] + " became a viable candidate");
+				sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
+				sopl("Max vel: " + maxVelPerDim[0] + ", " + maxVelPerDim[1] + ", " + maxVelPerDim[2]);
+				sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
+				
 			} else if( ! theresAnObjectThatCouldBeFirstHit(minMaxIndexes1) && currentlyViableCandidate){
 				currentlyViableCandidate = false;
 
 				sopl("At time " + currentTime + ", obj stopped becoming a viable candidate.");
+				sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
+				
 				
 			}
 			
-			/*if(somethingHappened) {
-				for(int i=0; i<3; i++) {
-					sopl(currentTime + ": " + minMaxIndexes1[i]);
-				}
-				sopl();
-			}*/
 		}
 		
 		
@@ -440,16 +561,49 @@ public class prob24b2 {
 		
 	}
 	
-	public static int getMinStartIndexForDim(ArrayList <prob24obj> trajs, int dimIndex) {
-		return getMinStartIndexForDim(trajs, dimIndex, -1);
+	//TODO: care about direction to make it better?
+	public static boolean proposalTooFast(ArrayList <prob24obj> trajs, prob24bTransition proposal, int maxVelPerDim[], boolean isVelocityPositivePerDim[]) {
+		
+		prob24obj a = trajs.get(proposal.origLesserIndex);
+		prob24obj b = trajs.get(proposal.newLesserIndex);
+		
+		if(objTooFast(a, maxVelPerDim, isVelocityPositivePerDim) || objTooFast(b, maxVelPerDim, isVelocityPositivePerDim)) {
+			return true;
+		}
+		
+		return false;
+		//proposalTooFast(proposal, maxVelPerDim);
 	}
-	public static int getMinStartIndexForDim(ArrayList <prob24obj> trajs, int dimIndex, int indexToIgnore) {
+	
+	public static boolean objTooFast(prob24obj obj, int maxVelPerDim[], boolean isVelocityPositivePerDim[]) {
+		
+		for(int i=0; i<maxVelPerDim.length; i++) {
+			
+			if(isVelocityPositivePerDim[i] && obj.vel[i] >= maxVelPerDim[i] ) {
+				return true;
+			} else if( ! isVelocityPositivePerDim[i] && obj.vel[i] <= 0  -maxVelPerDim[i] ) {
+				return true;
+			}
+		}
+		
+		return false;
+		//proposalTooFast(proposal, maxVelPerDim);
+	}
+
+	
+	public static int getMinStartIndexForDim(ArrayList <prob24obj> trajs, int dimIndex, int maxVelPerDim[], boolean isVelocityPositivePerDim[]) {
+		return getMinStartIndexForDim(trajs, dimIndex, -1, maxVelPerDim, isVelocityPositivePerDim);
+	}
+	public static int getMinStartIndexForDim(ArrayList <prob24obj> trajs, int dimIndex, int indexToIgnore, int maxVelPerDim[], boolean isVelocityPositivePerDim[]) {
 		int ret = -1;
 		
 		double currentSmallest = 0.0;
 		
 		for(int i=0; i<trajs.size(); i++) {
 			if(i == indexToIgnore) {
+				continue;
+			}
+			if(objTooFast(trajs.get(i), maxVelPerDim, isVelocityPositivePerDim)) {
 				continue;
 			}
 			if(ret == -1 || trajs.get(i).start[dimIndex] < currentSmallest) {
@@ -472,16 +626,19 @@ public class prob24b2 {
 		return ret;
 	}
 	
-	public static int getMaxStartIndexForDim(ArrayList <prob24obj> trajs, int dimIndex) {
-		return getMaxStartIndexForDim(trajs, dimIndex, -1);
+	public static int getMaxStartIndexForDim(ArrayList <prob24obj> trajs, int dimIndex, int maxVelPerDim[], boolean isVelocityPositivePerDim[]) {
+		return getMaxStartIndexForDim(trajs, dimIndex, -1, maxVelPerDim, isVelocityPositivePerDim);
 	}
-	public static int getMaxStartIndexForDim(ArrayList <prob24obj> trajs, int dimIndex, int indexToIgnore) {
+	public static int getMaxStartIndexForDim(ArrayList <prob24obj> trajs, int dimIndex, int indexToIgnore, int maxVelPerDim[], boolean isVelocityPositivePerDim[]) {
 		int ret = -1;
 		
 		double currentBiggest = 0.0;
 		
 		for(int i=0; i<trajs.size(); i++) {
 			if(i == indexToIgnore) {
+				continue;
+			}
+			if(objTooFast(trajs.get(i), maxVelPerDim, isVelocityPositivePerDim)) {
 				continue;
 			}
 			if(ret == -1 || trajs.get(i).start[dimIndex] > currentBiggest) {
