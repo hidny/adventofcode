@@ -548,8 +548,30 @@ public class prob24b2 {
 				currentlyViableCandidate = true;
 				sopl("At time " + currentTime + ", obj index " + minMaxIndexes[0] + " became a viable candidate");
 				sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
-				sopl("Max vel: " + maxVelPerDim[0] + ", " + maxVelPerDim[1] + ", " + maxVelPerDim[2]);
-				sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
+				
+				
+				//sopl("Max vel: " + maxVelPerDim[0] + ", " + maxVelPerDim[1] + ", " + maxVelPerDim[2]);
+				//sopl(isVelocityPositivePerDim[0] + ", " + isVelocityPositivePerDim[1] + ", " + isVelocityPositivePerDim[2]);
+				
+				if(isVelocityPositivePerDim[0]) {
+					sop(maxVelPerDim[0] + ", ");
+				} else {
+					sop((int)(0-maxVelPerDim[0]) + ", ");
+				}
+
+				if(isVelocityPositivePerDim[1]) {
+					sop(maxVelPerDim[1] + ", ");
+				} else {
+					sop((int)(0-maxVelPerDim[1]) + ", ");
+				}
+				
+				if(isVelocityPositivePerDim[2]) {
+					sop(maxVelPerDim[2] + ", ");
+				} else {
+					sop((int)(0-maxVelPerDim[2]) + ", ");
+				}
+				sopl();
+				
 				
 			} else if( ! theresAnObjectThatCouldBeFirstHit(minMaxIndexes) && currentlyViableCandidate){
 				currentlyViableCandidate = false;
