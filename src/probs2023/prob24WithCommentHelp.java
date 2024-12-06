@@ -110,8 +110,6 @@ public class prob24WithCommentHelp {
 					sopl("Getting the matrix for x and z:");
 				}
 				
-				//TODO AHA: no need for z
-				
 				int offset = 0;
 				
 				for(int i=0; i<numEquations; i++) {
@@ -164,6 +162,13 @@ public class prob24WithCommentHelp {
 			//sum = 808107741406756
 			//It's correct!
 			
+			//Comment about how to use less hailstones:
+			/*
+			"Azaril\r\n"
+			+ "·\r\n"
+			+ "4 days ago\r\n"
+			+ "This approach can be used for z as well - with the exact same equation structure for (x, z) and (y,z). You then generate 3 equations per pair of hailstones which means you can solve it with 3 pairs of hailstones - which is creatable with 3 hailstones."
+			*/
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
