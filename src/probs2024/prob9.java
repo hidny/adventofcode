@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob6 {
+public class prob9 {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +21,7 @@ public class prob6 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in6.txt"));
+			in = new Scanner(new File("in2024/prob2024in9.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -59,104 +59,15 @@ public class prob6 {
 			int most3 = 0;
 			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
-			
-			int curi=0;
-			int curj=0;
-			int dir=0;
 			for(int i=0; i<lines.size(); i++) {
 				
-				for(int j=0; j<lines.get(i).length(); j++) {
-					if(lines.get(i).charAt(j) == '^') {
-						curi=i;
-						curj=j;
-						dir=0;
-					}
-				}
+				
 				line = lines.get(i);
 				
-			}
-			
-			cur++;
-
-			table342[curi][curj] = true;
-			int nexti;
-			int nextj;
-			OUT:
-			while(curi>=0 && curj>=0 && curi < lines.size() && curj < lines.get(0).length()) {
-				
-				boolean moved = false;
-
-				nexti = curi;
-				nextj = curj;
-				while(moved == false) {
-					nexti = curi;
-					nextj = curj;
-					
-					moved = true;
-					if(dir == 0) {
-						if(curi==0) {
-							break OUT;
-						}
-						nexti--;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
-						
-					} else if(dir == 1) {
-						if(curj == lines.get(0).length() - 1) {
-							break OUT;
-						}
-						nextj++;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
-					} else if(dir == 2) {
-						if(curi==lines.size()-1) {
-							break OUT;
-						}
-						nexti++;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
-						
-					} else if(dir == 3) {
-						if(curj == 0) {
-							break OUT;
-						}
-						nextj--;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
-						
-					}
-				}
-				
-				cur++;
-				curi = nexti;
-				curj = nextj;
-				sopl(curi + ", " + curj);
-				table342[curi][curj] = true;
-				sopl(dir);
-			}
-			cur++;
-			//185, 186
-			
-			cur = 0;
-			for(int i=0; i<table342.length; i++) {
-				for(int j=0; j<table342[0].length; j++) {
-					if(table342[i][j]) {
-						cur++;
-					}
-				}
 			}
 
 
 			sopl("Answer: " + cur);
-			
 			in.close();
 			
 		} catch(Exception e) {

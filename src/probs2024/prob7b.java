@@ -1,6 +1,6 @@
 package probs2024;
 import java.io.File;
-
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob6 {
+public class prob7b {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +21,7 @@ public class prob6 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in6.txt"));
+			in = new Scanner(new File("in2024/prob2024in7.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -59,104 +59,72 @@ public class prob6 {
 			int most3 = 0;
 			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
-			
-			int curi=0;
-			int curj=0;
-			int dir=0;
 			for(int i=0; i<lines.size(); i++) {
 				
-				for(int j=0; j<lines.get(i).length(); j++) {
-					if(lines.get(i).charAt(j) == '^') {
-						curi=i;
-						curj=j;
-						dir=0;
-					}
-				}
+				
 				line = lines.get(i);
 				
-			}
-			
-			cur++;
-
-			table342[curi][curj] = true;
-			int nexti;
-			int nextj;
-			OUT:
-			while(curi>=0 && curj>=0 && curi < lines.size() && curj < lines.get(0).length()) {
 				
-				boolean moved = false;
-
-				nexti = curi;
-				nextj = curj;
-				while(moved == false) {
-					nexti = curi;
-					nextj = curj;
+				
+				BigInteger lhs = new BigInteger(line.split(":")[0]);
+				
+				String tokens[] = line.split(": ")[1].split(" ");
+				
+				ArrayList<BigInteger> pos = null;
+				ArrayList<BigInteger> prevPos = null;
+				
+				
+				for(int j=0; j<tokens.length; j++) {
 					
-					moved = true;
-					if(dir == 0) {
-						if(curi==0) {
-							break OUT;
-						}
-						nexti--;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
+					prevPos = pos;
+					
+					if(j==0) {
+						pos = new ArrayList();
+						BigInteger next = new BigInteger(tokens[j]);
+						pos.add(next);
+					} else {
 						
-					} else if(dir == 1) {
-						if(curj == lines.get(0).length() - 1) {
-							break OUT;
-						}
-						nextj++;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
-					} else if(dir == 2) {
-						if(curi==lines.size()-1) {
-							break OUT;
-						}
-						nexti++;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
+						pos = new ArrayList();
 						
-					} else if(dir == 3) {
-						if(curj == 0) {
-							break OUT;
-						}
-						nextj--;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
+						BigInteger next = new BigInteger(tokens[j]);
 						
+						for(int k=0; k<prevPos.size(); k++) {
+							pos.add(prevPos.get(k).add(next));
+							pos.add(prevPos.get(k).multiply(next));
+							
+							
+							BigInteger tmp = BigInteger.ONE;
+							BigInteger TEN = new BigInteger("10");
+							int numDigits = 1;
+							BigInteger tmp2 = prevPos.get(k);
+							
+							while(next.compareTo(tmp) >=0) {
+								tmp = tmp.multiply(TEN);
+								tmp2 = tmp2.multiply(TEN);
+								numDigits++;
+								
+							}
+							
+							pos.add(tmp2.add(next));
+						}
+					}
+					
+					
+					prevPos = pos;
+					
+				}
+				
+				for(int k=0; k<prevPos.size(); k++) {
+					if(lhs.compareTo(prevPos.get(k)) == 0) {
+						cur += lhs.longValue();
+						break;
 					}
 				}
 				
-				cur++;
-				curi = nexti;
-				curj = nextj;
-				sopl(curi + ", " + curj);
-				table342[curi][curj] = true;
-				sopl(dir);
-			}
-			cur++;
-			//185, 186
-			
-			cur = 0;
-			for(int i=0; i<table342.length; i++) {
-				for(int j=0; j<table342[0].length; j++) {
-					if(table342[i][j]) {
-						cur++;
-					}
-				}
 			}
 
 
 			sopl("Answer: " + cur);
-			
 			in.close();
 			
 		} catch(Exception e) {
@@ -179,6 +147,15 @@ public class prob6 {
 	public static int pint(String s) {
 		if (IsNumber.isNumber(s)) {
 			return Integer.parseInt(s);
+		} else {
+			sop("Error: (" + s + ") is not a number");
+			return -1;
+		}
+	}
+
+	public static long plong(String s) {
+		if (IsNumber.isNumber(s)) {
+			return Long.parseLong(s);
 		} else {
 			sop("Error: (" + s + ") is not a number");
 			return -1;

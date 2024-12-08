@@ -40,7 +40,6 @@ public class prob6b {
 			
 			
 			int LIMIT = 20000;
-			boolean table342[][] = new boolean[LIMIT][LIMIT];
 			
 			
 			//dir: 0 up
@@ -76,9 +75,46 @@ public class prob6b {
 				
 			}
 			
-			cur++;
+			cur=0;
+			
+			for(int i=0; i<lines.size(); i++) {
+				
+				for(int j=0; j<lines.get(i).length(); j++) {
+					if(checkLocationForLoop(i, j, curi, curj, lines)) {
+						cur++;
+					}
+				}
+			}
+			
+			sopl("Answer: " + cur);
+			in.close();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+		}
 
-			table342[curi][curj] = true;
+	}
+		
+		public static boolean checkLocationForLoop(int iTry, int jTry, int curi, int curj, ArrayList <String>lines) {
+			int LIMIT = Math.max(lines.size(), lines.get(0).length());
+			
+			if(curi == iTry && curj == jTry) {
+				return false;
+			}
+			
+			int table342[][] = new int[LIMIT][LIMIT];
+			
+			for(int i=0; i<table342.length; i++) {
+				for(int j=0; j<table342[0].length; j++) {
+					table342[i][j] = 0;
+				}
+			}
+			
+
+			int dir=0;
+			
+			table342[curi][curj] = 1;
 			int nexti;
 			int nextj;
 			OUT:
@@ -98,7 +134,7 @@ public class prob6b {
 							break OUT;
 						}
 						nexti--;
-						if(lines.get(nexti).charAt(nextj) == '#') {
+						if(lines.get(nexti).charAt(nextj) == '#' || ( nexti ==iTry && nextj == jTry)) {
 							dir = (dir + 1) % 4;
 							moved = false;
 						}
@@ -108,7 +144,7 @@ public class prob6b {
 							break OUT;
 						}
 						nextj++;
-						if(lines.get(nexti).charAt(nextj) == '#') {
+						if(lines.get(nexti).charAt(nextj) == '#' || ( nexti ==iTry && nextj == jTry)) {
 							dir = (dir + 1) % 4;
 							moved = false;
 						}
@@ -117,7 +153,7 @@ public class prob6b {
 							break OUT;
 						}
 						nexti++;
-						if(lines.get(nexti).charAt(nextj) == '#') {
+						if(lines.get(nexti).charAt(nextj) == '#' || ( nexti ==iTry && nextj == jTry)) {
 							dir = (dir + 1) % 4;
 							moved = false;
 						}
@@ -127,7 +163,7 @@ public class prob6b {
 							break OUT;
 						}
 						nextj--;
-						if(lines.get(nexti).charAt(nextj) == '#') {
+						if(lines.get(nexti).charAt(nextj) == '#' || ( nexti ==iTry && nextj == jTry)) {
 							dir = (dir + 1) % 4;
 							moved = false;
 						}
@@ -135,34 +171,20 @@ public class prob6b {
 					}
 				}
 				
-				cur++;
 				curi = nexti;
 				curj = nextj;
-				sopl(curi + ", " + curj);
-				table342[curi][curj] = true;
-				sopl(dir);
+				//sopl(curi + ", " + curj);
+				if((table342[curi][curj] & ((int)Math.pow(2, dir))) != 0) {
+					return true;
+				}
+				table342[curi][curj] ^= (int)Math.pow(2, dir);
+				//sopl(dir);
 			}
-			cur++;
 			//185, 186
 			
-			cur = 0;
-			for(int i=0; i<table342.length; i++) {
-				for(int j=0; j<table342[0].length; j++) {
-					if(table342[i][j]) {
-						cur++;
-					}
-				}
-			}
 
-
-			sopl("Answer: " + cur);
+			return false;
 			
-			in.close();
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-		}
 	}
 
 	public static void sop(Object a) {

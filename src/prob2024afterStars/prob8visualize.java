@@ -1,4 +1,4 @@
-package probs2024;
+package prob2024afterStars;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob6 {
+public class prob8visualize {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +21,7 @@ public class prob6 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in6.txt"));
+			in = new Scanner(new File("in2024/prob2024in8.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -59,110 +59,87 @@ public class prob6 {
 			int most3 = 0;
 			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
-			
-			int curi=0;
-			int curj=0;
-			int dir=0;
 			for(int i=0; i<lines.size(); i++) {
 				
-				for(int j=0; j<lines.get(i).length(); j++) {
-					if(lines.get(i).charAt(j) == '^') {
-						curi=i;
-						curj=j;
-						dir=0;
-					}
-				}
+				
 				line = lines.get(i);
 				
 			}
 			
-			cur++;
+			
 
-			table342[curi][curj] = true;
-			int nexti;
-			int nextj;
-			OUT:
-			while(curi>=0 && curj>=0 && curi < lines.size() && curj < lines.get(0).length()) {
+			for(int i=0; i<lines.size(); i++) {
 				
-				boolean moved = false;
-
-				nexti = curi;
-				nextj = curj;
-				while(moved == false) {
-					nexti = curi;
-					nextj = curj;
+				for(int j=0; j<lines.get(0).length(); j++) {
 					
-					moved = true;
-					if(dir == 0) {
-						if(curi==0) {
-							break OUT;
-						}
-						nexti--;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
+					
+					for(int i2=0; i2<lines.size(); i2++) {
 						
-					} else if(dir == 1) {
-						if(curj == lines.get(0).length() - 1) {
-							break OUT;
-						}
-						nextj++;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
-					} else if(dir == 2) {
-						if(curi==lines.size()-1) {
-							break OUT;
-						}
-						nexti++;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
-						}
 						
-					} else if(dir == 3) {
-						if(curj == 0) {
-							break OUT;
-						}
-						nextj--;
-						if(lines.get(nexti).charAt(nextj) == '#') {
-							dir = (dir + 1) % 4;
-							moved = false;
+						for(int j2=0; j2<lines.get(0).length(); j2++) {
+							
+							if(i == i2 && j == j2) {
+								continue;
+							}
+							//inBound(int i, int j, ArrayList<String> lines)
+							int i3 = i + 2*(i2 - i);
+							int j3 = j + 2*(j2 - j);
+							
+							if(inBound(i3, j3, lines)) {
+								if(lines.get(i2).charAt(j2) == lines.get(i).charAt(j) && lines.get(i2).charAt(j2) != '.') {
+									
+									if(table342[i3][j3] == false) {
+										table342[i3][j3] = true;
+										cur++;
+										//sop("#");
+										//sopl(i + "," + j + ": " + i2 + ", " + j2 + ":" + i3 + ", " + j3);
+										
+										continue;
+										
+									}
+								}
+							}
 						}
 						
 					}
+
+					//sop(".");
 				}
+				//sopl();
 				
-				cur++;
-				curi = nexti;
-				curj = nextj;
-				sopl(curi + ", " + curj);
-				table342[curi][curj] = true;
-				sopl(dir);
+				
 			}
-			cur++;
-			//185, 186
 			
-			cur = 0;
-			for(int i=0; i<table342.length; i++) {
-				for(int j=0; j<table342[0].length; j++) {
-					if(table342[i][j]) {
-						cur++;
-					}
-				}
-			}
-
-
+			display(lines, table342);
 			sopl("Answer: " + cur);
-			
 			in.close();
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 		}
+	}
+	public static boolean inBound(int i, int j, ArrayList<String> lines) {
+		return i >=0 && j >=0 && i<lines.size() && j<lines.get(0).length();
+	}
+	
+	public static void display(ArrayList<String> lines, boolean table342[][]) {
+		for(int i=0; i<lines.size(); i++) {
+			
+			for(int j=0; j<lines.get(0).length(); j++) {
+				
+				if(lines.get(i).charAt(j) != '.') {
+					sop(lines.get(i).charAt(j));
+				} else if(table342[i][j]) {
+					sop("#");
+				} else {
+					sop('.');
+				}
+				
+			}
+			sopl();
+		}
+		
 	}
 
 	public static void sop(Object a) {
