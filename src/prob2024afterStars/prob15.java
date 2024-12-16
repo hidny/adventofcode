@@ -1,4 +1,4 @@
-package probs2024;
+package prob2024afterStars;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob15 {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +21,7 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in1.txt"));
+			in = new Scanner(new File("in2024/prob2024in15.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -59,14 +59,125 @@ public class prob0 {
 			int most3 = 0;
 			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
+			
+			
+			char map[][] = getCharTable(lines);
+
+			for(int i=0; i<map.length; i++) {
+				for(int j=0; j<map[0].length; j++) {
+					sop(map[i][j]);
+				}
+				sopl();
+			}
+			sopl();
+			
+			String moves = "";
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
-				
+				if(! line.contains("#")) {
+					moves += line;
+				}
 			}
+			
+			char moves2[] = moves.toCharArray();
 
-
+			sopl("moves2: ");
+			for(int i=0; i<moves2.length; i++) {
+				sop(moves2[i]);
+			}
+			sopl();
+			sopl("test last: " + moves2[moves2.length - 1]);
+			
+			
+			int curi = -1;
+			int curj = -1;
+			for(int i=0; i<map.length; i++) {
+				for(int j=0; j<map[0].length; j++) {
+					if(map[i][j] == '@') {
+						curi = i;
+						curj = j;
+					}
+				}
+			}
+			
+			int diri;
+			int dirj;
+			
+			for(int i=0; i<moves2.length; i++) {
+				diri=0;
+				dirj=0;
+				
+				if(moves2[i] == '^') {
+					
+					diri=-1;
+					
+					
+				} else if(moves2[i] == '>') {
+					dirj=1;
+					
+				} else if(moves2[i] == 'v') {
+					diri=1;
+					
+				} else if(moves2[i] == '<') {
+					dirj=-1;
+					
+				} else {
+					sopl("oops!");
+					exit(1);
+				}
+				
+				//Has space:
+				int nexti=curi+diri;
+				int nextj=curj+dirj;
+				
+				while(map[nexti][nextj] =='O') {
+					nexti=nexti+diri;
+					nextj=nextj+dirj;
+				}
+				
+				if(map[nexti][nextj] == '#') {
+					//do nothing
+				} else if(map[nexti][nextj] == '.') {
+					//move:
+					while(nexti != curi || nextj != curj) {
+						map[nexti][nextj] = map[nexti - diri][nextj - dirj];
+						nexti = nexti - diri;
+						nextj = nextj - dirj;
+						//sopl(map[nexti - diri][nextj - dirj] + "to ");
+						//sopl(map[nexti][nextj]);
+					}
+					map[curi][curj] = '.';
+					
+					//sopl("move");
+					curi = curi + diri;
+					curj = curj + dirj;
+				}
+				
+				/*for(int i2=0; i2<map.length; i2++) {
+					for(int j=0; j<map[0].length; j++) {
+						sop(map[i2][j]);
+					}
+					sopl();
+				}
+				sopl();
+				sopl();
+				*/
+			}
+			
+			//1432364
+			//1432369
+			cur = 0L;
+			
+			for(int i=0; i<map.length; i++) {
+				for(int j=0; j<map[0].length; j++) {
+					if(map[i][j] == 'O') {
+						cur += 100*i + j;
+					}
+				}
+			}
+			
 			sopl("Answer: " + cur);
 			in.close();
 			
@@ -134,12 +245,29 @@ public class prob0 {
 	
 
 	public static char[][] getCharTable(ArrayList<String> lines) {
-		char grid[][] = new char[lines.size()][lines.get(0).length()];
 		
+		int height = 0;
+		int num= 0;
 		for(int i=0; i<lines.size(); i++) {
+			if(lines.get(i).startsWith("####")) {
+				num++;
+				if(num == 2) {
+					break;
+				}
+			} else {
+				height++;
+			}
+		}
+		height++;
+		height++;
+		char grid[][] = new char[height][lines.get(0).length()];
+		
+		for(int i=0; i<height; i++) {
 			
-			for(int j=0; j<grid[0].length; j++) {
+			for(int j=0; j<lines.get(i).length(); j++) {
+				
 				grid[i][j] = lines.get(i).charAt(j);
+				
 
 			}
 		}

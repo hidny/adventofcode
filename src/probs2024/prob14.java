@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob14 {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +21,7 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in1.txt"));
+			in = new Scanner(new File("in2024/prob2024in0.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -59,14 +59,113 @@ public class prob0 {
 			int most3 = 0;
 			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
+			
+			ArrayList<prob14obj> robs = new ArrayList<prob14obj>();
+			
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
 				
+				String tokens[] = line.split(" ");
+				
+				String ps[] = tokens[0].split("=")[1].split(",");
+				String vs[] = tokens[1].split("=")[1].split(",");
+				
+				long p[] = new long[2];
+				long v[] = new long[2];
+				p[0] = pint(ps[0]);
+				p[1] = pint(ps[1]);
+				
+				v[0] = pint(vs[0]);
+				v[1] = pint(vs[1]);
+				
+				robs.add(new prob14obj(p, v));
+				
+				
+			}
+			sopl(robs.size());
+
+			//int height = 103;
+			//int width = 101;
+			
+			//Torus
+			int height = 7;
+			int width = 11;
+			
+			int quads[] = new int[4];
+			/*
+			for(int i=0; i<robs.size(); i++) {
+				robs.get(i).tick(100);
+				
+				if(robs.get(i).quad(width, height) != -1) {
+					quads[robs.get(i).quad(width, height)]++;
+					sopl(robs.get(i).quad(width, height));
+				} else {
+					sopl("-1");
+				}
+			}
+			*/
+			
+			int lowestNum = width * height;
+			
+			Scanner in2= new Scanner(System.in);
+			int sec = 0;
+			for(int k=0; k<101; k++) {
+				sec++;
+				sopl("seconds: " + sec);
+				boolean table[][] = new boolean[height][width];
+				
+				for(int i=0; i<robs.size(); i++) {
+					robs.get(i).tick(1);
+					
+					table[(int)prob14obj.mod(robs.get(i).p[1], table.length)][(int)prob14obj.mod(robs.get(i).p[0], table[0].length)] = true;
+					
+				}
+				
+				boolean show = true;
+				/*for(int i=0; i<10; i++) {
+					for(int j=0; j<10; j++) {
+						if(table[i][j] == true) {
+							show = false;
+						}
+					}
+				}*/
+				int curNum = 0;
+				for(int i=0; i<table.length; i++) {
+					for(int j=0; j<table[0].length; j++) {
+						if(table[i][j]) {
+							curNum++;
+						}
+					}
+				}
+				//show = curNum <= lowestNum;
+				
+				if(show) {
+					lowestNum = curNum;
+					for(int i=0; i<table.length; i++) {
+						for(int j=0; j<table[0].length; j++) {
+							if(table[i][j]) {
+								sop("#");
+							} else {
+								sop(".");
+							}
+						}
+						sopl();
+					}
+					sopl();
+				}
+				
+				//in2.next();
+			}
+				
+			cur = 1L;
+			
+			for(int i=0; i<quads.length; i++) {
+				cur *= quads[i];
 			}
 
-
+			//93965184
 			sopl("Answer: " + cur);
 			in.close();
 			

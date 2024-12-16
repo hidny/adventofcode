@@ -13,69 +13,92 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob14obj {
 
 	//day1 part 1
 	//2:38.01
 	
-	public static void main(String[] args) {
-		Scanner in;
-		try {
-			in = new Scanner(new File("in2024/prob2024in1.txt"));
-			//in = new Scanner(new File("in2024/prob2024in0.txt"));
-			int numTimes = 0;
-			 
-			int count = 0;
-			boolean part2 = false;
-			String line = "";
-
-			LinkedList queue = new LinkedList();
-			Stack stack = new Stack();
-			HashSet set = new HashSet();
-			
-			
-			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
-			
-			ArrayList <String>lines = new ArrayList<String>();
-			
-			
-			int LIMIT = 20000;
-			boolean table342[][] = new boolean[LIMIT][LIMIT];
-			
-			
-			//dir: 0 up
-			//1 right
-			//2 down
-			//3 left
-			
-			while(in.hasNextLine()) {
-				line = in.nextLine();
-				lines.add(line);
-				
-			}
-
-			int most = 0;
-			int most2 = 0;
-			int most3 = 0;
-			long cur = 0L;
-			ArrayList ints = new ArrayList<Integer>();
-			for(int i=0; i<lines.size(); i++) {
-				
-				
-				line = lines.get(i);
-				
-			}
-
-
-			sopl("Answer: " + cur);
-			in.close();
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-		}
+	public long p[] = new long[2];
+	public long v[] = new long[2];
+	
+	
+	
+	
+	public prob14obj(long[] p, long[] v) {
+		super();
+		this.p = p;
+		this.v = v;
 	}
 
+	public void tick(int numSeconds) {
+		
+		p[0] += numSeconds * v[0];
+		p[1] += numSeconds * v[1];
+		
+		/*sopl("Move to:");
+		sopl(p[0]);
+		sopl(p[1]);
+		
+		sopl("ie");
+		sopl(mod(p[0], 11));
+		sopl(mod(p[1], 7));
+		*/
+		
+	}
+	
+	//0: x
+	//1: y
+	public int quad(int width, int height) {
+		
+		int MidUp = height/2;
+		int MidLeftRight = width/2;
+		
+		sopl("xtest: " + mod(this.p[0], width));
+		sopl("ytest: " + mod(this.p[1], height));
+		
+		if(mod(this.p[0], width) < MidLeftRight) {
+			
+			if(mod(this.p[1], height) < MidUp) {
+				return 0;
+			} else if(mod(this.p[1], height) == MidUp) {
+				sopl("???3");
+				return -1;
+			
+			} else {
+				return 1;
+				
+			}
+		} else if(mod(this.p[0], width) == MidLeftRight) {
+			sopl("???2");
+			return -1;
+		
+		} else {
+			if(mod(this.p[1], height) < MidUp) {
+				return 2;
+			} else if(mod(this.p[1], height) == MidUp) {
+				sopl("???");
+				return -1;
+			
+			} else {
+				return 3;
+				
+			}
+		}
+		
+	}
+	
+	public static long mod(long num, long mod) {
+		long tmp = num % mod;
+		if(tmp < 0) {
+			return tmp + mod;
+			
+		} else {
+			return tmp;
+		}
+	}
+	
+	
+	
 	public static void sop(Object a) {
 		System.out.print(a.toString());
 	}

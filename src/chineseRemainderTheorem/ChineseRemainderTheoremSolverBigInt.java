@@ -39,22 +39,6 @@ public class ChineseRemainderTheoremSolverBigInt {
 			BigInteger ithTermToUse = ithTerm.multiply(inverse.multiply(new BigInteger(equations.get(i).getNum() + "")));
 			
 			
-			
-			/*
-			System.out.println("Num to inverse: " + new BigInteger(""+ equations.get(i).getMod()));
-			BigInteger inverse = ithTerm.modInverse(new BigInteger(""+ equations.get(i).getMod()));
-
-			System.out.println("inverse: " + inverse);
-			BigInteger ithTermToUse = inverse.multiply(new BigInteger(equations.get(i).getNum() + ""));
-			
-			System.out.println(ithTermToUse.divideAndRemainder(new BigInteger("" + equations.get(i).getMod()))[1] + " vs2 " + new BigInteger(""+ equations.get(i).getNum()));
-			
-			System.out.println("term to use: " + ithTermToUse + " vs " + new BigInteger(""+ equations.get(i).getNum()));
-			
-			*/
-			//ithTerm = new BigInteger("" + equations.get(i).getNum());
-			//System.out.println("term to use: " + ithTerm);
-			
 			answer = answer.add(ithTermToUse);
 		}
 		

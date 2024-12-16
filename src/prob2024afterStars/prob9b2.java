@@ -1,4 +1,4 @@
-package probs2024;
+package prob2024afterStars;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob9b2 {
 
 	//day1 part 1
 	//2:38.01
@@ -21,8 +21,8 @@ public class prob9 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in9.txt"));
-			//in = new Scanner(new File("in2024/prob2024in0.txt"));
+			//in = new Scanner(new File("in2024/prob2024in9.txt"));
+			in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -86,7 +86,7 @@ public class prob9 {
 				}
 				
 				int table[] = new int[posIndex];
-				sopl(posIndex);
+				//sopl(posIndex);
 				for(int j=0; j<table.length; j++) {
 					table[j] = -1;
 				}
@@ -129,43 +129,76 @@ public class prob9 {
 				}
 				sopl();
 				
-				int table2[] = new int[table.length];
+				//MOVE
 				
-				int backIndex = table.length - 1;
-				for(int j=0; j<=backIndex; j++) {
-					if(table[j] >=0) {
-						table2[j] = table[j];
-					} else {
-						
-						while(backIndex > j && table[backIndex] == -1) {
-							backIndex--;
-						}
-						if(backIndex > j) {
-							table2[j] = table[backIndex];
-							backIndex--;
-							table2[backIndex] = -1;
-						}
+				for(int backIndex=table.length - 1; backIndex >=0; ) {
+					
+					while(backIndex >= 0 && table[backIndex] == -1) {
+						backIndex--;
 					}
-				}
+					if(backIndex <0) {
+						break;
+					}
+					
+					int origBack = table[backIndex];
+					int k = backIndex;
+					
+					
+					int sizeBack = 0;
+					
+					while(k >=0 && table[k] == origBack) {
+						sizeBack++;
+						k--;
+					}
+					
+					for(int j=0; j<backIndex;) {
 
-				for(int j=0; j<table2.length; j++) {
-					if(table2[j] == -1) {
+						if(table[j] != -1) {
+							j++;
+							continue;
+						}
+						
+						int sizeFront = 0;
+						k=j;
+						while(k<table.length && table[k] == -1) {
+							sizeFront++;
+							k++;
+						}
+						
+						if(sizeBack <= sizeFront) {
+							for(k=0; k<sizeBack; k++) {
+								table[j+k] = table[backIndex-k];
+								table[backIndex-k] = -1;
+							}
+							break;
+							
+						}
+						
+						j+=sizeFront;
+						
+					}
+					
+					backIndex -= sizeBack;
+				}
+				//END MOVE
+
+				for(int j=0; j<table.length; j++) {
+					if(table[j] == -1) {
 						sop('.');
 					} else {
-						sop(table2[j]);
+						sop(table[j]);
 					}
 				}
 				sopl();
 				
-				for(int j=0; j<table2.length; j++) {
-					if( table2[j] >= 0) {
-						cur += j * table2[j];
-						sopl(j + " * " + table2[j] + " = " + (j * table2[j]));
+				for(int j=0; j<table.length; j++) {
+					if( table[j] >= 0) {
+						cur += j * table[j];
+						sopl(j + " * " + table[j] + " = " + (j * table[j]));
 					}
 				}
 			}
 
-			//12636121403167
 
 			sopl("Answer: " + cur);
 			in.close();

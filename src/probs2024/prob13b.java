@@ -1,6 +1,6 @@
 package probs2024;
 import java.io.File;
-
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -12,8 +12,10 @@ import java.util.Stack;
 import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
+import utilsPE.Fraction;
+import utilsPE.Matrix;
 
-public class prob0 {
+public class prob13b {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +23,7 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in1.txt"));
+			in = new Scanner(new File("in2024/prob2024in13.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -64,6 +66,78 @@ public class prob0 {
 				
 				line = lines.get(i);
 				
+				if(line.startsWith("Button A")) {
+					
+					String rightPart = line.split(":")[1];
+					String xPart = rightPart.split(",")[0];
+					
+					int x1 = pint(xPart.split("\\+")[1]);
+
+					String yPart = rightPart.split(",")[1];
+					int y1 = pint(yPart.split("\\+")[1]);
+					
+					i++;
+					line = lines.get(i);
+					
+					rightPart = line.split(":")[1];
+					xPart = rightPart.split(",")[0];
+					
+					int x2 = pint(xPart.split("\\+")[1]);
+
+					yPart = rightPart.split(",")[1];
+					int y2 = pint(yPart.split("\\+")[1]);
+					
+					i++;
+					line = lines.get(i);
+					rightPart = line.split(":")[1];
+					xPart = rightPart.split(",")[0];
+					
+					long xp = pint(xPart.split("\\=")[1]) + 10000000000000L;
+
+					yPart = rightPart.split(",")[1];
+					long yp = pint(yPart.split("\\=")[1]) + 10000000000000L;
+					
+					
+					sopl(x1 + ", " + y1);
+					sopl(x2 + ", " + y2);
+					sopl(xp + ", " + yp);
+					sopl("-----");
+					
+					
+					//solve matrix:
+					Fraction matrix[][] = new Fraction[2][3];
+					matrix[0][0] = new Fraction(x1 , 1);
+					matrix[0][1] = new Fraction(x2 , 1);
+					matrix[0][2] = new Fraction(xp , 1);
+					
+					matrix[1][0] = new Fraction(y1 , 1);
+					matrix[1][1] = new Fraction(y2 , 1);
+					matrix[1][2] = new Fraction(yp , 1);
+					
+					Fraction result[] = Matrix.solveMatrixSlow(matrix);
+					
+					sopl("result: ");
+					if(result[0].getNumerator().divideAndRemainder(result[0].getDenominator())[1].compareTo(BigInteger.ZERO) == 0
+						&& result[1].getNumerator().divideAndRemainder(result[1].getDenominator())[1].compareTo(BigInteger.ZERO) == 0
+								
+							) {
+						sopl(result[0]);
+						sopl(result[1]);
+						sopl("-----");
+						sopl("-----");
+						
+						//14752
+						cur += 3 * result[0].getNumerator().divideAndRemainder(result[0].getDenominator())[0].longValue() 
+								+ result[1].getNumerator().divideAndRemainder(result[1].getDenominator())[0].longValue() ;
+					} else {
+						sopl("Fraction");
+						sopl(result[0]);
+						sopl(result[1]);
+						sopl("-----");
+						sopl("-----");
+					}
+					
+				}
 			}
 
 

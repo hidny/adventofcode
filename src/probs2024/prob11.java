@@ -1,6 +1,6 @@
 package probs2024;
 import java.io.File;
-
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob11 {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +21,7 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in1.txt"));
+			in = new Scanner(new File("in2024/prob2024in11.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -64,7 +64,53 @@ public class prob0 {
 				
 				line = lines.get(i);
 				
+				
+				
 			}
+			//line = "125 17";
+			line = lines.get(0);
+			
+			String tokens[] = line.split(" ");
+			
+			long nums[] = new long[tokens.length];
+			for(int i=0; i<nums.length; i++) {
+				nums[i] = plong(tokens[i]);
+			}
+			
+			prob11obj head = new prob11obj(new BigInteger(nums[0] + ""), null);
+
+			prob11obj current = head;
+			
+			for(int i=1; i<nums.length; i++) {
+				current.next = new prob11obj(new BigInteger(nums[i] + ""), null);
+				current = current.next;
+			}
+			
+			for(int i=0; i<25; i++) {
+				current = head;
+				while(current != null) {
+					
+					prob11obj next = current.next;
+					current.do_calc();
+					//sop(current.num + " ");
+					
+					if(current.next != next) {
+
+						//sop(current.next.num + " ");
+					}
+					
+					current = next;
+				}
+				sopl(i);
+			}
+			cur=0;
+			current = head;
+			while(current != null) {
+				cur++;
+				current = current.next;
+			}
+			
+			//62484
 
 
 			sopl("Answer: " + cur);
@@ -86,20 +132,18 @@ public class prob0 {
 	public static void sopl() {
 		System.out.println();
 	}
-	
-	public static int pint(String s) {
+
+	public static long plong(String s) {
 		if (IsNumber.isNumber(s)) {
-			return Integer.parseInt(s);
+			return Long.parseLong(s);
 		} else {
 			sop("Error: (" + s + ") is not a number");
 			return -1;
 		}
 	}
-	
-
-	public static long plong(String s) {
-		if (IsNumber.isLong(s)) {
-			return Long.parseLong(s);
+	public static int pint(String s) {
+		if (IsNumber.isNumber(s)) {
+			return Integer.parseInt(s);
 		} else {
 			sop("Error: (" + s + ") is not a number");
 			return -1;
@@ -118,7 +162,11 @@ public class prob0 {
 	public static int[][] getIntTable(ArrayList<String> lines) {
 		int grid[][] = new int[lines.size()][lines.get(0).length()];
 		
+		String line;
 		for(int i=0; i<lines.size(); i++) {
+			
+			
+			line = lines.get(i);
 			
 			for(int j=0; j<grid[0].length; j++) {
 				if(lines.get(i).charAt(j) == '.') {
@@ -126,21 +174,6 @@ public class prob0 {
 				} else {
 					grid[i][j] = (int)(lines.get(i).charAt(j) - '0');
 				}
-			}
-		}
-		
-		return grid;
-	}
-	
-
-	public static char[][] getCharTable(ArrayList<String> lines) {
-		char grid[][] = new char[lines.size()][lines.get(0).length()];
-		
-		for(int i=0; i<lines.size(); i++) {
-			
-			for(int j=0; j<grid[0].length; j++) {
-				grid[i][j] = lines.get(i).charAt(j);
-
 			}
 		}
 		

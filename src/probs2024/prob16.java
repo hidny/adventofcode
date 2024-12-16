@@ -9,11 +9,13 @@ import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
 
+import aStar.AstarAlgo;
+import aStar.AstarNode;
 import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob16 {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +23,7 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in1.txt"));
+			in = new Scanner(new File("in2024/prob2024in16.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -65,6 +67,42 @@ public class prob0 {
 				line = lines.get(i);
 				
 			}
+			
+			char map[][] = getCharTable(lines);
+			
+			prob16AstarNode.mapOutAll(map);
+			
+			int starti=-1;
+			int startj=-1;
+			int startRot = 1;
+			
+			int endi=-1;
+			int endj=-1;
+			for(int i=0; i<map.length; i++) {
+				for(int j=0; j<map[0].length; j++) {
+					if(map[i][j] == 'S') {
+						starti=i;
+						startj=j;
+						startRot =1;
+					} else if(map[i][j] == 'E') {
+						endi=i;
+						endj=j;
+					}
+				}
+			}
+			
+			prob16AstarNode.setGoal(endi, endj);
+			
+			ArrayList<AstarNode> ret = AstarAlgo.astar(prob16AstarNode.mapOut[starti][startj][startRot], null);
+			
+			cur = ret.size() - 1;
+			
+			for(int i=1; i<ret.size(); i++) {
+				if(((prob16AstarNode)ret.get(i-1)).rot != ((prob16AstarNode)ret.get(i)).rot) {
+					cur+=1000;
+				}
+			}
+			
 
 
 			sopl("Answer: " + cur);

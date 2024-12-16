@@ -1,7 +1,8 @@
 package probs2024;
 import java.io.File;
-
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob11b {
 
 	//day1 part 1
 	//2:38.01
@@ -21,7 +22,7 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in1.txt"));
+			in = new Scanner(new File("in2024/prob2024in11.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -34,7 +35,6 @@ public class prob0 {
 			HashSet set = new HashSet();
 			
 			
-			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
 			ArrayList <String>lines = new ArrayList<String>();
 			
@@ -59,13 +59,83 @@ public class prob0 {
 			int most3 = 0;
 			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
-			for(int i=0; i<lines.size(); i++) {
+			
+			line = "1";
+			
+
+			Hashtable<BigInteger, Long> trail = new Hashtable<BigInteger, Long>();
+			
+			
+			//line = "125 17";
+			line = lines.get(0);
+			
+			String tokens[] = line.split(" ");
+			
+			long nums[] = new long[tokens.length];
+			for(int i=0; i<nums.length; i++) {
+				nums[i] = plong(tokens[i]);
+			}
+			
+			prob11obj head = new prob11obj(new BigInteger(nums[0] + ""), null);
+
+			prob11obj current = head;
+			trail.put(head.num, 1L);
+			
+			for(int i=1; i<nums.length; i++) {
+				current.next = new prob11obj(new BigInteger(nums[i] + ""), null);
+				trail.put(current.next.num, 1L);
+				current = current.next;
+			}
+			
+			Hashtable<BigInteger, Long> prevtrail = new Hashtable<BigInteger, Long>();
+			
+			for(int i=0; i<75; i++) {
+				
+				prevtrail = trail;
+				trail = new Hashtable<BigInteger, Long>();
+				
+				Enumeration<BigInteger> list = prevtrail.keys();
 				
 				
-				line = lines.get(i);
+				
+				while(list.hasMoreElements()) {
+					
+					BigInteger nextElement = list.nextElement();
+					long num = prevtrail.get(nextElement);
+					
+					prob11obj tmp = new prob11obj(nextElement, null);
+					tmp.do_calc();
+					
+					if(trail.containsKey(tmp.num)) {
+						long prevNum = trail.get(tmp.num);
+						
+						trail.put(tmp.num, prevNum + num);
+					} else {
+						trail.put(tmp.num, num);
+					}
+					
+					if(tmp.next != null) {
+						if(trail.containsKey(tmp.next.num)) {
+							long prevNum = trail.get(tmp.next.num);
+							
+							trail.put(tmp.next.num, prevNum + num);
+						} else {
+							trail.put(tmp.next.num, num);
+						}
+					}
+				}
 				
 			}
+			
+			Enumeration<BigInteger> list = trail.keys();
+			
+			
 
+			cur=0;
+			while(list.hasMoreElements()) {
+				cur += trail.get(list.nextElement());
+			}
+			
 
 			sopl("Answer: " + cur);
 			in.close();
@@ -75,6 +145,7 @@ public class prob0 {
 		} finally {
 		}
 	}
+	
 
 	public static void sop(Object a) {
 		System.out.print(a.toString());
@@ -86,20 +157,18 @@ public class prob0 {
 	public static void sopl() {
 		System.out.println();
 	}
-	
-	public static int pint(String s) {
+
+	public static long plong(String s) {
 		if (IsNumber.isNumber(s)) {
-			return Integer.parseInt(s);
+			return Long.parseLong(s);
 		} else {
 			sop("Error: (" + s + ") is not a number");
 			return -1;
 		}
 	}
-	
-
-	public static long plong(String s) {
-		if (IsNumber.isLong(s)) {
-			return Long.parseLong(s);
+	public static int pint(String s) {
+		if (IsNumber.isNumber(s)) {
+			return Integer.parseInt(s);
 		} else {
 			sop("Error: (" + s + ") is not a number");
 			return -1;
@@ -118,7 +187,11 @@ public class prob0 {
 	public static int[][] getIntTable(ArrayList<String> lines) {
 		int grid[][] = new int[lines.size()][lines.get(0).length()];
 		
+		String line;
 		for(int i=0; i<lines.size(); i++) {
+			
+			
+			line = lines.get(i);
 			
 			for(int j=0; j<grid[0].length; j++) {
 				if(lines.get(i).charAt(j) == '.') {
@@ -126,21 +199,6 @@ public class prob0 {
 				} else {
 					grid[i][j] = (int)(lines.get(i).charAt(j) - '0');
 				}
-			}
-		}
-		
-		return grid;
-	}
-	
-
-	public static char[][] getCharTable(ArrayList<String> lines) {
-		char grid[][] = new char[lines.size()][lines.get(0).length()];
-		
-		for(int i=0; i<lines.size(); i++) {
-			
-			for(int j=0; j<grid[0].length; j++) {
-				grid[i][j] = lines.get(i).charAt(j);
-
 			}
 		}
 		

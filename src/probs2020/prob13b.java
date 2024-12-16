@@ -1,7 +1,6 @@
 package probs2020;
 import java.io.File;
-
-
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -10,7 +9,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import chineseRemainderTheorem.CRTTuple;
-import chineseRemainderTheorem.ChineseRemainderTheoremSolver;
+import chineseRemainderTheorem.ChineseRemainderTheoremSolverBigInt;
 import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
@@ -95,11 +94,11 @@ public class prob13b {
 				
 			}
 			
-			CRTTuple ans = ChineseRemainderTheoremSolver.solve(equations);
+			BigInteger ans[] = ChineseRemainderTheoremSolverBigInt.solve(equations);
 			
-			sopl("Answer: " + ans.getNum());
+			sopl("Answer: " + ans[0]);
 			
-			//1684818206450117
+			//210612924879242
 			in.close();
 			
 		} catch(Exception e) {

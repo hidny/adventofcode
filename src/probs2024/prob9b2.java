@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob9b2 {
 
 	//day1 part 1
 	//2:38.01
@@ -129,38 +129,84 @@ public class prob9 {
 				}
 				sopl();
 				
-				int table2[] = new int[table.length];
+				//MOVE
 				
-				int backIndex = table.length - 1;
-				for(int j=0; j<=backIndex; j++) {
-					if(table[j] >=0) {
-						table2[j] = table[j];
-					} else {
-						
-						while(backIndex > j && table[backIndex] == -1) {
-							backIndex--;
-						}
-						if(backIndex > j) {
-							table2[j] = table[backIndex];
-							backIndex--;
-							table2[backIndex] = -1;
-						}
+				for(int backIndex=table.length - 1; backIndex >=0; ) {
+					
+					//Really move:
+					while(backIndex >= 0 && table[backIndex] == -1) {
+						backIndex--;
+						//sopl(".");
 					}
-				}
+					if(backIndex <0) {
+						break;
+					}
+					//sopl("Trying: " + table[backIndex]);
+					
+					int origBack = table[backIndex];
+					int k = backIndex;
+					
+					
+					int sizeBack = 0;
+					
+					while(k >=0 && table[k] == origBack) {
+						sizeBack++;
+						k--;
+						sopl(".");
+					}
+					//sopl("sizeBack: " + sizeBack);
+					
+					for(int j=0; j<backIndex;) {
+						//sopl("ah");
 
-				for(int j=0; j<table2.length; j++) {
-					if(table2[j] == -1) {
+						if(table[j] != -1) {
+							j++;
+							continue;
+						}
+						
+						int sizeFront = 0;
+						k=j;
+						while(k<table.length && table[k] == -1) {
+							sizeFront++;
+							k++;
+						}
+						//sopl();
+						//sopl("size Front: " + sizeFront + " (" + j + " to " + k + ")");
+						
+
+						sopl(sizeBack + " vs " + sizeFront + "...");
+						if(sizeBack <= sizeFront) {
+							for(k=0; k<sizeBack; k++) {
+								table[j+k] = table[backIndex-k];
+								table[backIndex-k] = -1;
+							}
+							break;
+							
+						}
+						
+						j+=sizeFront;
+						sopl("j:" + j);
+						
+					}
+					
+					backIndex -= sizeBack;
+					sopl("backIndex: " + backIndex);
+				}
+				//END MOVE
+
+				for(int j=0; j<table.length; j++) {
+					if(table[j] == -1) {
 						sop('.');
 					} else {
-						sop(table2[j]);
+						sop(table[j]);
 					}
 				}
 				sopl();
 				
-				for(int j=0; j<table2.length; j++) {
-					if( table2[j] >= 0) {
-						cur += j * table2[j];
-						sopl(j + " * " + table2[j] + " = " + (j * table2[j]));
+				for(int j=0; j<table.length; j++) {
+					if( table[j] >= 0) {
+						cur += j * table[j];
+						sopl(j + " * " + table[j] + " = " + (j * table[j]));
 					}
 				}
 			}
@@ -175,6 +221,7 @@ public class prob9 {
 		} finally {
 		}
 	}
+	//6347435485773
 
 	public static void sop(Object a) {
 		System.out.print(a.toString());
