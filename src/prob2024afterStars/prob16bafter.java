@@ -24,8 +24,8 @@ public class prob16bafter {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			//in = new Scanner(new File("in2024/prob2024in16.txt"));
-			in = new Scanner(new File("in2024/prob2024in0.txt"));
+			in = new Scanner(new File("in2024/prob2024in16.txt"));
+			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -113,7 +113,7 @@ public class prob16bafter {
 				table[((prob16AstarNode)ret.get(i)).i][((prob16AstarNode)ret.get(i)).j] = true;
 			}
 			
-			table =  getAltPaths(ret, score, table, starti, startj, startRot);
+			table =  getAltPaths(ret, score, table, starti, startj, startRot, 0);
 			
 			cur = 0;
 			for(int i=0; i<table.length; i++) {
@@ -133,9 +133,9 @@ public class prob16bafter {
 		}
 	}
 	
-	public static boolean[][] getAltPaths(ArrayList<AstarNode> ret, long score, boolean table[][], int starti, int startj, int startRot) {
+	public static boolean[][] getAltPaths(ArrayList<AstarNode> ret, long score, boolean table[][], int starti, int startj, int startRot, int indexFirstDirversion) {
 
-		for(int i=0; i<ret.size() - 1; i++) {
+		for(int i=indexFirstDirversion; i<ret.size() - 1; i++) {
 			
 			prob16AstarNode.resetPoisonNeighbour();
 			prob16AstarNode.setPoisonNeighbour(((prob16AstarNode)ret.get(i)).i, ((prob16AstarNode)ret.get(i)).j, ((prob16AstarNode)ret.get(i+1)).i, ((prob16AstarNode)ret.get(i+1)).j);
@@ -184,6 +184,10 @@ public class prob16bafter {
 						
 					}
 					
+					getAltPaths(ret, score, table, starti, startj, startRot, i+1);
+					
+					prob16AstarNode.resetPoisonNeighbour();
+					prob16AstarNode.setPoisonNeighbour(((prob16AstarNode)ret.get(i)).i, ((prob16AstarNode)ret.get(i)).j, ((prob16AstarNode)ret.get(i+1)).i, ((prob16AstarNode)ret.get(i+1)).j);
 					prob16AstarNode.setPoisonNeighbour(((prob16AstarNode)wholePath.get(i)).i, ((prob16AstarNode)wholePath.get(i)).j, ((prob16AstarNode)wholePath.get(i+1)).i, ((prob16AstarNode)wholePath.get(i+1)).j);
 					
 					
