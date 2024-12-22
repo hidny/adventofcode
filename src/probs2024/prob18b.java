@@ -15,7 +15,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob18 {
+public class prob18b {
 
 	//day1 part 1
 	//2:38.01
@@ -65,26 +65,34 @@ public class prob18 {
 			String cur = "";
 			ArrayList ints = new ArrayList<Integer>();
 			
-		
-			map = new boolean[WIDTH + 1][WIDTH + 1];
-
-			for(int i=0; i<1024; i++) {
-				line = lines.get(i);
+			
+			OUT:
+			for(int i2=0; i2<lines.size(); i2++) {
 				
-				String tokens[] = line.split(",");
-				int x = pint(tokens[0]);
-				int y = pint(tokens[1]);
-				if(x < WIDTH + 1 && y < WIDTH + 1) {
-					map[y][x] = true;
+				map = new boolean[WIDTH + 1][WIDTH + 1];
+
+				for(int i=0; i<lines.size(); i++) {
+					line = lines.get(i);
+					
+					String tokens[] = line.split(",");
+					int x = pint(tokens[0]);
+					int y = pint(tokens[1]);
+					if(x < WIDTH + 1 && y < WIDTH + 1) {
+						map[y][x] = true;
+					}
+					
+					prob18Node.init(map);
+	
+					ArrayList<AstarNode> ret = AstarAlgo.astar(prob18Node.mapUsed[0][0], null);
+					
+					if(ret == null) {
+						cur = line;
+						break OUT;
+					}
 				}
 				
-				
 			}
-			
-			prob18Node.init(map);
 
-			ArrayList<AstarNode> ret = AstarAlgo.astar(prob18Node.mapUsed[0][0], null);
-			
 			
 			//for(int i=0; i<)
 			
@@ -93,7 +101,7 @@ public class prob18 {
 			//192
 			//190
 
-			sopl("Answer: " + (ret.size() -1));
+			sopl("Answer: " + cur);
 			in.close();
 			
 		} catch(Exception e) {

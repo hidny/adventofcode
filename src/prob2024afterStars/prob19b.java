@@ -1,4 +1,4 @@
-package probs2024;
+package prob2024afterStars;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -9,13 +9,11 @@ import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
 
-import aStar.AstarAlgo;
-import aStar.AstarNode;
 import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob18 {
+public class prob19b {
 
 	//day1 part 1
 	//2:38.01
@@ -23,7 +21,7 @@ public class prob18 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in18.txt"));
+			in = new Scanner(new File("in2024/prob2024in19.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -56,50 +54,75 @@ public class prob18 {
 				
 			}
 
-			int WIDTH = 70;
-			
-			boolean map[][] = new boolean[WIDTH + 1][WIDTH + 1];
 			int most = 0;
 			int most2 = 0;
 			int most3 = 0;
-			String cur = "";
+			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
 			
-		
-			map = new boolean[WIDTH + 1][WIDTH + 1];
-
-			for(int i=0; i<1024; i++) {
+			String patterns[] = null;
+			for(int i=0; i<lines.size(); i++) {
+				
+				
 				line = lines.get(i);
 				
-				String tokens[] = line.split(",");
-				int x = pint(tokens[0]);
-				int y = pint(tokens[1]);
-				if(x < WIDTH + 1 && y < WIDTH + 1) {
-					map[y][x] = true;
+				if(i==0) {
+					patterns = line.split(", ");
 				}
-				
 				
 			}
 			
-			prob18Node.init(map);
+			cur = 0L;
+			for(int i=2; i<lines.size(); i++) {
+				
+				cur += numWays(patterns, lines.get(i));
+				
+			}
 
-			ArrayList<AstarNode> ret = AstarAlgo.astar(prob18Node.mapUsed[0][0], null);
+			//w,u,b,r,g
 			
-			
-			//for(int i=0; i<)
-			
-			
-			
-			//192
-			//190
-
-			sopl("Answer: " + (ret.size() -1));
+			sopl("Answer: " + cur);
 			in.close();
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 		}
+	}
+	
+	public static long numWaysFuture[];
+	
+	public static long numWays(String patterns[], String target) {
+		
+		numWaysFuture = new long[target.length()];
+		for(int i=0; i<numWaysFuture.length; i++) {
+			numWaysFuture[i] = -1L;
+		}
+		return numWays(patterns, target, 0);
+	}
+	
+	public static long numWays(String patterns[], String target,  int startIndex) {
+		
+		if(startIndex == target.length()) {
+			return 1L;
+		}
+		
+		long ret = 0L;
+		if(numWaysFuture[startIndex] >=0) {
+			return numWaysFuture[startIndex];
+		}
+		
+		
+		for(int i=0; i<patterns.length; i++) {
+			if(target.substring(startIndex).startsWith(patterns[i])) {
+				ret += numWays(patterns, target,  startIndex + patterns[i].length());
+				
+			}
+		}
+		
+		numWaysFuture[startIndex] = ret;
+		
+		return ret;
 	}
 
 	public static void sop(Object a) {

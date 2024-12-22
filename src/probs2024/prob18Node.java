@@ -9,98 +9,13 @@ import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
 
-import aStar.AstarAlgo;
 import aStar.AstarNode;
 import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob18 {
+public class prob18Node implements AstarNode {
 
-	//day1 part 1
-	//2:38.01
-	
-	public static void main(String[] args) {
-		Scanner in;
-		try {
-			in = new Scanner(new File("in2024/prob2024in18.txt"));
-			//in = new Scanner(new File("in2024/prob2024in0.txt"));
-			int numTimes = 0;
-			 
-			int count = 0;
-			boolean part2 = false;
-			String line = "";
-
-			LinkedList queue = new LinkedList();
-			Stack stack = new Stack();
-			HashSet set = new HashSet();
-			
-			
-			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
-			
-			ArrayList <String>lines = new ArrayList<String>();
-			
-			
-			int LIMIT = 20000;
-			boolean table342[][] = new boolean[LIMIT][LIMIT];
-			
-			
-			//dir: 0 up
-			//1 right
-			//2 down
-			//3 left
-			
-			while(in.hasNextLine()) {
-				line = in.nextLine();
-				lines.add(line);
-				
-			}
-
-			int WIDTH = 70;
-			
-			boolean map[][] = new boolean[WIDTH + 1][WIDTH + 1];
-			int most = 0;
-			int most2 = 0;
-			int most3 = 0;
-			String cur = "";
-			ArrayList ints = new ArrayList<Integer>();
-			
-		
-			map = new boolean[WIDTH + 1][WIDTH + 1];
-
-			for(int i=0; i<1024; i++) {
-				line = lines.get(i);
-				
-				String tokens[] = line.split(",");
-				int x = pint(tokens[0]);
-				int y = pint(tokens[1]);
-				if(x < WIDTH + 1 && y < WIDTH + 1) {
-					map[y][x] = true;
-				}
-				
-				
-			}
-			
-			prob18Node.init(map);
-
-			ArrayList<AstarNode> ret = AstarAlgo.astar(prob18Node.mapUsed[0][0], null);
-			
-			
-			//for(int i=0; i<)
-			
-			
-			
-			//192
-			//190
-
-			sopl("Answer: " + (ret.size() -1));
-			in.close();
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {
-		}
-	}
 
 	public static void sop(Object a) {
 		System.out.print(a.toString());
@@ -171,6 +86,68 @@ public class prob18 {
 		}
 		
 		return grid;
+	}
+
+	
+	public static void init(boolean mapChar[][]) {
+		
+		map = mapChar;
+		
+		mapUsed = new prob18Node[map.length][map[0].length];
+		for(int i=0; i<map.length; i++) {
+			for(int j=0; j<map[0].length; j++) {
+				mapUsed[i][j] = new prob18Node(i, j);
+			}
+		}
+	}
+	
+	public prob18Node(int i, int j) {
+		this.i = i;
+		this.j = j;
+	}
+	//TODO: init
+	public static boolean map[][];
+	public static prob18Node mapUsed[][];
+	public int i;
+	public int j;
+	
+	@Override
+	public long getAdmissibleHeuristic(AstarNode goal) {
+		// TODO Auto-generated method stub
+		if(i==70 && j==70) {
+			return -1;
+		}
+		return Math.abs(70 - i) + Math.abs(70-j);
+	}
+
+	@Override
+	public ArrayList<AstarNode> getNodeNeighbours() {
+		// TODO Auto-generated method stub
+		
+		ArrayList<AstarNode> ret = new ArrayList<AstarNode>();
+		
+		for(int i2=i-1; i2<=i+1; i2++) {
+			for(int j2=j-1; j2<=j+1; j2++) {
+				if((i2 !=i && j2 == j) || (i2 ==i && j2 != j)) {
+					
+					if(i2 >= 0 && j2 >= 0 && i2 <map.length && j2 <map[0].length) {
+						
+						if(map[i2][j2] == false) {
+							ret.add(mapUsed[i2][j2]);
+						}
+					}
+					
+				}
+			}
+		}
+		
+		return ret;
+	}
+
+	@Override
+	public long getCostOfMove(AstarNode nextPos) {
+		// TODO Auto-generated method stub
+		return 1;
 	}
 
 }

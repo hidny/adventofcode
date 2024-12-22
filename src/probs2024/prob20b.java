@@ -15,7 +15,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob18 {
+public class prob20b {
 
 	//day1 part 1
 	//2:38.01
@@ -23,7 +23,7 @@ public class prob18 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2024/prob2024in18.txt"));
+			in = new Scanner(new File("in2024/prob2024in20.txt"));
 			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 			int numTimes = 0;
 			 
@@ -56,44 +56,114 @@ public class prob18 {
 				
 			}
 
-			int WIDTH = 70;
-			
-			boolean map[][] = new boolean[WIDTH + 1][WIDTH + 1];
 			int most = 0;
 			int most2 = 0;
 			int most3 = 0;
-			String cur = "";
+			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
-			
-		
-			map = new boolean[WIDTH + 1][WIDTH + 1];
-
-			for(int i=0; i<1024; i++) {
+			for(int i=0; i<lines.size(); i++) {
+				
+				
 				line = lines.get(i);
 				
-				String tokens[] = line.split(",");
-				int x = pint(tokens[0]);
-				int y = pint(tokens[1]);
-				if(x < WIDTH + 1 && y < WIDTH + 1) {
-					map[y][x] = true;
+			}
+
+			char map[][] = getCharTable(lines);
+
+			boolean mapBool[][] = new boolean[map.length][map[0].length];
+			int starti = -5;
+			int startj = -5;
+			int goali = -5;
+			int goalj = -5;
+			
+			for(int i=0; i<map.length; i++) {
+				for(int j=0; j<map[0].length; j++) {
+
+					mapBool[i][j] = false;
+					if(map[i][j] == 'S') {
+						starti = i;
+						startj = j;
+					} else if(map[i][j] == 'E') {
+						goali = i;
+						goalj = j;
+						
+					} else if(map[i][j] == '.') {
+						
+					} else {
+						mapBool[i][j] = true;
+					}
 				}
-				
-				
 			}
 			
-			prob18Node.init(map);
+			int debug= 0;
+			for(int i=0; i<mapBool.length; i++) {
+				for(int j=0; j<mapBool[0].length; j++) {
+					if(mapBool[i][j] == false ) {
+						debug++;
+					}
+				}
+			}
+			
+			
+			
+			prob20Node.init(mapBool);
+			
+			prob20Node.goali = goali;
+			prob20Node.goalj = goalj;
+			
+			
+			ArrayList<AstarNode> ret = AstarAlgo.astar(prob20Node.mapUsed[starti][startj], null);
+			
+			
+			int timesSave[] = new int[ret.size()];
+			cur = 0L;
+			long ahh = 0L;
+			
+			for(int i=0; i<ret.size(); i++) {
+				for(int j=i+1; j<ret.size(); j++) {
+					
+					int dist = Math.abs(((prob20Node)ret.get(i)).i - ((prob20Node)ret.get(j)).i) +
+							Math.abs(((prob20Node)ret.get(i)).j - ((prob20Node)ret.get(j)).j);
+					
+					if(  dist
+						<= 20
+						) {
+						
+						int newPath = i + dist + (ret.size() - 1 - j);
+						int oldPath = ret.size() - 1;
+								
+						
+						timesSave[oldPath - newPath]++;
+						
+						if(newPath <= oldPath -100) {
+							cur+=1;
+						}
+					}
+					ahh++;
+				}
+			}
+			
+			//1214287
+			//1149468
+			//1159785
 
-			ArrayList<AstarNode> ret = AstarAlgo.astar(prob18Node.mapUsed[0][0], null);
-			
-			
-			//for(int i=0; i<)
-			
-			
-			
-			//192
-			//190
+			long cur2=0L;
+			for(int i=0; i<timesSave.length; i++) {
+				if(timesSave[i] > 0) {
+					sopl("There are " + timesSave[i] + " cheats that save " + i + " picoseconds."); 
+				}
+				
+				if(i >=100) {
+					cur2+=timesSave[i];
+				}
+			}
 
-			sopl("Answer: " + (ret.size() -1));
+			sopl("ah" + ahh);
+			sopl("Answer: " + cur);
+			sopl("Answer2: " + cur2);
+			
+			sopl("Debug: " + debug);
+			sopl("ret size: " + ret.size());
 			in.close();
 			
 		} catch(Exception e) {
