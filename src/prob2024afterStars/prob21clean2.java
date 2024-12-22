@@ -61,18 +61,38 @@ public class prob21clean2 {
 				sopl("Num: " + num);
 				
 				int PART1 = 3;
-				int TEST = 3;
+				int TEST = 5;
 				ArrayList<String> shortest = getShortestSequence(new prob21state2(TEST), line);
-				sopl(shortest.get(0));
+				//sopl(shortest.get(0));
 				sopl(shortest.get(0).length());
 				testResult(shortest.get(0), TEST);
 				
 				sopl("Rearrange and test:");
 				String retry = rearrangeSequenceToBeRepetitive(shortest.get(0));
-				sopl(retry);
+				//sopl(retry);
+				sopl(retry.length());
 				testResult(retry, TEST);
 				
 				sopl(shortest.size());
+				
+				int N = 1;
+				ArrayList<String> shortestMinusN = getShortestSequence(new prob21state2(TEST - N), line);
+				String test2 = shortestMinusN.get(0);
+				
+				for(int i2=0; i2<N; i2++) {
+					test2 = getLongerSolutionBasedOnMatrix(test2);
+					test2 = rearrangeSequenceToBeRepetitive(test2);
+				}
+				//sopl(test2);
+				sopl(test2.length());
+				testResult(test2, TEST);
+				
+				if(test2.length() != shortest.get(0).length()) {
+					sopl("Lengths don't match!");
+					exit(1);
+				}
+				sopl();
+				sopl();
 				
 				cur += num * shortest.get(0).length();
 			}
@@ -296,4 +316,81 @@ public class prob21clean2 {
 			
 			return grid;
 		}
+		
+		
+
+	public static String getLongerSolutionBasedOnMatrix(String input) {
+		
+		String output = "";
+		
+		sopl("getLongerSolutionBasedOnMatrix");
+		
+		char prevInput = 'A';
+		char prev = 'A';
+		char next;
+		
+		for(int i=0; i<input.length(); i++) {
+		
+			next = input.charAt(i);
+			int previ = getiCoord(prev);
+			int prevj = getjCoord(prev);
+			
+			int nexti = getiCoord(next);
+			int nextj = getjCoord(next);
+		
+			//if(prev == 'A' && next == prevInput) {
+				
+				//sopl("PASS TEST");
+				//pass
+			//} else {
+			//if(prevInput != next && previ==0 && prevj==2) {
+			
+				for(int i4=0; i4<nexti - previ; i4++) {
+					output += "v";
+					prevInput = 'v';
+				}
+			
+				
+				for(int i4=0; i4<nextj - prevj; i4++) {
+					output += ">";
+					prevInput = '>';
+				}
+			
+				for(int i4=0; i4<prevj - nextj; i4++) {
+					output += "<";
+					prevInput = '<';
+				}
+		
+				for(int i4=0; i4<previ - nexti; i4++) {
+					output += "^";
+					prevInput = '^';
+				}
+			//}
+			output += "A";
+			
+			prev = next;
+			if(next != 'A') {
+				prevInput = next;
+			}
+		}
+		
+		return output;
+	}
+	
+	public static int getiCoord(char in) {
+		if(in == '^' || in == 'A') {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+	public static int getjCoord(char in) {
+		if(in == '<') {
+			return 0;
+		} else if(in == '^' || in == 'v') {
+			return 1;
+		} else {
+			return 2;
+		}
+	}
 }
