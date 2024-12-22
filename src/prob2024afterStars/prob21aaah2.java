@@ -15,7 +15,7 @@ import probs2024.prob21state2;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob21aaah {
+public class prob21aaah2 {
 
 	//day1 part 1
 	//2:38.01
@@ -39,63 +39,88 @@ public class prob21aaah {
 			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
 			
 			ArrayList <String>lines = new ArrayList<String>();
-			long matrix[][] = new long[25][25];
-			for(int i2=0; i2<mapDir.length; i2++) {
-				for(int j2=0; j2<mapDir[0].length; j2++) {
-					for(int i3=0; i3<mapDir.length; i3++) {
-						for(int j3=0; j3<mapDir[0].length; j3++) {
-							
-							
-							char prev = mapDir[i2][j2];
-							char next = mapDir[i3][j3];
-							
-							if(prev == '#' || next == '#') {
-								continue;
-							}
+			
+			long matrix[][] = new long[125][125];
+			
+			for(int k=0; k<nextChar.length; k++) {
+				for(int i2=0; i2<mapDir.length; i2++) {
+					for(int j2=0; j2<mapDir[0].length; j2++) {
+						for(int i3=0; i3<mapDir.length; i3++) {
+							for(int j3=0; j3<mapDir[0].length; j3++) {
+								
+								
+								char prev = mapDir[i2][j2];
+								char next = mapDir[i3][j3];
+								
+								if(prev == '#' || next == '#') {
+									continue;
+								}
 
-							int previ = getiCoord(prev);
-							int prevj = getjCoord(prev);
-							
-							int nexti = getiCoord(next);
-							int nextj = getjCoord(next);
+								int nexti = getiCoord(next);
+								int nextj = getjCoord(next);
+		
+								if(next == nextChar[k]) {
+									nexti = getiCoord('A');
+									nextj = getjCoord('A');
+								}
 	
-							
-							
-							String newString = "A";
-							for(int i4=0; i4<nexti - previ; i4++) {
-								newString += "v";
+								int previ = getiCoord(prev);
+								int prevj = getjCoord(prev);
+								
+								
+								
+								String newString = "A";
+								for(int i4=0; i4<nexti - previ; i4++) {
+									newString += "v";
+								}
+	
+								
+								for(int i4=0; i4<nextj - prevj; i4++) {
+									newString += ">";
+								}
+	
+								for(int i4=0; i4<prevj - nextj; i4++) {
+									newString += "<";
+								}
+	
+								for(int i4=0; i4<previ - nexti; i4++) {
+									newString += "^";
+								}
+								newString += "A";
+								
+								int matrixJ = 25 * k + 5 * getMoveIndex(prev) + getMoveIndex(next);
+								
+								int newk = k;
+								if(nextChar[k] != next) {
+									boolean set2 = false;
+									for(int i=0; i<5; i++) {
+										if(next == nextChar[i]) {
+											newk = i;
+											set2 = true;
+											break;
+										}
+									}
+									if(set2 == false) {
+										sopl("???");
+										exit(1);
+									}
+									
+								}
+								
+								for(int i4=1; i4<newString.length(); i4++) {
+									int matrixI = 25 * newk + 5 * getMoveIndex(newString.charAt(i4-1)) + getMoveIndex(newString.charAt(i4));
+									matrix[matrixJ][matrixI]++;
+								}
+								
+								
+								//matrix[5 * getMoveIndex(prev) + getMoveIndex(next)][getMoveIndex(next)] = steps;
+								
+								//TODO: 25x25 matrix!
+								
 							}
-
-							
-							for(int i4=0; i4<nextj - prevj; i4++) {
-								newString += ">";
-							}
-
-							for(int i4=0; i4<prevj - nextj; i4++) {
-								newString += "<";
-							}
-
-							for(int i4=0; i4<previ - nexti; i4++) {
-								newString += "^";
-							}
-							newString += "A";
-							
-							int matrixJ = 5 * getMoveIndex(prev) + getMoveIndex(next);
-							
-							for(int i4=1; i4<newString.length(); i4++) {
-								int matrixI = 5 * getMoveIndex(newString.charAt(i4-1)) + getMoveIndex(newString.charAt(i4));
-								matrix[matrixJ][matrixI]++;
-							}
-							
-							
-							//matrix[5 * getMoveIndex(prev) + getMoveIndex(next)][getMoveIndex(next)] = steps;
-							
-							//TODO: 25x25 matrix!
-							
 						}
 					}
 				}
-				
 			}
 			
 			for(int i2=0; i2<matrix.length; i2++) {
@@ -169,16 +194,40 @@ public class prob21aaah {
 					
 				}
 				
-				long ret[] = new long[25];
+				long ret[] = new long[125];
+				
+				char curK = 'A';
+				int curKIndex = 4;
+				
 				for(int i2=0; i2<shortest.length(); i2++) {
 					char prev2 = 'A';
 					if(i2 > 0) {
 						prev2 = shortest.charAt(i2-1);
+						if(prev2 != 'A') {
+							curK = prev2;
+							
+							curKIndex = -1;
+							
+							boolean set2 = false;
+							for(int i3=0; i3<5; i3++) {
+								if(curK == nextChar[i3]) {
+									curKIndex = i3;
+									set2 = true;
+									break;
+								}
+							}
+							if(set2 == false) {
+								sopl("???ddd");
+								exit(1);
+							}
+								
+						}
 					}
-					ret[5 * getMoveIndex(prev2) + getMoveIndex(shortest.charAt(i2))]++;
+					ret[5 * 5 * curKIndex + 5 * getMoveIndex(prev2) + getMoveIndex(shortest.charAt(i2))]++;
 				}
 				
 				
+				ret = matrixMult(matrix, ret);
 				ret = matrixMult(matrix, ret);
 				ret = matrixMult(matrix, ret);
 				String matrixTest = "";
@@ -288,6 +337,7 @@ public static String getLongerSolutionBasedOnMatrix(String input) {
 	
 	String output = "";
 	
+	sopl("getLongerSolutionBasedOnMatrix");
 	
 	char prevInput = 'A';
 	char prev = 'A';
@@ -302,6 +352,11 @@ public static String getLongerSolutionBasedOnMatrix(String input) {
 		int nexti = getiCoord(next);
 		int nextj = getjCoord(next);
 	
+		if(prev == 'A' && getCharIndex(next) == prevInput) {
+			
+			sopl("PASS TEST");
+			//pass
+		} else {
 		//if(prevInput != next && previ==0 && prevj==2) {
 		
 			for(int i4=0; i4<nexti - previ; i4++) {
@@ -324,13 +379,26 @@ public static String getLongerSolutionBasedOnMatrix(String input) {
 				output += "^";
 				prevInput = '^';
 			}
-		//}
+		}
 		output += "A";
 		
 		prev = next;
+		if(next != 'A') {
+			prevInput = next;
+		}
 	}
 	
 	return output;
+}
+
+public static int getCharIndex(char input) {
+	
+	for(int i=0; i<nextChar.length; i++) {
+		if(nextChar[i] == input) {
+			return i;
+		}
+	}
+	return -1;
 }
 	
 public static long[] matrixMult(long matrix[][], long ret[]) {

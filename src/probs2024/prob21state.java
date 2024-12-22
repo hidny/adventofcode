@@ -70,7 +70,7 @@ public class prob21state {
 			return null;
 		}
 		
-		prob21state newState = new prob21state(robotsLocations, this.curInput + prob21b.nextChar[move], this.curOutput, this.badState);
+		prob21state newState = new prob21state(robotsLocations, this.curInput + prob21b2.nextChar[move], this.curOutput, this.badState);
 		
 		makeMove(newState, move, 0);
 		

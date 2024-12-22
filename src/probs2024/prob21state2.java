@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import number.IsNumber;
+import prob2024afterStars.prob21clean2;
 import utils.Mapping;
 import utils.Sort;
 
@@ -70,7 +71,7 @@ public class prob21state2 {
 			return null;
 		}
 		
-		prob21state2 newState = new prob21state2(robotsLocations, this.curInput + prob21b.nextChar[move], this.curOutput, this.badState);
+		prob21state2 newState = new prob21state2(robotsLocations, this.curInput + prob21clean2.nextChar[move], this.curOutput, this.badState);
 		
 		makeMove(newState, move, 0);
 		
@@ -80,37 +81,29 @@ public class prob21state2 {
 	public prob21state2 makeMove(prob21state2 newState, int move, int index) {
 		
 
-		if(move == 0) {
+		if(prob21clean2.nextChar[move] == '^') {
 			newState.robotsLocations[index][0]--;
-		} else if(move==1) {
-			newState.robotsLocations[index][1]++;
-		} else if(move==2) {
+			
+		} else if(prob21clean2.nextChar[move] == 'v') {
 			newState.robotsLocations[index][0]++;
-		} else if(move==3) {
+			
+		} else if(prob21clean2.nextChar[move] == '>') {
+			newState.robotsLocations[index][1]++;
+			
+		} else if(prob21clean2.nextChar[move] == '<') {
 			newState.robotsLocations[index][1]--;
-		} else if(move == 4) {
+			
+		} else if(prob21clean2.nextChar[move] == 'A') {
 			
 			if(index < this.robotsLocations.length - 1) {
 				char nextRobotMove = mapDir[newState.robotsLocations[index][0]][newState.robotsLocations[index][1]];
 				
-				int innerMove = -1;
-				if(nextRobotMove == '^') {
-					innerMove = 0;
-				} else if(nextRobotMove == '>') {
-					innerMove = 1;
-				} else if(nextRobotMove == 'v') {
-					innerMove = 2;
-				} else if(nextRobotMove == '<') {
-					innerMove = 3;
-				} else if(nextRobotMove == 'A') {
-					innerMove = 4;
-				}
+				int innerMove = prob21clean2.getMoveIndex(nextRobotMove);
 				newState = makeMove(newState, innerMove, index + 1);
 			
 			} else {
 				char nextRobotMove = mapKeys[newState.robotsLocations[index][0]][newState.robotsLocations[index][1]];
 				
-				int innerMove = -1;
 				if(nextRobotMove >= '0' && nextRobotMove<='9') {
 					newState.curOutput += nextRobotMove + "";
 				} else if(nextRobotMove == 'A') {
