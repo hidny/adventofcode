@@ -121,10 +121,12 @@ public class prob21state2 {
 			if(index < this.robotsLocations.length - 1) {
 				
 				if(newState.robotsLocations[index][0] >= mapDir.length || newState.robotsLocations[index][0] < 0) {
+					//sopl("bad 1: " + newState.robotsLocations[index][0]);
 					newState.badState = true;
 					return newState;
 				}
 				if(newState.robotsLocations[index][1] >= mapDir[0].length || newState.robotsLocations[index][1] < 0) {
+					//sopl("bad 2");
 					newState.badState = true;
 					return newState;
 				}
@@ -132,15 +134,18 @@ public class prob21state2 {
 				char nextRobotMove = mapDir[newState.robotsLocations[index][0]][newState.robotsLocations[index][1]];
 				
 				if(nextRobotMove == '#') {
+					//sopl("bad 3");
 					newState.badState = true;
 				}
 			} else {
 				
 				if(newState.robotsLocations[index][0] >= mapKeys.length || newState.robotsLocations[index][0] < 0) {
+					//sopl("bad 4");
 					newState.badState = true;
 					return newState;
 				}
 				if(newState.robotsLocations[index][1] >= mapKeys[0].length || newState.robotsLocations[index][1] < 0) {
+					//sopl("bad 5");
 					newState.badState = true;
 					return newState;
 				}
@@ -148,6 +153,7 @@ public class prob21state2 {
 				char nextRobotMove = mapKeys[newState.robotsLocations[index][0]][newState.robotsLocations[index][1]];
 				
 				if(nextRobotMove == '#') {
+					//sopl("bad 6");
 					newState.badState = true;
 				}
 			}

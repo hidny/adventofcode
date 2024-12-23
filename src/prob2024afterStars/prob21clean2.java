@@ -39,6 +39,8 @@ public class prob21clean2 {
 				lines.add(line);
 				
 			}
+			
+			
 	
 			int most = 0;
 			int most2 = 0;
@@ -61,15 +63,15 @@ public class prob21clean2 {
 				sopl("Num: " + num);
 				
 				int PART1 = 3;
-				int TEST = 5;
+				int TEST = 4;
 				ArrayList<String> shortest = getShortestSequence(new prob21state2(TEST), line);
-				//sopl(shortest.get(0));
+				sopl(shortest.get(0));
 				sopl(shortest.get(0).length());
 				testResult(shortest.get(0), TEST);
 				
 				sopl("Rearrange and test:");
 				String retry = rearrangeSequenceToBeRepetitive(shortest.get(0));
-				//sopl(retry);
+				sopl(retry);
 				sopl(retry.length());
 				testResult(retry, TEST);
 				
@@ -79,17 +81,21 @@ public class prob21clean2 {
 				ArrayList<String> shortestMinusN = getShortestSequence(new prob21state2(TEST - N), line);
 				String test2 = shortestMinusN.get(0);
 				
+				sopl("Alt at first: " + test2);
+				test2 = rearrangeSequenceToBeRepetitive(test2);
+				
+				sopl("At first:     " + test2);
 				for(int i2=0; i2<N; i2++) {
 					test2 = getLongerSolutionBasedOnMatrix(test2);
 					test2 = rearrangeSequenceToBeRepetitive(test2);
 				}
-				//sopl(test2);
+				sopl(test2);
 				sopl(test2.length());
 				testResult(test2, TEST);
 				
 				if(test2.length() != shortest.get(0).length()) {
 					sopl("Lengths don't match!");
-					exit(1);
+					//exit(1);
 				}
 				sopl();
 				sopl();
@@ -111,20 +117,22 @@ public class prob21clean2 {
 		
 		prob21state2 curState = new prob21state2(numRobots);
 		
+		String curOutput = "";
 		for(int i=0; i<sequence.length(); i++) {
 			curState = curState.makeMove(getMoveIndex(sequence.charAt(i)));
 			
 			if(curState.badState) {
 				sopl("reached bad state at i2 = " + i);
+				sopl(sequence.substring(0, i + 1));
 				exit(1);
 			}
 			
-			/*if(curState.curOutput.length() > curOutput.length()) {
-				sopl(baseOnMatrix.substring(0, i2 + 1));
+			if(curState.curOutput.length() > curOutput.length()) {
+				sopl(sequence.substring(0, i + 1));
 				sopl(curState.curOutput);
-				sopl(baseOnMatrix.substring(0, i2 + 1).length());
+				sopl(sequence.substring(0, i + 1).length());
 				curOutput = curState.curOutput;
-			}*/
+			}
 		}
 		
 		sopl("Output of sequence: " + curState.curOutput);
@@ -343,27 +351,22 @@ public class prob21clean2 {
 				//sopl("PASS TEST");
 				//pass
 			//} else {
-			//if(prevInput != next && previ==0 && prevj==2) {
 			
 				for(int i4=0; i4<nexti - previ; i4++) {
 					output += "v";
-					prevInput = 'v';
 				}
 			
 				
 				for(int i4=0; i4<nextj - prevj; i4++) {
 					output += ">";
-					prevInput = '>';
 				}
 			
 				for(int i4=0; i4<prevj - nextj; i4++) {
 					output += "<";
-					prevInput = '<';
 				}
 		
 				for(int i4=0; i4<previ - nexti; i4++) {
 					output += "^";
-					prevInput = '^';
 				}
 			//}
 			output += "A";
