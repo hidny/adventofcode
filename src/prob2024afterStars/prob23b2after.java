@@ -157,13 +157,13 @@ public class prob23b2after {
 	public static ArrayList<Integer> getBest(ArrayList <Integer>curList, boolean connections[][], int startIndex, int depth) {
 		ArrayList<Integer> ret = new ArrayList<Integer>();
 		
-		if(depth == 3) {
+		/*if(depth == 3) {
 			for(int j=0; j<curList.size(); j++) {
 				sop(curList.get(j) + ", ");
 			}
 			sopl();
 			sopl();
-		}
+		}*/
 		
 		for(int i=0; i<curList.size(); i++) {
 			ret.add(curList.get(i));
