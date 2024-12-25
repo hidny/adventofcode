@@ -1,4 +1,4 @@
-package prob2024afterStars;
+package prob2024day21;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,9 +11,11 @@ import java.util.Stack;
 import number.IsNumber;
 import probs2024.prob21state2;
 
-public class prob21clean2 {
+public class prob21test1 {
 
 	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
 		// TODO Auto-generated method stub
 		Scanner in;
 		try {
@@ -64,42 +66,30 @@ public class prob21clean2 {
 				
 				int PART1 = 3;
 				int TEST = 1;
+
 				ArrayList<String> shortest = getShortestSequence(new prob21state2(TEST), line);
+				
+				if(TEST == 1) {
+					ArrayList<String> allShortest = getAllShortestSequences(new prob21state2(TEST), line);
+					
+					for(int j=0; j<allShortest.size(); j++) {
+						sopl(allShortest.get(j));
+					}
+					
+				}
+				sopl("Actual shortest:");
 				sopl(shortest.get(0));
 				sopl(shortest.get(0).length());
+				sopl("test result:");
 				testResult(shortest.get(0), TEST);
-
-				/*
-				sopl("Rearrange and test:");
-				String retry = rearrangeSequenceToBeRepetitive(shortest.get(0));
-				sopl(retry);
-				sopl(retry.length());
-				testResult(retry, TEST);
 				
-				sopl(shortest.size());
-				int N = 1;
-				ArrayList<String> shortestMinusN = getShortestSequence(new prob21state2(TEST - N), line);
-				String test2 = shortestMinusN.get(0);
 				
-				sopl("Alt at first: " + test2);
-				test2 = rearrangeSequenceToBeRepetitive(test2);
+				//int N = 1;
+				//ArrayList<String> shortestMinusN = getShortestSequence(new prob21state2(TEST - N), line);
+				//String test2 = shortestMinusN.get(0);
 				
-				sopl("At first:     " + test2);
-				for(int i2=0; i2<N; i2++) {
-					test2 = getLongerSolutionBasedOnMatrix(test2);
-					test2 = rearrangeSequenceToBeRepetitive(test2);
-				}
-				sopl(test2);
-				sopl(test2.length());
-				testResult(test2, TEST);
-				
-				if(test2.length() != shortest.get(0).length()) {
-					sopl("Lengths don't match!");
-					//exit(1);
-				}
 				sopl();
-				sopl();
-				*/
+				
 				
 				cur += num * shortest.get(0).length();
 			}
@@ -110,10 +100,14 @@ public class prob21clean2 {
 			e.printStackTrace();
 		} finally {
 		}
-		
-		
 	}
 	
+	
+	//TODO:
+	//^> vs >^
+	
+	
+
 	public static void testResult(String sequence, int numRobots) {
 		
 		prob21state2 curState = new prob21state2(numRobots);
@@ -139,57 +133,11 @@ public class prob21clean2 {
 		sopl("Output of sequence: " + curState.curOutput);
 		
 	}
-
-	public static String rearrangeSequenceToBeRepetitive(String shortest) {
-		
-		String output = "";
-		
-		int curIndex = 0;
-		
-		while(curIndex < shortest.length()) {
-			int nextIndex = curIndex + shortest.substring(curIndex).indexOf('A');
-			if(nextIndex == -1) {
-				break;
-			}
-			
-			String tmp = shortest.substring(curIndex, nextIndex);
-			
-			int num[] = new int[4];
-			for(int j=0; j<tmp.length(); j++) {
-				
-				if(tmp.charAt(j) == '^') {
-					num[0]++;
-				} else if(tmp.charAt(j) == '>') {
-					num[1]++;
-				} else if(tmp.charAt(j) == 'v') {
-					num[2]++;
-				} else if(tmp.charAt(j) == '<') {
-					num[3]++;
-				}
-			}
-
-			for(int i=0; i<num[2]; i++) {
-				output+="v";
-			}
-			for(int i=0; i<num[1]; i++) {
-				output+=">";
-			}
-			for(int i=0; i<num[3]; i++) {
-				output+="<";
-			}
-			for(int i=0; i<num[0]; i++) {
-				output+="^";
-			}
-			
-			output+="A";
-			curIndex = nextIndex + 1;
-		}
-		
-		return output;
-	}
 	
+
 	public static char nextChar[] = new char[]{'>', '^', 'v', '<', 'A'};
-	
+
+
 	public static int getMoveIndex(char move) {
 		for(int i=0; i<nextChar.length; i++) {
 			if(move == nextChar[i]) {
@@ -199,6 +147,7 @@ public class prob21clean2 {
 		return -1;
 	}
 
+	
 	public static ArrayList<String> getShortestSequence(prob21state2 curState, String line) {
 		
 		
@@ -223,6 +172,9 @@ public class prob21clean2 {
 					//pass
 				} else if(line.startsWith(next.curOutput) == false) {
 					//pass
+
+				} else if(curShortest != -1 && next.curInput.length() > curShortest){
+					//pass
 					
 				} else if( ! listStates.contains(next.toString())) {
 					listStates.add(next.toString());
@@ -236,6 +188,8 @@ public class prob21clean2 {
 					if(next.curOutput.equals(line)) {
 						
 						if(curShortest == -1 || curShortest  == next.curInput.length()) {
+							
+							curShortest = next.curInput.length();
 							ret.add(next.curInput);
 						}
 						
@@ -253,134 +207,104 @@ public class prob21clean2 {
 		
 		return ret;
 	}
+
 	
 
-		public static void sop(Object a) {
-			System.out.print(a.toString());
-		}
-		public static void sopl(Object a) {
-			System.out.println(a.toString());
-		}
-
-		public static void sopl() {
-			System.out.println();
-		}
+	public static ArrayList<String> getAllShortestSequences(prob21state2 curState, String line) {
 		
-		public static int pint(String s) {
-			if (IsNumber.isNumber(s)) {
-				return Integer.parseInt(s);
-			} else {
-				sop("Error: (" + s + ") is not a number");
-				return -1;
-			}
-		}
 		
-
-		public static long plong(String s) {
-			if (IsNumber.isLong(s)) {
-				return Long.parseLong(s);
-			} else {
-				sop("Error: (" + s + ") is not a number");
-				return -1;
-			}
-		}
+		LinkedList<prob21state2> queue = new LinkedList<prob21state2>();
 		
-		public static void exit() {
-			exit(0);
-		}
-		public static void exit(int code) {
-			sop("Exit with code " + code);
+		queue.add(curState);
+		
+		ArrayList<String> ret = new ArrayList<String>();
+		int curShortest = -1;
+		
+		while( ! queue.isEmpty()) {
 			
-			System.exit(code);
-		}
-		
-		public static int[][] getIntTable(ArrayList<String> lines) {
-			int grid[][] = new int[lines.size()][lines.get(0).length()];
 			
-			for(int i=0; i<lines.size(); i++) {
+			prob21state2 cur = queue.remove();
+			
+			for(int j=0; j<nextChar.length; j++) {
+				prob21state2 next =  cur.makeMove(getMoveIndex(nextChar[j]));
 				
-				for(int j=0; j<grid[0].length; j++) {
-					if(lines.get(i).charAt(j) == '.') {
-						grid[i][j] = -1;
+				if(next.badState) {
+					//pass
+				} else if(line.startsWith(next.curOutput) == false) {
+					//pass
+
+				} else if(curShortest != -1 && next.curInput.length() > curShortest){
+					//pass
+					
+				} else {
+					
+					
+					if(next.curOutput.equals(line)) {
+						
+						if(curShortest == -1 || curShortest  == next.curInput.length()) {
+							ret.add(next.curInput);
+							
+							if(ret.size() > 1000) {
+								sopl("oops");
+							}
+						}
+						
+						if(curShortest == -1) {
+							curShortest = next.curInput.length();
+						}
 					} else {
-						grid[i][j] = (int)(lines.get(i).charAt(j) - '0');
+
+						queue.add(next);
 					}
 				}
 			}
-			
-			return grid;
-		}
-		
-
-		public static char[][] getCharTable(ArrayList<String> lines) {
-			char grid[][] = new char[lines.size()][lines.get(0).length()];
-			
-			for(int i=0; i<lines.size(); i++) {
-				
-				for(int j=0; j<grid[0].length; j++) {
-					grid[i][j] = lines.get(i).charAt(j);
-
-				}
-			}
-			
-			return grid;
 		}
 		
 		
+		return ret;
+	}
 
-	public static String getLongerSolutionBasedOnMatrix(String input) {
-		
-		String output = "";
-		
-		sopl("getLongerSolutionBasedOnMatrix");
-		
-		char prevInput = 'A';
-		char prev = 'A';
-		char next;
-		
-		for(int i=0; i<input.length(); i++) {
-		
-			next = input.charAt(i);
-			int previ = getiCoord(prev);
-			int prevj = getjCoord(prev);
-			
-			int nexti = getiCoord(next);
-			int nextj = getjCoord(next);
-		
-			//if(prev == 'A' && next == prevInput) {
-				
-				//sopl("PASS TEST");
-				//pass
-			//} else {
-			
-				for(int i4=0; i4<nexti - previ; i4++) {
-					output += "v";
-				}
-			
-				
-				for(int i4=0; i4<nextj - prevj; i4++) {
-					output += ">";
-				}
-			
-				for(int i4=0; i4<prevj - nextj; i4++) {
-					output += "<";
-				}
-		
-				for(int i4=0; i4<previ - nexti; i4++) {
-					output += "^";
-				}
-			//}
-			output += "A";
-			
-			prev = next;
-			if(next != 'A') {
-				prevInput = next;
-			}
-		}
-		
-		return output;
+	public static void sop(Object a) {
+		System.out.print(a.toString());
+	}
+	public static void sopl(Object a) {
+		System.out.println(a.toString());
+	}
+
+	public static void sopl() {
+		System.out.println();
 	}
 	
+	public static int pint(String s) {
+		if (IsNumber.isNumber(s)) {
+			return Integer.parseInt(s);
+		} else {
+			sop("Error: (" + s + ") is not a number");
+			return -1;
+		}
+	}
+	
+
+	public static long plong(String s) {
+		if (IsNumber.isLong(s)) {
+			return Long.parseLong(s);
+		} else {
+			sop("Error: (" + s + ") is not a number");
+			return -1;
+		}
+	}
+	
+	public static void exit() {
+		exit(0);
+	}
+	public static void exit(int code) {
+		sop("Exit with code " + code);
+		
+		System.exit(code);
+	}
+	
+	
+		
 	public static int getiCoord(char in) {
 		if(in == '^' || in == 'A') {
 			return 0;
@@ -396,5 +320,5 @@ public class prob21clean2 {
 		} else {
 			return 2;
 		}
-	}
+}
 }
