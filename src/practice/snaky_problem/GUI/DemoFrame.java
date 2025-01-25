@@ -1,6 +1,7 @@
 package practice.snaky_problem.GUI;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 public class DemoFrame extends JFrame {
 
@@ -26,6 +27,9 @@ public class DemoFrame extends JFrame {
 		this.setResizable(true);
 		this.setTitle("lets go");
 		this.setVisible(true);
+		
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
 		
 	}
 

@@ -9,4 +9,11 @@ public class Constants {
 	public static int NUM_CELLS_VERT = 30;
 	public static int NUM_CELLS_HORI = 30;
 	
+	public static int PIECE_WIDTH = 20;
+	
+	public static int PLAYER_1 = 1;
+	public static int PLAYER_2 = 2;
+	public static int EMPTY = 0;
+	
+	
 }
