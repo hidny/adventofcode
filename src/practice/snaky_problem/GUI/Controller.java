@@ -1,6 +1,7 @@
 package practice.snaky_problem.GUI;
 
 import practice.snaky_problem.AI.BasicRandomHandler;
+import practice.snaky_problem.AI.EmergencyMoveHandler;
 import practice.snaky_problem.AI.MoveHandlerInterface;
 import practice.snaky_problem.logic.BoardStateStatic;
 
@@ -19,7 +20,8 @@ public class Controller {
 	}
 	
 	public static void main(String args[]) {
-		Controller c = new Controller(new BasicRandomHandler());
+		//Controller c = new Controller(new BasicRandomHandler());
+		Controller c = new Controller(new EmergencyMoveHandler());
 	}
 
 	

@@ -5,6 +5,11 @@ import practice.snaky_problem.GUI.Constants;
 public class BoardStateStatic {
 
 	
+	public static void resetBoardState() {
+		state = new int[Constants.NUM_CELLS_VERT][Constants.NUM_CELLS_HORI];
+		state2 = new int[Constants.NUM_CELLS_VERT][Constants.NUM_CELLS_HORI];
+		numAdded = 0;
+	}
 	public static int state[][] = new int[Constants.NUM_CELLS_VERT][Constants.NUM_CELLS_HORI];
 	public static int state2[][] = new int[Constants.NUM_CELLS_VERT][Constants.NUM_CELLS_HORI];
 	public static int numAdded = 0;
@@ -66,7 +71,6 @@ public class BoardStateStatic {
 	
 	public static boolean hasWinAtLocation(int i2, int j2, int playerIndex) {
 		
-		NEXTK:
 		for(int k=0; k<allSnakes.length; k++) {
 			
 			boolean matchesSoFar = true;
