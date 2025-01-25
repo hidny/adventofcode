@@ -15,10 +15,6 @@ import java.awt.event.MouseEvent;
 
 public class DemoPanel extends JPanel {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
 	
 	private Controller app;
 	
@@ -49,7 +45,6 @@ public class DemoPanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 background = getBackground();
                 setBackground(Color.RED);
-                System.out.println(app);
                 repaint();
                 
                 int x = e.getX();
@@ -58,7 +53,9 @@ public class DemoPanel extends JPanel {
                 gridXPress = (x - Constants.TOP_LEFT_X) / Constants.GRID_WIDTH;
                 gridYPress = (y - Constants.TOP_LEFT_Y) / Constants.GRID_WIDTH;
                 
-                if(gridXPress < Constants.NUM_CELLS_HORI 
+                if(x >=Constants.TOP_LEFT_X
+                		&& y >=Constants.TOP_LEFT_Y
+                		&& gridXPress < Constants.NUM_CELLS_HORI 
                 		&& gridYPress < Constants.NUM_CELLS_VERT 
                 		&& gridXPress >= 0 
                 		&& gridYPress >=0) {
@@ -67,7 +64,6 @@ public class DemoPanel extends JPanel {
                 	gridXPress = -1;
                 	gridYPress = -1;
                 }
-        		//System.out.println("xpress: " + gridXPress + ", ypress = " + gridYPress);
                 
             }
 
@@ -81,13 +77,14 @@ public class DemoPanel extends JPanel {
                 int gridXRelease = (x - Constants.TOP_LEFT_X) / Constants.GRID_WIDTH;
                 int gridYRelease = (y - Constants.TOP_LEFT_Y) / Constants.GRID_WIDTH;
                 
-                if(gridXRelease < Constants.NUM_CELLS_HORI 
+                if(x >=Constants.TOP_LEFT_X
+                		&& y >=Constants.TOP_LEFT_Y
+                		&& gridXRelease < Constants.NUM_CELLS_HORI 
                 		&& gridYRelease < Constants.NUM_CELLS_VERT 
                 		&& gridXRelease >= 0 
                 		&& gridYRelease >=0) {
                 	
                 	if(gridXRelease == gridXPress && gridYPress == gridYRelease) {
-                		System.out.println("x: " + gridXRelease + ", y = " + gridYRelease);
                 		app.insertGUIMove(gridXRelease, gridYRelease);
                 	}
                 	//pass
@@ -111,13 +108,7 @@ public class DemoPanel extends JPanel {
          double thickness = 2;
          Stroke oldStroke = g2.getStroke();
          g2.setStroke(new BasicStroke((float) thickness));
-         int x = 0;
-         int y =0;
-         int width = 200;
-         int height = 200;
          
-         //g.drawString("BLAH", 20, 20);
-         //g.drawRect(200, 200, 200, 200);
          
          for(int i=0; i<=Constants.NUM_CELLS_HORI; i++) {
         	 
@@ -148,7 +139,6 @@ public class DemoPanel extends JPanel {
             	 
         		 if(BoardStateStatic.get(i, j) == Constants.PLAYER_1) {
 
-        			 System.out.println("HELLO?");
         	         g.setColor(Color.YELLOW);
         			 g.fillOval(
                 			 Constants.TOP_LEFT_X + j*Constants.GRID_WIDTH + Constants.GRID_WIDTH/2 - Constants.PIECE_WIDTH /2,
@@ -171,39 +161,8 @@ public class DemoPanel extends JPanel {
              }
          }
          
-         //g2.drawRect(x, y, width, height);
          g2.setStroke(oldStroke);
          
      }
 	 
-	 /*
-	  * import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
-
-public class ImagePanel extends JPanel{
-
-    private BufferedImage image;
-
-    public ImagePanel() {
-       try {                
-          image = ImageIO.read(new File("image name and path"));
-       } catch (IOException ex) {
-            // handle exception...
-       }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(image, 0, 0, this); // see javadoc for more info on the parameters            
-    }
-
-}
-*/
 }

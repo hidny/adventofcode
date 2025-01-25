@@ -20,10 +20,9 @@ public class BoardStateStatic {
 		numAdded++;
 		
 		if(i >= 0 && j>=0 && i<Constants.NUM_CELLS_VERT && j <Constants.NUM_CELLS_HORI) {
-			System.out.println("put " + i + " and " + j);
 			state[i][j] = num;
 		} else {
-			System.out.println("Out of bounds!");
+			System.out.println("Out of bounds in BoardStateStatic!");
 		}
 		
 		state2[i][j] = numAdded;
@@ -158,7 +157,6 @@ public class BoardStateStatic {
 			}
 		}
 		
-		System.out.println("TODO: debug");
 
 	}
 

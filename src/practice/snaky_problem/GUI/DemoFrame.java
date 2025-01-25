@@ -25,7 +25,7 @@ public class DemoFrame extends JFrame {
 				3 * Constants.TOP_LEFT_Y + (Constants.NUM_CELLS_VERT + 1) * Constants.GRID_WIDTH
 		);
 		this.setResizable(true);
-		this.setTitle("lets go");
+		this.setTitle("SNAAAAKY");
 		this.setVisible(true);
 		
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
