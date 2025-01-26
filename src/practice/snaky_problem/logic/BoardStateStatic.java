@@ -163,5 +163,9 @@ public class BoardStateStatic {
 		
 
 	}
+	
+	public static int[][] getBoard() {
+		return state;
+	}
 
 }
