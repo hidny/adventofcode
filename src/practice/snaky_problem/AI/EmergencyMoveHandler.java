@@ -58,5 +58,28 @@ public class EmergencyMoveHandler  implements MoveHandlerInterface {
 		System.out.println("Regualar move");
 		return backupMover.handleMove(i, j);
 	}
+	
+	public boolean hasEmergencyMove() {
+		
+		if(positionCheckUtils.is1Away(Constants.PLAYER_2)) {
+			
+			return true;
+		}
+
+		if(positionCheckUtils.is1Away(Constants.PLAYER_1)) {
+			return true;
+		}
+		
+		if(positionCheckUtils.hasDoubleThreat(Constants.PLAYER_2)) {
+			return true;
+		}
+		
+		if(positionCheckUtils.hasDoubleThreat(Constants.PLAYER_1)) {
+
+			return true;
+		}
+		
+		return false;
+	}
 
 }
