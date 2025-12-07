@@ -191,7 +191,6 @@ public class getTransitionOptions {
 				String path = getPath(startI, endI, wayIndex);
 				sopl("Index Path: " + wayIndex + " : " + path);
 				
-				//TODO
 				long transitionResult[] = getTransitionListGivenPath(path);
 				
 				for(int j1=0; j1<transitionResult.length; j1++) {
@@ -205,26 +204,13 @@ public class getTransitionOptions {
 			
 		}
 	}
+
 	
-	
-	//TODO:
-	public static long[][] getPossibleTransitionsNextLevel(long transitions[]) {
+	public static long getNumWaysCurLevel(String path) {
 		
-		long ret = 0L;
-		for(int i=0; i<transitions.length; i++) {
-			ret += transitions[i];
-		}
-		return null;
-	}
-	
-	//TODO:
-	//Get possible transitions next level...
-	public static long[][] getPossibleTransitionsNextLevel(String path) {
-		
-		//TODO: copy/paste code
 		long transitionResult[] = getTransitionListGivenPath(path);
 		
-		return getPossibleTransitionsNextLevel(transitionResult);
+		return getNumWaysCurLevel(transitionResult);
 	}
 	
 	public static long getNumWaysCurLevel(long transitions[]) {
@@ -236,16 +222,75 @@ public class getTransitionOptions {
 		return ret;
 	}
 	
-	//TODO:
 	//Get possible transitions next level...
-	
-	public static long getNumWaysCurLevel(String path) {
+	public static long[][] getPossibleTransitionsNextLevel(String path) {
 		
-		//TODO: copy/paste code
 		long transitionResult[] = getTransitionListGivenPath(path);
 		
-		return getNumWaysCurLevel(transitionResult);
+		return getPossibleTransitionsNextLevel(transitionResult);
 	}
+	
+	
+	public static int getNumDistinctTransitionsWithMultipleAnswers(long transitions[]) {
+		
+		int ret = 0;
+		for(int i=0; i<transitions.length; i++) {
+			
+			if(transitions[i] == 0) {
+				continue;
+			}
+			
+			if(transitionsListNextLevel[i][0].length == 2) {
+				ret++;
+				
+			}
+		}
+		
+		return ret;
+		
+	}
+	//TODO:
+	public static long[][] getPossibleTransitionsNextLevel(long transitions[]) {
+		
+		int numWaysNaive = (int)(Math.pow(2, getNumDistinctTransitionsWithMultipleAnswers(transitions)));
+
+		long ret[][] = new long[numWaysNaive][transitions.length];
+		
+		for(int numWayIndex= 0; numWayIndex<numWaysNaive; numWayIndex++) {
+			
+			long curDirectionCode = numWayIndex;
+			for(int i=0; i<transitions.length; i++) {
+				
+				if(transitions[i] == 0) {
+					continue;
+				}
+				
+				if(transitionsListNextLevel[i][0].length == 2) {
+					
+					if(curDirectionCode % 2 == 0) {
+						
+						//TODO
+					} else {
+						
+						//TODO
+					}
+					
+					curDirectionCode /= 2;
+				}
+			}
+			
+			if(curDirectionCode > 0) {
+				sopl("doh!");
+				exit(1);
+			}
+		}
+		
+		
+		return ret;
+	}
+	
+	//TODO: have function eliminate dominated transition list options
+	//TODO: eventually have a rule of thumb for eliminating unpromissing transition list options.
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -261,6 +306,18 @@ public class getTransitionOptions {
 
 		path = "AAA>^>^";
 		sopl("Test path=(" + path + "): " + getNumWaysCurLevel(path));
+		
+		long fakeTransitionList[] = new long[25];
+		for(int i=0; i<fakeTransitionList.length; i++) {
+			fakeTransitionList[i] = 1;
+		}
+		sopl("Number of transitions with 2 options: " + getNumDistinctTransitionsWithMultipleAnswers(fakeTransitionList));
+		
+		
+		for(int i=0; i<fakeTransitionList.length; i++) {
+			fakeTransitionList[i] = 0;
+		}
+		sopl("Expect number under 0: " + getNumDistinctTransitionsWithMultipleAnswers(fakeTransitionList));
 		
 	}
 	
