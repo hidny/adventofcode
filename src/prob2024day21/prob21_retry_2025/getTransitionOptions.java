@@ -381,8 +381,10 @@ public class getTransitionOptions {
 		
 		
 		//TODO: Have program create the possible paths based on input like: "029A"
-		String pathExamples[] = new String[] {"<A^A>^^AvvvA", "<A^A^>^AvvvA", "<A^A^^>AvvvA"};
+		//String pathExamples[] = new String[] {"<A^A>^^AvvvA", "<A^A^>^AvvvA", "<A^A^^>AvvvA"};
 		
+		//TODO: For part 2, don't do i, j, k, l... Do recursion!
+		//Go from 2 dirArraw pads from here to 25 dirArraw pads from here:
 		for(int i=0; i<1; i++) {
 			
 			long nextLevel[][] = getPossibleTransitionsNextLevel("<A^A>^^AvvvA");
