@@ -249,35 +249,83 @@ public class getTransitionOptions {
 		return ret;
 		
 	}
-	//TODO:
-	public static long[][] getPossibleTransitionsNextLevel(long transitions[]) {
+	
+	public static long[] addTransitionList(long transitionsCurLevel[], int transitionIndexToUse, int wayIndexToUse, long runningTotal[]) {
 		
-		int numWaysNaive = (int)(Math.pow(2, getNumDistinctTransitionsWithMultipleAnswers(transitions)));
+		for(int j=0; j<runningTotal.length; j++) {
+			runningTotal[j] += transitionsCurLevel[transitionIndexToUse] * transitionsListNextLevel[transitionIndexToUse][j][wayIndexToUse];
+		}
+		return runningTotal;
+	}
+	
+	//TODO:
+	public static long[][] getPossibleTransitionsNextLevel(long transitionsCurLevel[]) {
+		
+		
+		/*//DEBUG
+		long curSum2 = 0;
+		for(int i=0; i<transitionsCurLevel.length; i++) {
+			sopl("Transition index " + i + ": " + transitionsCurLevel[i]);
+			curSum2 += transitionsCurLevel[i]; 
+		}
+		System.out.println("Number of transitions cur Level:");
+		sopl(curSum2);
+		//END DEBUG
+		*/
+		
+		sopl("Start of getPossibleTransitionsNextLevel");
+		int numWaysNaive = (int)(Math.pow(2, getNumDistinctTransitionsWithMultipleAnswers(transitionsCurLevel)));
 
-		long ret[][] = new long[numWaysNaive][transitions.length];
+		long ret[][] = new long[numWaysNaive][transitionsCurLevel.length];
+		
+		for(int i=0; i<ret.length; i++) {
+			for(int j=0; j<ret[0].length; j++) {
+				ret[i][j] = 0L;
+			}
+		}
 		
 		for(int numWayIndex= 0; numWayIndex<numWaysNaive; numWayIndex++) {
 			
+			
 			long curDirectionCode = numWayIndex;
-			for(int i=0; i<transitions.length; i++) {
+			for(int transitionIndexCurLevel=0; transitionIndexCurLevel<transitionsCurLevel.length; transitionIndexCurLevel++) {
 				
-				if(transitions[i] == 0) {
+				if(transitionsCurLevel[transitionIndexCurLevel] == 0) {
+					//no transitions in current level means no transitions to add in the next level:
 					continue;
 				}
 				
-				if(transitionsListNextLevel[i][0].length == 2) {
+				if(transitionsListNextLevel[transitionIndexCurLevel][0].length == 2) {
 					
 					if(curDirectionCode % 2 == 0) {
 						
+						//transitionsListNextLevel[i][0][0]
+						ret[numWayIndex] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, (int)(curDirectionCode % 2), ret[numWayIndex]);
 						//TODO
 					} else {
-						
+						//transitionsListNextLevel[i][0][1]
+						ret[numWayIndex] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, (int)(curDirectionCode % 2), ret[numWayIndex]);
 						//TODO
 					}
 					
 					curDirectionCode /= 2;
+				} else {
+					//transitionsListNextLevel[i][0][0]
+					ret[numWayIndex] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, 0, ret[numWayIndex]);
+					
 				}
 			}
+			
+			//DEBUG
+			/*long curSum = 0;
+			for(int i=0; i<ret[numWayIndex].length; i++) {
+				//sopl("Transition index " + i + ": " + ret[numWayIndex][i]);
+				curSum += ret[numWayIndex][i]; 
+			}
+			System.out.println("Number of transitions:");
+			sopl(curSum);
+			*/
+			//END DEBUG
 			
 			if(curDirectionCode > 0) {
 				sopl("doh!");
@@ -285,7 +333,22 @@ public class getTransitionOptions {
 			}
 		}
 		
+		//Sanity test diff result:
 		
+		/*sopl("Sanity Test ret:");
+		for(int i=0; i<ret.length; i++) {
+			
+			long origResult = ret[i][0];
+			for(int j=0; j<ret[0].length; j++) {
+				
+				if(ret[i][j] != origResult) {
+					sopl(i + ", " + j + ": differs!");
+				}
+			}
+			
+		}
+		sopl("END Sanity Test ret:");
+		*/
 		return ret;
 	}
 	
@@ -319,9 +382,66 @@ public class getTransitionOptions {
 		}
 		sopl("Expect number under 0: " + getNumDistinctTransitionsWithMultipleAnswers(fakeTransitionList));
 		
+		
+		
+		String pathExamples[] = new String[] {"<A^A>^^AvvvA", "<A^A^>^AvvvA", "<A^A^^>AvvvA"};
+		
+		for(int i=0; i<1; i++) {
+			
+			long nextLevel[][] = getPossibleTransitionsNextLevel("<A^A>^^AvvvA");
+			
+			long shortestNextLevel = getLowestNumberTransitions(nextLevel);
+			
+			sopl();
+			sopl("Shortest for the next level: " + shortestNextLevel);
+
+			//From AOC
+			//v<<A>>^A<A>AvA<^AA>A<vAAA>^A
+			//39-11 = 28
+			
+			long bestShortest = Long.MAX_VALUE;
+			sopl("Iterate over next level:");
+			for(int j=0; j<nextLevel.length; j++) {
+
+				long nextLevel2[][] = getPossibleTransitionsNextLevel(nextLevel[j]);
+				
+				long shortestNextLevel2 = getLowestNumberTransitions(nextLevel2);
+				
+				if(shortestNextLevel2 < bestShortest) { 
+					bestShortest = shortestNextLevel2;
+				}
+			}
+			
+			sopl("Shortest for 2 levels down (part 1): " + bestShortest);
+			//From AOC:
+			// <vA<AA>>^AvAA<^A>A<v<A>>^AvA^A<vA>^A<v<A>^A>AAvA^A<v<A>A>^AAAvA<^A>A
+			// 84-16 = 68
+			// It matches!
+			
+			//That matches what my algo found! Holy crap I might be getting somewhere!
+		}
 	}
 	
 
+	public static long getLowestNumberTransitions(long ret[][]) {
+		
+		long answer = Long.MAX_VALUE;
+		
+		for(int numWayIndex=0; numWayIndex<ret.length; numWayIndex++) {
+			
+			long curSum = 0;
+			for(int i=0; i<ret[numWayIndex].length; i++) {
+				//sopl("Transition index " + i + ": " + ret[numWayIndex][i]);
+				curSum += ret[numWayIndex][i]; 
+			}
+			
+			if(curSum < answer) {
+				answer = curSum;
+			}
+		}
+		return answer;
+		
+	}
 
 	public static void sop(Object a) {
 		System.out.print(a.toString());
