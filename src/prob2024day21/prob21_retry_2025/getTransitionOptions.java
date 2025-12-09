@@ -258,7 +258,6 @@ public class getTransitionOptions {
 		return runningTotal;
 	}
 	
-	//TODO:
 	public static long[][] getPossibleTransitionsNextLevel(long transitionsCurLevel[]) {
 		
 		
@@ -299,18 +298,16 @@ public class getTransitionOptions {
 					
 					if(curDirectionCode % 2 == 0) {
 						
-						//transitionsListNextLevel[i][0][0]
+						//transitionsListNextLevel[i][x][0]
 						ret[numWayIndex] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, (int)(curDirectionCode % 2), ret[numWayIndex]);
-						//TODO
 					} else {
-						//transitionsListNextLevel[i][0][1]
+						//transitionsListNextLevel[i][x][1]
 						ret[numWayIndex] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, (int)(curDirectionCode % 2), ret[numWayIndex]);
-						//TODO
 					}
 					
 					curDirectionCode /= 2;
 				} else {
-					//transitionsListNextLevel[i][0][0]
+					//transitionsListNextLevel[i][x][0]
 					ret[numWayIndex] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, 0, ret[numWayIndex]);
 					
 				}
@@ -356,7 +353,6 @@ public class getTransitionOptions {
 	//TODO: eventually have a rule of thumb for eliminating unpromissing transition list options.
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		createTransitionListNextLevel();
 		
 		sopl("---------");
@@ -384,6 +380,7 @@ public class getTransitionOptions {
 		
 		
 		
+		//TODO: Have program create the possible paths based on input like: "029A"
 		String pathExamples[] = new String[] {"<A^A>^^AvvvA", "<A^A^>^AvvvA", "<A^A^^>AvvvA"};
 		
 		for(int i=0; i<1; i++) {
