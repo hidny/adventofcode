@@ -13,10 +13,11 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob10 {
+public class prob10b {
 
 	
 	public static void main(String[] args) {
+		sopl("Start");
 		Scanner in;
 		try {
 			in = new Scanner(new File("in2025/prob2025in10.txt"));
@@ -66,31 +67,70 @@ public class prob10 {
 				
 				line = lines.get(i);
 				
-				
-				String target = line.split("\\]")[0].split("\\[")[1];
-				
-				long targetNumber = 0L;
-				for(int j=target.length() - 1; j>=0; j--) {
-					if(target.charAt(j) == '#') {
-						targetNumber = 2*targetNumber + 1;
-					} else {
-						targetNumber = 2*targetNumber;
-					}
-				}
-				
-				sopl("Target: " + targetNumber);
+				int listCounters[] = getListCounters(line);
 				
 				String tokens[] = line.split(" ");
 				
-				long optionNumbers[] = new long[tokens.length -1];
+				long optionNumbers[] = new long[tokens.length -2];
 				
 				for(int j=1; j<tokens.length - 1; j++) {
 					optionNumbers[j - 1] = getOptionNumber(tokens[j]);
 					sopl("option number: " + optionNumbers[j-1]);
 				}
 				
+				for(int numPresses=0; true; numPresses++) {
+					sopl("Num presses: " + numPresses);
+					boolean combo[] = new boolean[numPresses + optionNumbers.length - 1];
+					
+					for(int k=0; k<optionNumbers.length - 1; k++) {
+						combo[k] = true;
+					}
+					
+					NEXT_COMBO:
+					while(combo != null) {
+						
+						int counterTrial[] = new int[listCounters.length];
+						
+						int indexOption = 0;
+						for(int j=0; j<combo.length; j++) {
+							
+							if(combo[j]) {
+								indexOption++;
+							} else {
+								
+								for(int k=0; k<counterTrial.length; k++) {
+									if( (optionNumbers[indexOption] & ( 1 << k)) != 0) {
+										counterTrial[k]++;
+										
+										if(counterTrial[k] > listCounters[k]) {
+											//sopl("boom");
+											combo = utilsPE.Combination.getNextCombination(combo);
+											continue NEXT_COMBO;
+										}
+									}
+								}
+							}
+							
+						}
+						
+						boolean good =true;
+						for(int k=0; k<counterTrial.length; k++) {
+							if(counterTrial[k] != listCounters[k]) {
+								good = false;
+							}
+						}
+						
+						if(good) {
+							cur+=numPresses;
+							continue NEXT_LINE;
+						}
+						
+						
+						combo = utilsPE.Combination.getNextCombination(combo);
+					}
+				}
 				
-				
+				/*
 				for(int j=0; j<optionNumbers.length; j++) {
 
 					sopl("j = " + j);
@@ -119,7 +159,7 @@ public class prob10 {
 						
 						combo = utilsPE.Combination.getNextCombination(combo);
 					}
-				}
+				}*/
 				
 			}
 
@@ -133,6 +173,19 @@ public class prob10 {
 		}
 	}
 	
+	public static int[] getListCounters(String line) {
+		
+		String list = line.split("\\{")[1].split("\\}")[0];
+		
+		String tokens[] = list.split(",");
+		
+		int ret[] = new int[tokens.length];
+		
+		for(int i=0; i<ret.length; i++) {
+			ret[i] = pint(tokens[i]);
+		}
+		return ret;
+	}
 
 	public static long[][] createPascalTriangle(int size) {
 		size = size+1;

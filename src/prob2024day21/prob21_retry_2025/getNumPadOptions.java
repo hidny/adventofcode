@@ -1,5 +1,15 @@
 package prob2024day21.prob21_retry_2025;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.Stack;
+
+import probs2024.prob21state2;
+
 public class getNumPadOptions {
 
 
@@ -166,8 +176,8 @@ public class getNumPadOptions {
 		return ret + "A";
 	}
 	
-	public static void main(String args[]) {
-		
+	public static void testNumPad() { 
+
 		for(int i=0; i<targetList.length; i++) {
 			for(int j=0; j<targetList.length; j++) {
 				
@@ -187,6 +197,120 @@ public class getNumPadOptions {
 			sopl();
 			sopl();
 		}
+	}
+	
+
+	public static ArrayList<String> getList(String key, String cur, int index) {
+		
+		ArrayList<String> ret = new ArrayList<String>();
+
+		if(index == key.length()) {
+			ret.add(cur);
+			return ret;
+		}
+		
+		char prevChar = 'A';
+		char curChar = key.charAt(index);
+		if(index > 0) {
+			prevChar = key.charAt(index - 1);
+		}
+		
+		for(int i=0; i<getNumWays(charToIndex(prevChar),  charToIndex(curChar)); i++) {
+			String toAdd = getPath(charToIndex(prevChar), charToIndex(curChar), i);
+			
+			ret.addAll(getList(key, cur + toAdd, index + 1));
+		}
+		
+		
+		return ret;
+	}
+	
+	public static ArrayList<String> getList(String key) {
+		return getList(key, "", 0);
+	}
+	
+	public static void printAllOptions(String key) {
+		
+		ArrayList<String> list = getList(key);
+		
+		for(int i=0; i<list.size(); i++) {
+			sopl(list.get(i));
+		}
+	}
+	
+	
+	public static void main(String args[]) {
+		
+		
+		Scanner in;
+		try {
+			in = new Scanner(new File("in2024/prob2024in21.txt"));
+			//in = new Scanner(new File("in2024/prob2024in0.txt"));
+			int numTimes = 0;
+			 
+			int count = 0;
+			boolean part2 = false;
+			String line = "";
+	
+			LinkedList queue = new LinkedList();
+			Stack stack = new Stack();
+			HashSet set = new HashSet();
+			
+			
+			Hashtable<Long, Integer> trail = new Hashtable<Long, Integer>();
+			
+			ArrayList <String>lines = new ArrayList<String>();
+			
+			while(in.hasNextLine()) {
+				line = in.nextLine();
+				lines.add(line);
+				
+			}
+			
+			
+	
+			int most = 0;
+			int most2 = 0;
+			int most3 = 0;
+			long cur = 0L;
+			ArrayList ints = new ArrayList<Integer>();
+			for(int i=0; i<lines.size(); i++) {
+				
+				
+				line = lines.get(i);
+				
+				sopl(line + ":");
+				printAllOptions(line);
+				//TODO: make a transition list of the arrows plz.
+				sopl();
+				sopl();
+			}
+			
+			
+			sopl("Answer: " + cur);
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+		}
+
+		sopl("029A:");
+		printAllOptions("029A");
+		sopl();
+		sopl();
+		sopl("980A:");
+		printAllOptions("980A");
+		sopl();
+		sopl();
+		sopl("179A:");
+		printAllOptions("179A");
+		sopl();
+		sopl();
+		sopl("456A:");
+		printAllOptions("456A");
+		sopl();
+		sopl();
+		sopl("456A:");
+		printAllOptions("456A");
 	}
 	
 
