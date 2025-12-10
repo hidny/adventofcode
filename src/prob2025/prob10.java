@@ -13,13 +13,13 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob10 {
 
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("in2025/prob2025in9.txt"));
+			in = new Scanner(new File("in2025/prob2025in10.txt"));
 			//in = new Scanner(new File("in2025/prob2025in0.txt"));
 			int numTimes = 0;
 			 
@@ -55,32 +55,12 @@ public class prob9 {
 			int most = 0;
 			int most2 = 0;
 			int most3 = 0;
-			long cur = 0;
+			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
-			
-			long coordx[] = new long[lines.size()];
-			long coordy[] = new long[lines.size()];
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
-				
-				coordx[i] = plong(line.split(",")[0]);
-				coordy[i] = plong(line.split(",")[1]);
-				
-			}
-			
-			
-			for(int i=0; i<lines.size(); i++) {
-				for(int j=i+1; j<lines.size(); j++) {
-					
-					long area = (1+Math.abs(coordx[i] - coordx[j])) * (1+Math.abs(coordy[i] - coordy[j]));
-					
-					if(area > cur) {
-						cur = area;
-					}
-					
-				}
 			}
 
 
@@ -92,9 +72,6 @@ public class prob9 {
 		} finally {
 		}
 	}
-	
-	
-	
 
 	public static void sop(Object a) {
 		System.out.print(a.toString());

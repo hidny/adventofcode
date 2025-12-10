@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob9 {
+public class prob9b {
 
 	
 	public static void main(String[] args) {
@@ -60,21 +60,102 @@ public class prob9 {
 			
 			long coordx[] = new long[lines.size()];
 			long coordy[] = new long[lines.size()];
+			
+			int numLeft = 0;
+			int numRight = 0;
+			
+			int prevDir = -10;
+			int curDir = -1;
+			
+
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
 				
+				
 				coordx[i] = plong(line.split(",")[0]);
 				coordy[i] = plong(line.split(",")[1]);
-				
 			}
+			
+			for(int i=0; i<lines.size(); i++) {
+				
+			
+				if(coordx[i] != coordx[(i + coordx.length - 1) % coordx.length]) {
+					
+					if(coordx[i] > coordx[(i + coordx.length - 1) % coordx.length]) {
+						curDir = 1;
+					} else {
+
+						curDir = 3;
+					}
+
+					if(i > 0) {
+						if((prevDir + 1) % 4 == curDir) {
+							numRight++;
+							sopl("r1");
+						} else if((prevDir + 3) % 4 == curDir) {
+							numLeft++;
+							sopl("l1");
+
+						} else {
+							sopl("doh");
+							exit(1);
+						}
+					}
+					prevDir = curDir;
+					
+				} else if(coordy[i] != coordy[(i + coordx.length - 1) % coordx.length]){
+
+					if(coordy[i] > coordy[(i + coordx.length - 1) % coordx.length]) {
+						curDir = 2;
+					} else {
+
+						curDir = 0;
+					}
+
+					if(i > 0) {
+						if((prevDir + 1) % 4 == curDir) {
+							numRight++;
+							sopl("r2");
+						} else if((prevDir + 3) % 4 == curDir) {
+							numLeft++;
+							sopl("l2");
+						} else {
+							sopl("doh");
+							exit(1);
+						}
+					}
+					prevDir = curDir;
+					
+				} else {
+					sopl("doh!");
+					exit(1);
+				}
+			}
+				
+			sopl("Num right: " + numRight);
+			sopl("Num left: " + numLeft);
+			//Clockwise!
+			
 			
 			
 			for(int i=0; i<lines.size(); i++) {
 				for(int j=i+1; j<lines.size(); j++) {
 					
-					long area = (1+Math.abs(coordx[i] - coordx[j])) * (1+Math.abs(coordy[i] - coordy[j]));
+					
+					
+					
+					//long getAreaCutOut
+					
+					long area = getAreaCutOut(
+							(int)Math.min(coordx[i], coordx[j]),
+							(int)Math.max(coordx[i], coordx[j]),
+							(int)Math.min(coordy[i], coordy[j]),
+							(int)Math.max(coordy[i], coordy[j]),
+							true,
+							coordx,
+							coordy);
 					
 					if(area > cur) {
 						cur = area;
@@ -93,6 +174,70 @@ public class prob9 {
 		}
 	}
 	
+	//public static boolean meh[][];
+	
+	public static long getAreaCutOut(int minX, int maxX, int minY, int maxY, boolean clockwise, long coordx[], long coordy[]) {
+		
+		long area = (1+Math.abs(minX - maxX)) * (1+Math.abs(minY - maxY));
+		
+		//meh = null;
+		//meh = new boolean[1+Math.abs(minX - maxX)][(1+Math.abs(minY - maxY))];
+		
+		//TODO:
+		//ArrayList<SetOfLines> curves = new ArrayList<SetOfLines>();
+		
+		
+		for(int i=0; i<coordx.length; i++) {
+			
+			long nextX = coordx[(i + 1) % coordx.length];
+			long nextY = coordy[(i + 1) % coordx.length];
+			
+			long x = coordx[i];
+			long y = coordy[i];
+			
+			if(x == nextX) {
+				if(x > minX && x < minY) {
+					if(y <= minY && nextY<=minY) {
+						//pass
+					} else if(y >= maxY && nextY >= maxY) {
+						//pass
+					} else {
+						return -1L;
+						
+						
+					}
+						
+				} else {
+					//pass
+				}
+				
+			} else if(y == nextY) {
+				if(y > minY && y < maxY) {
+					if(x <= minX && nextX<=minX) {
+						//pass
+					} else if(x >= maxX && nextX >= maxX) {
+						//pass
+					} else {
+						return -1L;
+					}
+					
+				} else {
+					//pass
+				}
+				
+			} else {
+				sopl("doh2");
+				exit(1);
+			}
+			
+		}
+
+		sopl(area);
+		//TODO: calc area based on curves...
+		
+		return area;
+		
+	}
 	
 	
 
