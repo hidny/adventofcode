@@ -232,10 +232,10 @@ public class getTransitionOptions {
 	
 	
 
-	public static int getAllNumDistinctTransitionsWithMultipleAnswers(long transitions[]) {
+	public static int getAllNumDistinctTransitionsWithMultipleAnswers() {
 		
 		int ret = 0;
-		for(int i=0; i<transitions.length; i++) {
+		for(int i=0; i<transitionsListNextLevel.length; i++) {
 			
 			if(transitionsListNextLevel[i][0].length == 2) {
 				ret++;
@@ -294,7 +294,7 @@ public class getTransitionOptions {
 		//int numWaysNaive = (int)(Math.pow(2, getNumDistinctTransitionsWithMultipleAnswers(transitionsCurLevel)));
 		
 		//Just get all of them so it could be standard.
-		int numWaysNaive = (int)(Math.pow(2, getAllNumDistinctTransitionsWithMultipleAnswers(transitionsCurLevel)));
+		int numWaysNaive = (int)(Math.pow(2, getAllNumDistinctTransitionsWithMultipleAnswers()));
 
 		long ret[][] = new long[numWaysNaive][transitionsCurLevel.length];
 		

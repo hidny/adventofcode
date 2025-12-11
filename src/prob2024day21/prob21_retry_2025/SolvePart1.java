@@ -11,13 +11,22 @@ import java.util.Stack;
 public class SolvePart1 {
 
 
+	public static int NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = -1;
+	
 	public static void main(String args[]) {
 		
+		//TODO: put in function
+		// Initialize next level transition list:
+		getTransitionOptions.createTransitionListNextLevel();
+		NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = (int)Math.pow(2, getTransitionOptions.getAllNumDistinctTransitionsWithMultipleAnswers());
+		//END Initialize
+		
+		sopl("----------");
 		
 		Scanner in;
 		try {
-			//in = new Scanner(new File("in2024/prob2024in21.txt"));
-			in = new Scanner(new File("in2024/prob2024in0.txt"));
+			in = new Scanner(new File("in2024/prob2024in21.txt"));
+			//in = new Scanner(new File("in2024/prob2024in0.txt"));
 
 			String line = "";
 	
@@ -60,9 +69,10 @@ public class SolvePart1 {
 				
 				long curLevelTrasitions[][] = firstLevelTransitions;
 				
-				for(int j=0; j<1; j++) {
+				for(int j=0; j<2; j++) {
 					
 					curLevelTrasitions = getNextLevelTransitions(curLevelTrasitions);
+					sopl("Current number of transitions after getNextLevelTransitions iteration " + j + ": " + curLevelTrasitions.length);
 				}
 				
 				long shortestLength = Long.MAX_VALUE;
@@ -106,12 +116,26 @@ public class SolvePart1 {
 		return ret;
 	}
 	
+	//The hard part:
 	public static long[][] getNextLevelTransitions(long curLevelTrasitions[][]) {
 		
+		long ret[][] = new long[NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST * curLevelTrasitions.length][];
 		
-		//TODO: the hard part!
+		int curRetIndex = 0;
 		
-		return curLevelTrasitions;
+		for(int i=0; i<curLevelTrasitions.length; i++) {
+			long tmp[][] = getTransitionOptions.getPossibleTransitionsNextLevel(curLevelTrasitions[i]);
+			
+			for(int j=0; j<tmp.length; j++, curRetIndex++) {
+				ret[curRetIndex] = tmp[j];
+				
+			}
+		}
+		
+		sopl("Remove dominated options:");
+		ret = RemoveDominatedOptions(ret);
+		
+		return ret;
 	}
 	
 	public static long getNumericPartOfLine(String line) {
@@ -130,12 +154,17 @@ public class SolvePart1 {
 		boolean dominated[] = getDominated(firstLevelTransitions);
 		
 		int count = 0;
+		int dominatedCountDEBUG = 0;
 		for(int i=0; i<dominated.length; i++) {
 			if( ! dominated[i]) {
 				count++;
+			} else {
+				dominatedCountDEBUG++;
 			}
 		}
 		ret = new long[count][];
+		sopl("Found " + dominatedCountDEBUG + " dominated options");
+		sopl();
 		
 		int index = 0;
 		for(int i=0; i<dominated.length; i++) {
@@ -163,7 +192,7 @@ public class SolvePart1 {
 					if(isASameAsB(transitions[i], transitions[j])) {
 						//sopl("Same IJ!");
 					} else {
-						sopl("Different J!");
+						//sopl("Different J!");
 					}
 					//sopl("Dominated J!");
 					dominated[j] = true;
