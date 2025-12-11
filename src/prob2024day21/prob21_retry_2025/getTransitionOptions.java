@@ -231,6 +231,23 @@ public class getTransitionOptions {
 	}
 	
 	
+
+	public static int getAllNumDistinctTransitionsWithMultipleAnswers(long transitions[]) {
+		
+		int ret = 0;
+		for(int i=0; i<transitions.length; i++) {
+			
+			if(transitionsListNextLevel[i][0].length == 2) {
+				ret++;
+				
+			}
+		}
+		
+		return ret;
+		
+	}
+	
+	
 	public static int getNumDistinctTransitionsWithMultipleAnswers(long transitions[]) {
 		
 		int ret = 0;
@@ -272,10 +289,12 @@ public class getTransitionOptions {
 		//END DEBUG
 		*/
 		
-		sopl("Start of getPossibleTransitionsNextLevel");
-		//TODO: maybe replace getNumDistinctTransitionsWithMultipleAnswers
-		// with 6, so that the same numWays code meas the same thing every time.
-		int numWaysNaive = (int)(Math.pow(2, getNumDistinctTransitionsWithMultipleAnswers(transitionsCurLevel)));
+		// I decided to replace getNumDistinctTransitionsWithMultipleAnswers
+		// with 6, so that the same numWays code means the same thing every time.
+		//int numWaysNaive = (int)(Math.pow(2, getNumDistinctTransitionsWithMultipleAnswers(transitionsCurLevel)));
+		
+		//Just get all of them so it could be standard.
+		int numWaysNaive = (int)(Math.pow(2, getAllNumDistinctTransitionsWithMultipleAnswers(transitionsCurLevel)));
 
 		long ret[][] = new long[numWaysNaive][transitionsCurLevel.length];
 		
@@ -292,6 +311,12 @@ public class getTransitionOptions {
 			for(int transitionIndexCurLevel=0; transitionIndexCurLevel<transitionsCurLevel.length; transitionIndexCurLevel++) {
 				
 				if(transitionsCurLevel[transitionIndexCurLevel] == 0) {
+					
+					//Just whatever
+					if(transitionsListNextLevel[transitionIndexCurLevel][0].length == 2) {
+						curDirectionCode /= 2;
+					}
+					//END just whatever
 					//no transitions in current level means no transitions to add in the next level:
 					continue;
 				}
