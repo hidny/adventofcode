@@ -273,6 +273,8 @@ public class getTransitionOptions {
 		*/
 		
 		sopl("Start of getPossibleTransitionsNextLevel");
+		//TODO: maybe replace getNumDistinctTransitionsWithMultipleAnswers
+		// with 6, so that the same numWays code meas the same thing every time.
 		int numWaysNaive = (int)(Math.pow(2, getNumDistinctTransitionsWithMultipleAnswers(transitionsCurLevel)));
 
 		long ret[][] = new long[numWaysNaive][transitionsCurLevel.length];

@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob10b2 {
+public class prob10b3 {
 
 	
 	public static void main(String[] args) {
@@ -79,7 +79,15 @@ public class prob10b2 {
 					sopl("option number: " + optionNumbers[j-1]);
 				}
 				
-				cur += getAnswer(optionNumbers, listCounters);
+				long ansLine =  getAnswer(optionNumbers, listCounters);
+				
+				sopl("Answer for line: " + ansLine);
+				sopl();
+				sopl();
+				sopl();
+				cur +=ansLine;
+				
+				
 			}
 
 
@@ -92,12 +100,153 @@ public class prob10b2 {
 		}
 	}
 	
+	
+	
 	public static int getAnswer(long optionNumbers[], int listCounters[]) {
+
+		return getAnswer(optionNumbers, listCounters, new int[listCounters.length], new boolean[listCounters.length], new boolean[optionNumbers.length] );
+	}
+	
+	public static int getAnswer(long optionNumbers[], int goalCounters[], int usedCounters[], boolean usedIndex[], boolean usedOptionNumbers[]) {
 		
-		int countSoFar[] = new int[listCounters.length];
+		int numTimesIndexUsed[] = new int[goalCounters.length];
+		
+		for(int i=0; i<optionNumbers.length; i++) {
+			if(usedOptionNumbers[i]) {
+				continue;
+			}
+			for(int j=0; j<numTimesIndexUsed.length; j++) {
+				
+				if( (optionNumbers[i] & ( 1 << j)) != 0) {
+					numTimesIndexUsed[j]++;
+				}
+			}
+		}
+		
+		int leastUsedIndex = -1;
+		int numLeastUsed = -1;
+		for(int i=0; i<usedIndex.length; i++) {
+			if(usedIndex[i] == false && (leastUsedIndex == -1 || numLeastUsed > numTimesIndexUsed[i])) {
+				numLeastUsed = numTimesIndexUsed[i];
+				leastUsedIndex = i;
+			}
+		}
+		
+		if(leastUsedIndex == -1) {
+			//End condition:
+			
+			for(int i=0; i<goalCounters.length; i++) {
+				if(goalCounters[i] != usedCounters[i]) {
+					//big value:
+					return 100000;
+				}
+			}
+			//All good:
+			return 0;
+		}
+		
+		boolean newlyUsedIndex[] = new boolean[goalCounters.length];
+		for(int i=0; i<newlyUsedIndex.length; i++) {
+			newlyUsedIndex[i] = usedIndex[i];
+		}
+		newlyUsedIndex[leastUsedIndex] = true;
+		
+		boolean newlyUsedOptions[] = new boolean[optionNumbers.length];
+		for(int i=0; i<usedOptionNumbers.length; i++) {
+			newlyUsedOptions[i] = usedOptionNumbers[i];
+		}
 		
 		
-		return getAnswer(optionNumbers, listCounters, 0, countSoFar);
+		int goalNumber = goalCounters[leastUsedIndex] - usedCounters[leastUsedIndex];
+		
+		int optionsCounter = 0;
+		boolean optionsToUseThisIt[] = new boolean[optionNumbers.length];
+		
+		for(int i=0; i<optionNumbers.length; i++) {
+			if(usedOptionNumbers[i]) {
+				continue;
+			}
+			if( (optionNumbers[i] & ( 1 << leastUsedIndex)) != 0) {
+				newlyUsedOptions[i] = true;
+				
+				optionsCounter++;
+				optionsToUseThisIt[i] = true;
+			}
+		}
+
+		int minAnswer = 1000000;
+		
+		if(goalNumber == 0) {
+		
+			minAnswer = getAnswer(optionNumbers, goalCounters, usedCounters, newlyUsedIndex, newlyUsedOptions);
+			
+		} else if(optionsCounter > 0) { 
+			boolean combo[] = new boolean[goalNumber + optionsCounter - 1];
+			
+
+			for(int i=0; i<optionsCounter - 1; i++) {
+				combo[i] = true;
+			}
+				
+			
+			NEXT_COMBO:
+			while(combo != null) {
+				
+				int usedCounters2[] = new int[usedCounters.length];
+				
+				for(int i=0; i<usedCounters2.length; i++) {
+					usedCounters2[i] = usedCounters[i];
+				}
+				
+				int comboIndex = 0;
+				
+				for(int indexOption=0; indexOption<optionsToUseThisIt.length; indexOption++) {
+					
+					if(optionsToUseThisIt[indexOption]) {
+						
+						int numTimes = 0;
+						while(comboIndex < combo.length && combo[comboIndex] == false) {
+							
+							//TODO: add to usedCounters2
+							
+							
+							numTimes++;
+							comboIndex++;
+						}
+						
+						for(int k=0; k<usedCounters2.length; k++) {
+							if( (optionNumbers[indexOption] & ( 1 << k)) != 0) {
+								usedCounters2[k] += numTimes;
+								
+								if(usedCounters2[k] > goalCounters[k]) {
+									//sopl("boom");
+									combo = utilsPE.Combination.getNextCombination(combo);
+									continue NEXT_COMBO;
+								}
+							}
+						}
+						
+						comboIndex++;
+					}
+				}
+				
+				//At this point, check next recursion down:
+				
+				int newAnswer = goalNumber + getAnswer(optionNumbers, goalCounters, usedCounters2, newlyUsedIndex, newlyUsedOptions);
+				minAnswer = Math.min(minAnswer, newAnswer);
+				
+				combo = utilsPE.Combination.getNextCombination(combo);
+			}
+			
+			
+		} else {
+			
+			//Something went wrong?
+			minAnswer = 100000;
+		}
+		
+		
+		return minAnswer;
 	}
 
 	//Arg!
