@@ -11,23 +11,27 @@ import java.util.Stack;
 public class SolvePart2 {
 
 
-	public static int NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = -1;
+	public static int MAX_NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = -1;
+
+	//For now, I'll test with only allowing some combination of 2 codes out of 64.
+	//public static int NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = 2;
 	
-	public static void main(String args[]) {
-		
-		//TODO: put in function
+	//The testing of only allowing 2 codes out of 64 suggested that only 1 code is needed. It happens to be code index 19.
+	public static int NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = 1;
+	
+	
+	public static long triangle[][] = getNumPadOptions.createPascalTriangle(100);
+	public static void initializeTransitionObjectAndTriangle() {
 		// Initialize next level transition list:
 		getTransitionOptions.createTransitionListNextLevel();
 		
-		NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = (int)Math.pow(2, getTransitionOptions.getAllNumDistinctTransitionsWithMultipleAnswers());
+		MAX_NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = (int)Math.pow(2, getTransitionOptions.getAllNumDistinctTransitionsWithMultipleAnswers());
 		
-		//TODO:
-		//You know what, I'm just going to assume a single code is good enough.
-		//NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = 1;
-		//TODO: later: Assume 2 out of 64 code is good enough and check the diff.
-		//NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = 2;
+	}
+	
+	public static void main(String args[]) {
 		
-		//TODO END Initialize
+		initializeTransitionObjectAndTriangle();
 		
 		sopl("----------");
 		
@@ -77,28 +81,79 @@ public class SolvePart2 {
 
 				long shortestLength = Long.MAX_VALUE;
 				
-				//TODO: wrap this up with a combination of 2 of 64 codes that are allow
-				long curLevelTrasitions[][] = firstLevelTransitions;
+				boolean comboCodesToUse[] = new boolean[MAX_NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST];
 				
-				for(int j=0; j<2; j++) {
-				//for(int j=0; j<25; j++) {
-					
-					curLevelTrasitions = getNextLevelTransitions(curLevelTrasitions);
-					sopl("Current number of transitions after getNextLevelTransitions iteration " + j + ": " + curLevelTrasitions.length);
+				for(int j=0; j<NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST; j++) {
+					comboCodesToUse[j] = true;
 				}
 				
+				ArrayList <String> bestCodesDebug = new ArrayList <String>();
 				
-				for(int j=0; j<curLevelTrasitions.length; j++) {
+				while(comboCodesToUse != null) {
 					
-					long tmpLength = getPathLengthBasedOnTransitions(curLevelTrasitions[j]);
+					//Testing only using a combination of 2 of 64 codes only, because more codes is computationally hard.
+					// Used 1 of 64 codes, because testing showed that code 19 is key. TODO: what are the rules of code 19?
 					
-					if(tmpLength < shortestLength) {
-						shortestLength = tmpLength;
+					//Testing int NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = 2;
+					//3: 417214
+					//4: 1032210 (Number of codes found: 192 out of 2016)
+					//5: 2542056 (Number of codes found: 70 out of 2016) --> 19?
+					//6: 6336218 (Number of codes found: 63 out of 2016) --> It's all 19!
+					//7: 15719370 (Number of codes found: 63 out of 2016) --> It's all 19!
+					
+					
+					long curLevelTrasitions[][] = firstLevelTransitions;
+					
+					//for(int j=0; j<2; j++) {
+					//for(int j=0; j<7; j++) {
+					for(int j=0; j<25; j++) {
+						
+						curLevelTrasitions = getNextLevelTransitions(curLevelTrasitions, comboCodesToUse);
+						sopl("Current number of transitions after getNextLevelTransitions iteration " + j + ": " + curLevelTrasitions.length);
 					}
-				}
+					
+					boolean debugFoundShortCombo = false;
+					for(int j=0; j<curLevelTrasitions.length; j++) {
+						
+						long tmpLength = getPathLengthBasedOnTransitions(curLevelTrasitions[j]);
+						
+						if(tmpLength < shortestLength) {
+							shortestLength = tmpLength;
+							bestCodesDebug = new ArrayList <String>();
+							
+						}
+						
+						if(tmpLength <= shortestLength) {
 
-				//END TODO: wrap this up with a combination of 2 of 64 codes that are allow
+							debugFoundShortCombo =true;
+							
+							
+						}
+					}
+					
+					if(debugFoundShortCombo) {
+						String bestCodesString = "";
+						//Get index codes for debug:
+						for(int k=0; k<comboCodesToUse.length; k++) {
+							if(comboCodesToUse[k]) {
+								bestCodesString += k;
+							}
+						}
+						bestCodesDebug.add(bestCodesString);
+						//End get index codes for debug.
+					}
+	
+					//END wrapping up search with a combination of 2 of 64 codes allow (or combination of just 1 of 64 codes allowed)
+					
+					comboCodesToUse = utilsPE.Combination.getNextCombination(comboCodesToUse);
+				}
 				
+				sopl("Best codes found:");
+				for(int j=0; j<bestCodesDebug.size(); j++) {
+					sopl(bestCodesDebug.get(j));
+				}
+				
+				sopl("Number of codes found: " + bestCodesDebug.size() + " out of " + triangle[MAX_NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST][NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST]);
 				long curLineAnswer = numericPartOfLine * shortestLength;
 				sopl("Answer for this line: " + curLineAnswer);
 				cur += curLineAnswer;
@@ -108,7 +163,7 @@ public class SolvePart2 {
 			}
 			
 			
-			sopl("Answer: " + cur);
+			sopl("Answer for part 2: " + cur);
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -131,14 +186,25 @@ public class SolvePart2 {
 	
 	//The hard part:
 	public static long[][] getNextLevelTransitions(long curLevelTrasitions[][]) {
+		return getNextLevelTransitions(curLevelTrasitions, null);
+	}
+	public static long[][] getNextLevelTransitions(long curLevelTrasitions[][], boolean allowed_codes_to_use[]) {
 		
-		//TODO: Only 1-2 options at a time
-		long ret[][] = new long[NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST * curLevelTrasitions.length][];
+		int multPerLevel = 0;
+		for(int i=0; i<allowed_codes_to_use.length; i++) {
+			if(allowed_codes_to_use[i]) {
+				multPerLevel++;
+			}
+		}
+		sopl("Mult per level: " + multPerLevel);
+		
+		//Only 1-2 options at a time because all 64 is not computationally attainable:
+		long ret[][] = new long[multPerLevel * curLevelTrasitions.length][];
 		
 		int curRetIndex = 0;
 		
 		for(int i=0; i<curLevelTrasitions.length; i++) {
-			long tmp[][] = getTransitionOptions.getPossibleTransitionsNextLevel(curLevelTrasitions[i]);
+			long tmp[][] = getTransitionOptions.getPossibleTransitionsNextLevel(curLevelTrasitions[i], allowed_codes_to_use);
 			
 			for(int j=0; j<tmp.length; j++, curRetIndex++) {
 				ret[curRetIndex] = tmp[j];

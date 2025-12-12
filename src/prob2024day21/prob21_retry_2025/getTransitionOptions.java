@@ -276,7 +276,10 @@ public class getTransitionOptions {
 	}
 	
 	public static long[][] getPossibleTransitionsNextLevel(long transitionsCurLevel[]) {
-		
+		return getPossibleTransitionsNextLevel(transitionsCurLevel, null);
+	}
+
+	public static long[][] getPossibleTransitionsNextLevel(long transitionsCurLevel[], boolean allowed_codes_to_use[]) {
 		
 		/*//DEBUG
 		long curSum2 = 0;
@@ -296,7 +299,16 @@ public class getTransitionOptions {
 		//Just get all of them so it could be standard.
 		int numWaysNaive = (int)(Math.pow(2, getAllNumDistinctTransitionsWithMultipleAnswers()));
 
-		long ret[][] = new long[numWaysNaive][transitionsCurLevel.length];
+		int numCodesAllowed = numWaysNaive;
+		if(allowed_codes_to_use != null) {
+			for(int i=0; i<allowed_codes_to_use.length; i++) {
+				if(allowed_codes_to_use[i] == false) {
+					numCodesAllowed--;
+				}
+			}
+		}
+		
+		long ret[][] = new long[numCodesAllowed][transitionsCurLevel.length];
 		
 		for(int i=0; i<ret.length; i++) {
 			for(int j=0; j<ret[0].length; j++) {
@@ -304,8 +316,14 @@ public class getTransitionOptions {
 			}
 		}
 		
+
+		int curIndexOutput = 0;
 		for(int numWayIndex= 0; numWayIndex<numWaysNaive; numWayIndex++) {
 			
+			if(allowed_codes_to_use != null && allowed_codes_to_use[numWayIndex] == false) {
+				//Skip this code...
+				continue;
+			}
 			
 			long curDirectionCode = numWayIndex;
 			for(int transitionIndexCurLevel=0; transitionIndexCurLevel<transitionsCurLevel.length; transitionIndexCurLevel++) {
@@ -326,19 +344,22 @@ public class getTransitionOptions {
 					if(curDirectionCode % 2 == 0) {
 						
 						//transitionsListNextLevel[i][x][0]
-						ret[numWayIndex] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, (int)(curDirectionCode % 2), ret[numWayIndex]);
+						ret[curIndexOutput] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, (int)(curDirectionCode % 2), ret[curIndexOutput]);
 					} else {
 						//transitionsListNextLevel[i][x][1]
-						ret[numWayIndex] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, (int)(curDirectionCode % 2), ret[numWayIndex]);
+						ret[curIndexOutput] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, (int)(curDirectionCode % 2), ret[curIndexOutput]);
 					}
 					
 					curDirectionCode /= 2;
 				} else {
 					//transitionsListNextLevel[i][x][0]
-					ret[numWayIndex] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, 0, ret[numWayIndex]);
+					
+					ret[curIndexOutput] = addTransitionList(transitionsCurLevel, transitionIndexCurLevel, 0, ret[curIndexOutput]);
 					
 				}
 			}
+			
+			curIndexOutput++;
 			
 			//DEBUG
 			/*long curSum = 0;
