@@ -23,11 +23,11 @@ public class SolvePart2 {
 		
 		//TODO:
 		//You know what, I'm just going to assume a single code is good enough.
-		NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = 1;
+		//NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = 1;
 		//TODO: later: Assume 2 out of 64 code is good enough and check the diff.
 		//NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST = 2;
 		
-		//END Initialize
+		//TODO END Initialize
 		
 		sopl("----------");
 		
@@ -74,7 +74,10 @@ public class SolvePart2 {
 				
 				sopl();
 				sopl();
+
+				long shortestLength = Long.MAX_VALUE;
 				
+				//TODO: wrap this up with a combination of 2 of 64 codes that are allow
 				long curLevelTrasitions[][] = firstLevelTransitions;
 				
 				for(int j=0; j<2; j++) {
@@ -84,7 +87,6 @@ public class SolvePart2 {
 					sopl("Current number of transitions after getNextLevelTransitions iteration " + j + ": " + curLevelTrasitions.length);
 				}
 				
-				long shortestLength = Long.MAX_VALUE;
 				
 				for(int j=0; j<curLevelTrasitions.length; j++) {
 					
@@ -94,6 +96,8 @@ public class SolvePart2 {
 						shortestLength = tmpLength;
 					}
 				}
+
+				//END TODO: wrap this up with a combination of 2 of 64 codes that are allow
 				
 				long curLineAnswer = numericPartOfLine * shortestLength;
 				sopl("Answer for this line: " + curLineAnswer);
@@ -128,6 +132,7 @@ public class SolvePart2 {
 	//The hard part:
 	public static long[][] getNextLevelTransitions(long curLevelTrasitions[][]) {
 		
+		//TODO: Only 1-2 options at a time
 		long ret[][] = new long[NUM_NEXT_LEVEL_OPTIONS_PER_TRANSITION_LIST * curLevelTrasitions.length][];
 		
 		int curRetIndex = 0;
