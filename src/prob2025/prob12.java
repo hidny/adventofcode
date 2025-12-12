@@ -57,11 +57,72 @@ public class prob12 {
 			int most3 = 0;
 			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
+			
+			
+			ArrayList<prob12Shape> shapes = new ArrayList<prob12Shape>();
+			
+			
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
 				
+				String tokens[] = line.split(":");
+				
+				//sopl(line);
+				if(line.endsWith(":")) {
+					
+					sopl("shape");
+					boolean shape[][] = new boolean[3][3];
+					
+					i++;
+					
+					for(int j=0; j<3; j++) {
+						String curLine = lines.get(i + j);
+						
+						for(int k=0; k<3; k++) {
+							if(curLine.charAt(k) == '#') {
+								shape[j][k] = true;
+							} else {
+								shape[j][k] = false;
+							}
+						}
+						
+					}
+					
+					i = i+3;
+					
+					shapes.add(new prob12Shape(shape));
+					
+				}
+				
+				
+				if(tokens.length > 1 && tokens[1].length() > 2) {
+					
+					sopl();
+					sopl("Test: " + line);
+					int y = pint(tokens[0].split("x")[0]);
+					int x = pint(tokens[0].split("x")[1]);
+					
+					int boxArea = x*y;
+					
+					int shapeArea = 0;
+					
+					String amountTokens[] = tokens[1].trim().split(" ");
+					for(int j=0; j<amountTokens.length; j++) {
+						shapeArea += pint(amountTokens[j]) * shapes.get(j).area;
+					}
+					
+					if(shapeArea > boxArea) {
+						sopl("Already know it's a loser!");
+						continue;
+					}
+					
+					sopl("Holes allowed:");
+					sopl(boxArea - shapeArea);
+					
+					cur++;
+				}
 			}
 
 
