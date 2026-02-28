@@ -11,6 +11,7 @@ import java.util.LinkedList;
 //Solver that already exists:
 // https://rushhour.froogo.co.uk/
 //It also solved the reddit one in 42 moves!
+// The solution from the board game does it in 44 moves. It wasted 2 moves somehow.
 
 public class BFSRushHourSolver {
 
