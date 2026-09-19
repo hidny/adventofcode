@@ -160,6 +160,26 @@ public class numberTableTrial {
 		
 	}
 	
+	public static boolean snakeInOne(boolean isPlayer0) {
+		
+		int indexPlayer = isPlayer0 ? 0 : 1;
+		int indexOpponent = isPlayer0 ? 1 : 0;
+		
+		for(int n=0; n<NUM_ORIENTATION; n++) {			
+			for(int i=0; i<numTreats[indexPlayer][n].length; i++) {
+				for(int j=0; j<numTreats[indexPlayer][n][i].length; j++) {
+
+					if(numTreats[indexPlayer][n][i][j] == 5 && numTreats[indexOpponent][n][i][j] == 0) {
+						return true;
+					}
+
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public static void main(String args[]) {
 		
 		adjustTreatsAfterAdd(true, 5, 5);
@@ -167,8 +187,24 @@ public class numberTableTrial {
 
 		adjustTreatsAfterAdd(true, 4, 6);
 		adjustTreatsAfterAdd(true, 4, 7);
+		
+
+		if(snakeInOne(true)) {
+			System.out.println("snakeInOne False test failed!");
+			System.exit(1);
+			
+		} else {
+		}
+		
 		adjustTreatsAfterAdd(true, 4, 8);
-		adjustTreatsAfterAdd(true, 4, 9);
+		
+		if(snakeInOne(true)) {
+			
+		} else {
+			System.out.println("snakeInOne True test failed!");
+			System.exit(1);
+		}
+		//adjustTreatsAfterAdd(true, 4, 9);
 
 		//adjustTreatsAfterRemove(true, 5, 5);
 		//adjustTreatsAfterRemove(true, 5, 6);
