@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,14 +13,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob3b {
 
 	//https://flipflop.slome.org/demo
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("inflipflop2026/prob2026in1.txt"));
+			in = new Scanner(new File("inflipflop2026/prob2026in3.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -60,21 +60,51 @@ public class prob0 {
 
 			int digits[] = new int[10];
 			
+			String answer = "";
 			for(int i=0; i<lines.size(); i++) {
 				
 				
 				line = lines.get(i);
+				int score=0;
 				
-				int num = pint(line);
-				
-				if(num<60) {
-					cur += 60 - num;
+				if(line.matches(".*[a-z].*")) {
+					score++;
+				}if(line.matches(".*[A-Z].*")) {
+					score++;
+				}if(line.matches(".*[0-9].*")) {
+					score++;
+				}
+
+				if(line.matches("[^0-6^8-9]*7[^0-6^8-9]*")) {
+					sopl("yes");
+					sopl(line);
+					score += 7;
+				}
+				for(int j=line.length(); j>=3; j--) {
+					
+					//([a-zA-Z])\1\1
+					
+					if(line.matches(".*([.])\\1\\1.*")) {
+						score+= (j*j);
+						break;
+					}
 				}
 				
+				if(line.contains("red") || line.contains("green") || line.contains("blue")) {
+					score *= 3;
+				}
+
+				int num = line.length() *(score);
+				if(num > cur) {
+				
+					cur = num;
+					answer = line;
+				}
 			}
 
 			
 			sopl("Answer: " + cur);
+			sopl("Answer: " + answer);
 			
 			in.close();
 			

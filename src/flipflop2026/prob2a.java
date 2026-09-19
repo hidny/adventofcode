@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,14 +13,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob2a {
 
 	//https://flipflop.slome.org/demo
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("inflipflop2026/prob2026in1.txt"));
+			in = new Scanner(new File("inflipflop2026/prob2026in2.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -46,6 +46,10 @@ public class prob0 {
 			//2 down
 			//3 left
 			
+			int wall[] = new int[100];
+			int location = 0;
+			
+			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
 				lines.add(line);
@@ -60,21 +64,31 @@ public class prob0 {
 
 			int digits[] = new int[10];
 			
-			for(int i=0; i<lines.size(); i++) {
-				
-				
-				line = lines.get(i);
-				
-				int num = pint(line);
-				
-				if(num<60) {
-					cur += 60 - num;
+			for(int i=0; i<line.length(); i++) {
+			
+				if(line.charAt(i) == '>') {
+					location++;
+				} else {
+					location--;
 				}
+				location = (location + 100) % 100; 
+				wall[location]++;
 				
 			}
+			
+			int max = 0;
+			int maxIndex = 0;
+			for(int i=0; i<wall.length; i++) {
+				
+				if(wall[i] > max) {
+					max = wall[i];
+					maxIndex = i;
+				}
+			}
+			
+			System.out.println("Answer: " + ((maxIndex + 1) * max));
 
 			
-			sopl("Answer: " + cur);
 			
 			in.close();
 			

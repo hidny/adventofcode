@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,14 +13,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob5c {
 
-	//https://flipflop.slome.org/demo
+	//https://flipflop.slomprob6a.javae.org/demo
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("inflipflop2026/prob2026in1.txt"));
+			in = new Scanner(new File("inflipflop2026/prob2026in5.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -55,26 +55,95 @@ public class prob0 {
 			int most = 0;
 			int most2 = 0;
 			int most3 = 0;
-			long cur = 0L;
+			
 			ArrayList ints = new ArrayList<Integer>();
 
 			int digits[] = new int[10];
 			
-			for(int i=0; i<lines.size(); i++) {
+
+			long answer = -1;
+
+			for(int changeI=1; changeI<lines.size() - 1; changeI++) {
+				for(int changeJ=1; changeJ<lines.get(0).length() - 1; changeJ++) {
+					
+					for(int dirChange=0; dirChange<4; dirChange++) {
+						boolean wasThere[][] = new boolean[lines.size()][lines.get(0).length()];
+						
+						long answerForTrial = 0L;
+						int curi = 0;
+						int curj = 0;
+						
+						
+						for(int illegal=0; illegal<4; illegal++) {
+						
+							while(wasThere[curi][curj] == false) {
 				
-				
-				line = lines.get(i);
-				
-				int num = pint(line);
-				
-				if(num<60) {
-					cur += 60 - num;
+								answerForTrial++;
+								wasThere[curi][curj] = true;
+								
+								char dir = lines.get(curi).charAt(curj);
+								
+								if(curi == changeI && curj == changeJ) {
+									
+									if(dirChange == 0 ) {
+										curj++;
+									} else if(dirChange == 1) {
+										curi--;
+									} else if(dirChange == 2) {
+										curj--;
+									} else if(dirChange == 3) {
+										curi++;
+									} else {
+										System.out.println("Doh! 2");
+										System.exit(1);
+									}
+									
+								} else {
+									if(dir == '>' ) {
+										curj++;
+									} else if(dir == '^') {
+										curi--;
+									} else if(dir == '<') {
+										curj--;
+									} else if(dir == 'v') {
+										curi++;
+									} else {
+										System.out.println("Doh!");
+										System.exit(1);
+									}
+								}
+							}
+							
+							if(illegal < 3) {
+								
+								char dir = lines.get(curi).charAt(curj);
+								
+								if(dir == '>' ) {
+									curi++;
+								} else if(dir == '^') {
+									curj++;
+								} else if(dir == '<') {
+									curi--;
+								} else if(dir == 'v') {
+									curj--;
+								} else {
+									System.out.println("Doh!");
+									System.exit(1);
+								}
+								
+							}
+						}
+						
+						
+						if(answerForTrial > answer) {
+							answer = answerForTrial;
+						}
+					}
 				}
-				
 			}
 
 			
-			sopl("Answer: " + cur);
+			sopl("Answer: " + answer);
 			
 			in.close();
 			

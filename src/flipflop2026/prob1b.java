@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob1b {
 
 	//https://flipflop.slome.org/demo
 	
@@ -60,15 +60,21 @@ public class prob0 {
 
 			int digits[] = new int[10];
 			
-			for(int i=0; i<lines.size(); i++) {
+			for(int i=0; i<lines.size()/2; i++) {
 				
 				
 				line = lines.get(i);
 				
 				int num = pint(line);
 				
-				if(num<60) {
-					cur += 60 - num;
+				line = lines.get((int)(i + lines.size()/2));
+				
+				int target = pint(line);
+				
+				if(num<target) {
+					cur += target - num;
+				} else {
+					cur += 5 * (num - target);
 				}
 				
 			}

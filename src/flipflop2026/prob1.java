@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob1 {
 
 	//https://flipflop.slome.org/demo
 	
@@ -21,6 +21,7 @@ public class prob0 {
 		Scanner in;
 		try {
 			in = new Scanner(new File("inflipflop2026/prob2026in1.txt"));
+			//in = new Scanner(new File("inflipflop2026/prob2026in0.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -64,18 +65,47 @@ public class prob0 {
 				
 				
 				line = lines.get(i);
+				cur += pint(line);
+				sopl("line: " + line);
 				
-				int num = pint(line);
+				table342[pint(line)] ++;
 				
-				if(num<60) {
-					cur += 60 - num;
+				for(int j=0; j<line.length(); j++) {
+					digits[(int)(line.charAt(j) - '0')] ++;
+				}
+			}
+
+			most = 0;
+			
+			
+			for(int i=0; i<table342.length; i++) {
+			
+				if(table342[i] > 0) {
+					if(table342[i] > most) {
+						most = i;
+					}
 				}
 				
 			}
 
-			
+			//TODO: least commen digit!
+			int least = digits[0];
+			int leastDigit = 0;
+			for(int i=0; i<10; i++) {
+				if(digits[i] < least) {
+					least = digits[i];
+					leastDigit = i;
+				}
+			}
+
 			sopl("Answer: " + cur);
+			sopl("Lines: " + lines.size());
 			
+			double answer2 = Math.round((1.0 * cur) / (1.0 * lines.size()));
+
+			sopl("Answer2: " + answer2 + " vs " + (cur / lines.size()));
+			
+			sopl("Answer3: " + most + "" + leastDigit);
 			in.close();
 			
 		} catch(Exception e) {

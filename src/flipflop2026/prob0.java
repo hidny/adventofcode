@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class prob0 {
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("inflipflop2026/prob2026in1.txt"));
+			in = new Scanner(new File("inflipflop2026/prob2026in0.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -63,13 +63,6 @@ public class prob0 {
 			for(int i=0; i<lines.size(); i++) {
 				
 				
-				line = lines.get(i);
-				
-				int num = pint(line);
-				
-				if(num<60) {
-					cur += 60 - num;
-				}
 				
 			}
 

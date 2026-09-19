@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob1c {
 
 	//https://flipflop.slome.org/demo
 	
@@ -69,6 +69,8 @@ public class prob0 {
 				
 				if(num<60) {
 					cur += 60 - num;
+				} else {
+					cur += 5 * (num - 60);
 				}
 				
 			}

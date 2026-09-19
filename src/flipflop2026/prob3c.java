@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,14 +13,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob3c {
 
 	//https://flipflop.slome.org/demo
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("inflipflop2026/prob2026in1.txt"));
+			in = new Scanner(new File("inflipflop2026/prob2026in3.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -55,26 +55,83 @@ public class prob0 {
 			int most = 0;
 			int most2 = 0;
 			int most3 = 0;
-			long cur = 0L;
 			ArrayList ints = new ArrayList<Integer>();
 
 			int digits[] = new int[10];
 			
-			for(int i=0; i<lines.size(); i++) {
+			int bestSum = 0;
+			
+			
+			String answer = "";
+			for(int j=0; j<256; j++) {
 				
+				String append = (char)(j) + "";
 				
-				line = lines.get(i);
-				
-				int num = pint(line);
-				
-				if(num<60) {
-					cur += 60 - num;
+				if( ! append.matches("[A-Za-z0-9]")) {
+					continue;
 				}
 				
+				int curSum= 0;
+				for(int i=0; i<lines.size(); i++) {
+					
+					
+					line = lines.get(i) + append;
+					
+					int score=0;
+					
+					if(line.matches(".*[a-z].*")) {
+						score++;
+					}if(line.matches(".*[A-Z].*")) {
+						score++;
+					}if(line.matches(".*[0-9].*")) {
+						score++;
+					}
+	
+					if(line.matches("[^0-6^8-9]*7[^0-6^8-9]*")) {
+						//sopl("yes");
+						//sopl(line);
+						score += 7;
+					}
+					for(int k=line.length(); k>=3; k--) {
+						
+						//([a-zA-Z])\1\1
+						String repeats = "";
+						for(int m=0; m<k-1; m++) {
+							repeats += "\\1";
+						}
+						//sopl("hello");
+						
+						if(line.matches(".*(.)" + repeats + ".*")) {
+							score+= (k*k);
+							if (k > 3) {
+								sopl(line + ": " + k);
+							} else {
+								sopl(line + ": " + k);
+							}
+							//exit(1);
+							break;
+						}
+					}
+					
+					if(line.contains("red") || line.contains("green") || line.contains("blue")) {
+						score *= 3;
+					}
+	
+					int num = line.length() *(score);
+					if(append.equals("a")) {
+						sopl(line + " -> " + num);
+					}
+					curSum += num;
+				}
+				
+				if(curSum > bestSum) {
+					bestSum = curSum;
+					System.out.println("append: " + append);
+				}
 			}
 
 			
-			sopl("Answer: " + cur);
+			sopl("Answer: " + bestSum);
 			
 			in.close();
 			

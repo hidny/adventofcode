@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,14 +13,14 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob4b {
 
 	//https://flipflop.slome.org/demo
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("inflipflop2026/prob2026in1.txt"));
+			in = new Scanner(new File("inflipflop2026/prob2026in4.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -60,16 +60,32 @@ public class prob0 {
 
 			int digits[] = new int[10];
 			
+			
+			int curSide = -1;
 			for(int i=0; i<lines.size(); i++) {
-				
 				
 				line = lines.get(i);
 				
-				int num = pint(line);
-				
-				if(num<60) {
-					cur += 60 - num;
+				if(line.contains("o-") && curSide != 1) {
+					if(curSide == -1) {
+						
+					} else {
+						cur++ ;
+					}
+					curSide = 1;
+					sopl(line);
+					
 				}
+				if(line.contains("-o") && curSide != 0) {
+					if(curSide == -1) {
+						
+					} else {
+						cur++ ;
+					}
+					curSide = 0;
+					sopl(line);
+				}
+				
 				
 			}
 

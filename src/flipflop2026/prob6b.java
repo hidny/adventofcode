@@ -1,4 +1,4 @@
-package flipflop2025;
+package flipflop2026;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -13,14 +13,55 @@ import number.IsNumber;
 import utils.Mapping;
 import utils.Sort;
 
-public class prob0 {
+public class prob6b {
 
 	//https://flipflop.slome.org/demo
+	
+	
+	public static int[][] getGearRotation(ArrayList <String>lines) {
+		
+		int ret[][] = new int[lines.size()][lines.get(0).length()];
+		
+		int curI = -1;
+		int curJ = -1;
+
+		int parity = -1;
+
+		GET_START:
+		for(int i=0; i<lines.size(); i++) {
+			for(int j=0; j<lines.get(0).length(); j++) {
+			
+				char c = lines.get(i).charAt(j);
+				
+				if(c == 'S') {
+					curI = i;
+					curJ = j;
+					parity = (i + j) % 2;
+					break GET_START;
+					
+				}
+			}
+		}
+		
+		boolean searched[][] = new boolean[lines.size()][lines.get(0).length()];
+		
+		//TODO: later....
+		
+		searched[curI][curJ] = true;
+		ret[curI][curJ] = parity;
+		
+		
+		
+		
+		
+		return ret;
+	}
+	
 	
 	public static void main(String[] args) {
 		Scanner in;
 		try {
-			in = new Scanner(new File("inflipflop2026/prob2026in1.txt"));
+			in = new Scanner(new File("inflipflop2026/prob2026in6.txt"));
 			int numTimes = 0;
 			 
 			int count = 0;
@@ -55,22 +96,66 @@ public class prob0 {
 			int most = 0;
 			int most2 = 0;
 			int most3 = 0;
+			
 			long cur = 0L;
+			
 			ArrayList ints = new ArrayList<Integer>();
 
 			int digits[] = new int[10];
 			
+			int curI = -1;
+			int curJ = -1;
+			
+			int parity = -1;
+			GET_START:
 			for(int i=0; i<lines.size(); i++) {
+				for(int j=0; j<lines.get(0).length(); j++) {
 				
-				
-				line = lines.get(i);
-				
-				int num = pint(line);
-				
-				if(num<60) {
-					cur += 60 - num;
+					char c = lines.get(i).charAt(j);
+					
+					if(c == 'S') {
+						curI = i;
+						curJ = j;
+						parity = (i + j) % 2;
+						break GET_START;
+						
+					}
 				}
-				
+			}
+			
+			for(int i=0; i<lines.size(); i++) {
+				for(int j=0; j<lines.get(0).length(); j++) {
+					
+					char c = lines.get(i).charAt(j);
+					
+					if(c == '*') {
+						
+						for(int i2=i-1; i2<=i+1; i2++) {
+							for(int j2=j-1; j2<=j+1; j2++) {
+								
+								if(i2 < 0 || j2 < 0 || i2 >= lines.size() || j2 >= lines.get(0).length()) {
+									continue;
+								}
+								
+								if(i2 == i ^ j2 == j) {
+									
+									char c2 = lines.get(i2).charAt(j2);
+									if(c2 == '#') {
+										
+										int parity2 = (i2 + j2) % 2;
+										
+										if(parity == parity2) {
+											cur = 2*cur;
+										} else {
+
+											cur = 2*cur + 1;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			
