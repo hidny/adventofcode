@@ -121,47 +121,6 @@ public class numberTableTrial {
 			System.out.println();
 		}
 		
-		/*
-		for(int n=0; n<snaky_table_all_sym.length; n++) {
-			
-			for(int i=0; i<snaky_table_all_sym[n].length; i++) {
-
-				for(int j=0; j<snaky_table_all_sym[n][i].length; j++) {
-					
-					//relativeEffectTable[n][i][j]
-					
-					if(snaky_table_all_sym[n][i][j]) {
-						
-						relativeEffectTable
-								[n]
-								[snaky_table_all_sym[n].length - 1 - i]
-								[snaky_table_all_sym[n][0].length - 1 - j] = true;
-					}
-					
-				}
-			}
-		}
-		
-		
-		System.out.println("Print relative thing...");
-		//Print relative and test it:
-		for(int n=0; n<relativeEffectTable.length; n++) {
-			
-			for(int i=0; i<relativeEffectTable[n].length; i++) {
-
-				for(int j=0; j<relativeEffectTable[n][i].length; j++) {
-					
-					if(relativeEffectTable[n][i][j]) {
-						System.out.print("#");
-					} else {
-						System.out.print("_");
-					}
-				}
-				System.out.println();
-			}
-			
-			System.out.println();
-		}*/
 	}
 	
 	public static void adjustTreatsAfterAdd(boolean isPlayer0, int i, int j) {
@@ -185,13 +144,13 @@ public class numberTableTrial {
 		
 		for(int n=0; n<snaky_table_all_sym.length; n++) {
 			
-			for(int i2=0; i2<snaky_table_all_sym[n].length && i + i2 < GRID_SIZE; i2++) {
+			for(int i2=0; i2<snaky_table_all_sym[n].length && i - i2 > 0; i2++) {
 
-				for(int j2=0; j2<snaky_table_all_sym[n][i2].length && j + j2 < GRID_SIZE; j2++) {
+				for(int j2=0; j2<snaky_table_all_sym[n][i2].length && j - j2 > 0; j2++) {
 					
 					if(snaky_table_all_sym[n][i2][j2]) {
 						
-						numTreats[indexPlayer][n][i+i2][j+j2] += dirTreat;
+						numTreats[indexPlayer][n][i-i2][j-j2] += dirTreat;
 						
 					}
 				}
