@@ -169,6 +169,14 @@ public class numberTableTrial {
 		adjustTreatsAfterAdd(true, 4, 7);
 		adjustTreatsAfterAdd(true, 4, 8);
 		adjustTreatsAfterAdd(true, 4, 9);
+
+		//adjustTreatsAfterRemove(true, 5, 5);
+		//adjustTreatsAfterRemove(true, 5, 6);
+
+		//adjustTreatsAfterRemove(true, 4, 6);
+		//adjustTreatsAfterRemove(true, 4, 7);
+		//adjustTreatsAfterRemove(true, 4, 8);
+		//adjustTreatsAfterRemove(true, 4, 9);
 		
 		System.out.println("----------------------------");
 		boolean foundIt = false;
