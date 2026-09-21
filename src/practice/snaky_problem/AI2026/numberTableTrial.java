@@ -225,6 +225,17 @@ public class numberTableTrial {
 	}
 	
 	
+	public static boolean opponentHasSnakeIn1(boolean isPlayer0) {
+	
+		HashSet<Integer> potentialList2 = numberTableTrial.findMThreatLocationCoord(!isPlayer0, 5);
+		
+		if(potentialList2.size() > 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 
 	//pre: Snake in 1 not happening.
 	public static boolean hasSnakyIn2(boolean isPlayer0) {
