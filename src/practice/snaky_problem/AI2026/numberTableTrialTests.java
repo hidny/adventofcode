@@ -77,13 +77,6 @@ public class numberTableTrialTests {
 		numberTableTrial.adjustTreatsAfterRemove(true, 4, 10);
 		
 		
-		/*numberTableTrial.clear();
-		numberTableTrial.adjustTreatsAfterAdd(true, 4, 6);
-		numberTableTrial.adjustTreatsAfterAdd(true, 4, 7);
-		numberTableTrial.adjustTreatsAfterAdd(true, 4, 8);
-		numberTableTrial.adjustTreatsAfterAdd(true, 4, 9);
-		*/
-		
 		if(! numberTableTrial.hasSnakyIn2(true)) {
 			System.out.println("test didn't find mate in 2 passed!");
 			

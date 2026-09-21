@@ -249,13 +249,14 @@ public class numberTableTrial {
 				//TODO: add function that filters down to only the relevant locations...
 				HashSet<Integer> potentialList2 = numberTableTrial.findMThreatLocationCoord(isPlayer0, 5);
 				
-				if(potentialList2.size() > 1) {
-					return true;
-				}
-				System.out.println("( " + tmp / numberTableTrial.GRID_SIZE + ", " + tmp % numberTableTrial.GRID_SIZE + ")");
+				//System.out.println("( " + tmp / numberTableTrial.GRID_SIZE + ", " + tmp % numberTableTrial.GRID_SIZE + ")");
 				
 
 				numberTableTrial.adjustTreatsAfterRemove(isPlayer0, iCoord, jCoord);
+				
+				if(potentialList2.size() > 1) {
+					return true;
+				}
 			}
 		}
 		
